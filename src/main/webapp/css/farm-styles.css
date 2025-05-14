@@ -1,0 +1,527 @@
+/* 농가 소개 섹션 스타일 */
+.farm-intro {
+  margin: 80px auto 100px;
+  max-width: 1200px;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border-top: 4px solid #00c471;
+  position: relative;
+}
+
+/* 농가소개 페이지 스타일 */
+.farm-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 배너 스타일 */
+.farm-banner {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin-bottom: 50px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.farm-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.farm-banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.farm-banner-overlay h1 {
+  font-size: 36px;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.farm-banner-overlay p {
+  font-size: 18px;
+  max-width: 600px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* 농가소개 타이틀 강조 효과 */
+.farm-intro .section-title {
+  color: #00a65a;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.farm-intro .section-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #00c471;
+  transform: translateX(-50%);
+}
+
+.farm-intro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.farm-count {
+  font-size: 16px;
+  color: #555;
+}
+
+.farm-count strong {
+  font-weight: 600;
+  color: #00c471;
+}
+
+/* 농가 버튼 디자인 개선 */
+.farm-apply-btn {
+  background-color: #ffffff;
+  color: #00a65a;
+  border: 1px solid #00c471;
+  border-radius: 30px;
+  padding: 10px 20px;
+}
+
+.farm-apply-btn:hover {
+  background-color: #00c471;
+  color: white;
+  box-shadow: 0 3px 8px rgba(0, 196, 113, 0.3);
+}
+
+.farm-slider {
+  position: relative;
+}
+
+.farm-slider .arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  opacity: 0.8;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 5;
+}
+
+.farm-slider .arrow-left {
+  left: -20px;
+}
+
+.farm-slider .arrow-right {
+  right: -20px;
+}
+
+.farm-slider .arrow:hover {
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.farm-container {
+  display: flex;
+  gap: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  padding: 10px 0;
+}
+
+/* 농가 카드 디자인 개선 */
+.farm-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.farm-card:hover {
+  transform: translateY(-8px);
+}
+
+.farm-img {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.farm-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.farm-card:hover .farm-img img {
+  transform: scale(1.05);
+}
+
+.farm-info {
+  padding: 15px;
+}
+
+.farm-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.farm-desc {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.farm-location {
+  font-size: 13px;
+  color: #888;
+  display: flex;
+  align-items: center;
+}
+
+.farm-location i {
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+.farm-location .fas {
+  margin-right: 8px;
+  color: #00c471;
+}
+
+/* 아이콘 중복 문제 해결을 위한 스타일 */
+.farm-location i.fas {
+  display: inline-block;
+  width: auto;
+  font-size: 14px;
+}
+
+/* 소개 섹션 스타일 */
+.farm-intro-section {
+  margin: 60px 0;
+  padding: 40px 0;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.farm-intro-content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-top: 30px;
+}
+
+.farm-intro-text {
+  flex: 1;
+}
+
+.farm-intro-text p {
+  margin-bottom: 20px;
+  line-height: 1.8;
+  color: #555;
+}
+
+.farm-intro-image {
+  flex: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.farm-intro-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 농가 목록 스타일 */
+.farm-list-section {
+  margin: 60px 0;
+}
+
+.farm-list-desc {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 40px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.farm-filter {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.farm-filter-btn {
+  padding: 8px 20px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.farm-filter-btn.active {
+  background-color: #00c471;
+  color: white;
+}
+
+.farm-filter-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.farm-filter-btn.active:hover {
+  background-color: #00a65a;
+}
+
+.farm-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.farm-card {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.farm-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.farm-img {
+  height: 200px;
+  overflow: hidden;
+}
+
+.farm-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.farm-card:hover .farm-img img {
+  transform: scale(1.1);
+}
+
+.farm-info {
+  padding: 20px;
+}
+
+.farm-name {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.farm-desc {
+  font-size: 14px;
+  color: #00c471;
+  margin-bottom: 10px;
+}
+
+.farm-location {
+  font-size: 14px;
+  color: #777;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.farm-location i {
+  margin-right: 8px;
+  color: #00c471;
+  font-size: 14px;
+}
+
+.farm-detail {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.farm-card.expanded .farm-detail {
+  height: auto;
+  opacity: 1;
+  padding-top: 15px;
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.farm-detail p {
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #666;
+}
+
+/* 품질 관리 섹션 스타일 */
+.quality-control-section {
+  background-color: #f9f9f9;
+  padding: 60px 0;
+  margin: 60px 0;
+  border-radius: 10px;
+}
+
+.quality-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.quality-step {
+  text-align: center;
+  padding: 30px 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.quality-step:hover {
+  transform: translateY(-10px);
+}
+
+.step-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background-color: rgba(0, 196, 113, 0.1);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.step-icon i {
+  font-size: 30px;
+  color: #00c471;
+}
+
+.quality-step h3 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.quality-step p {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* 애니메이션 클래스 */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 반응형 스타일 */
+@media (max-width: 992px) {
+  .farm-card {
+    flex: 0 0 calc(33.333% - 13.333px);
+  }
+
+  .farm-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .farm-intro-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .quality-steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .farm-card {
+    flex: 0 0 calc(50% - 10px);
+  }
+
+  .farm-banner-overlay h1 {
+    font-size: 28px;
+  }
+
+  .farm-banner-overlay p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .farm-intro-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .farm-card {
+    flex: 0 0 100%;
+  }
+
+  .farm-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quality-steps {
+    grid-template-columns: 1fr;
+  }
+}

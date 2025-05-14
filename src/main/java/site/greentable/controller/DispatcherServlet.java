@@ -69,7 +69,7 @@ public class DispatcherServlet extends HttpServlet {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("errorMsg", e.getCause().getMessage());
+			request.setAttribute("error", e);
 			if (e instanceof BadRequestException) {
 				request.getRequestDispatcher("/error/400.jsp").forward(request, response);
 			} else if (e instanceof UnAuthorizedException) {
