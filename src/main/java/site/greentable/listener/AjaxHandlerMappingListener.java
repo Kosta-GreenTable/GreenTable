@@ -16,16 +16,16 @@ import site.greentable.controller.Controller;
  * 사용할수 있도록....
  */
 @WebListener
-public class HandlerMappingListener implements ServletContextListener {
+public class AjaxHandlerMappingListener implements ServletContextListener {
 
 	public void contextInitialized(ServletContextEvent event) {
 
 		// actionMapping.properties파일 로딩
-		ResourceBundle rb = ResourceBundle.getBundle("actionMapping"); // resources/actionMapping.properties
+		ResourceBundle rb = ResourceBundle.getBundle("ajaxMapping"); // resources/actionMapping.properties
 		
 		// 반복문 안헤서 key와 value를 분리해서
 
-		Map<String, Controller> map = new HashMap<String, Controller>();
+		Map<String, Controller> ajaxMap = new HashMap<String, Controller>();
 
 		try {
 			for (String key : rb.keySet()) {
@@ -39,7 +39,7 @@ public class HandlerMappingListener implements ServletContextListener {
 				System.out.println("key" + " = " + value + "con" + " = " + con);
 
 				// Map에 저장한다.
-				map.put(key, con);
+				ajaxMap.put(key, con);
 
 			} // for문끝
 		} catch (Exception e) {
@@ -48,8 +48,7 @@ public class HandlerMappingListener implements ServletContextListener {
 
 		// 마지막에 map을 application영역에 저장한다.
 		ServletContext application = event.getServletContext();
-		application.setAttribute("map", map);
-		application.setAttribute("path", application.getContextPath()); // ${path}
+		application.setAttribute("ajaxMap", ajaxMap);
 	}
 
 }

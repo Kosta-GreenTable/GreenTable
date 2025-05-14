@@ -1,0 +1,75 @@
+<!-- 상단 메뉴 바 -->
+<div class="top-menu-bar">
+    <div class="user-menu">
+        <a href="terms.html" class="active">회원가입</a>
+        <a href="login.html" class="active">로그인</a>
+        <a href="cart.html" class="active">장바구니</a>
+        <a href="mypage.html" class="active">마이페이지</a>
+        <a href="cs.html" class="active">고객센터</a>
+        <a href="../../admin/admin_index.html" class="admin-link active"
+            >관리자</a
+        >
+    </div>
+</div>
+
+<style>
+    .admin-link {
+        background-color: #007bff;
+        color: white !important;
+        padding: 2px 8px;
+        border-radius: 4px;
+    }
+    .admin-link:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<!-- 상단 헤더 섹션 -->
+<header>
+    <div class="top-header">
+        <div class="logo-container">
+            <a href="index.html">
+                <img
+                    src="https://picsum.photos/100/40"
+                    alt="Green Table 로고"
+                />
+            </a>
+            <h1>Green Table</h1>
+        </div>
+    </div>
+</header>
+
+<!-- 카테고리 섹션 -->
+<section class="category-section">
+    <div class="category-container">
+        <div class="category-left">
+            <!-- 기본 메인 네비게이션 -->
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="best.html">베스트</a></li>
+                    <li><a href="regular.html">정기배송</a></li>
+                    <li><a href="lunchbox.html">도시락</a></li>
+                    <li><a href="salad.html">샐러드</a></li>
+                    <li>
+                        <a href="event.html">이벤트</a>
+                    </li>
+                    <li>
+                        <a href="farm.html">농가 소개</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="category-right">
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="검색어를 입력하세요"
+                />
+                <button id="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

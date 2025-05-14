@@ -2,6 +2,7 @@ package site.greentable.controller;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.coyote.BadRequestException;
@@ -27,7 +28,7 @@ import site.greentable.exception.UnAuthorizedException;
 public class AjaxDispatcherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	Map<String, RestController> map;
+	Map<String, RestController> ajaxMap;
 	Gson gson;
 
 	@Override
@@ -35,7 +36,7 @@ public class AjaxDispatcherServlet extends HttpServlet {
 
 		ServletContext application = config.getServletContext();
 		Object obj = application.getAttribute("ajaxMap");
-		map = (Map<String, RestController>) obj;
+		ajaxMap = (Map<String, RestController>) obj;
 		gson = new Gson();
 
 	}
@@ -44,9 +45,10 @@ public class AjaxDispatcherServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String key = request.getParameter("key"); // customer
 		String methodName = request.getParameter("methodName"); // idCheck , insert , selectAll
+		response.setContentType("application/json;charset=utf-8");
 
 		try {
-			RestController controller = map.get(key);
+			RestController controller = ajaxMap.get(key);
 			Method method = controller.getClass().getMethod(methodName, HttpServletRequest.class,
 					HttpServletResponse.class);
 
@@ -59,21 +61,22 @@ public class AjaxDispatcherServlet extends HttpServlet {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("errorMsg", e.getCause().getMessage());
+			Map<String, String> jsonMap = new HashMap<String, String>();
+			jsonMap.put("errorMsg", e.getMessage());
 			if (e instanceof BadRequestException) {
-				request.getRequestDispatcher("/error/400.jsp").forward(request, response);
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			} else if (e instanceof UnAuthorizedException) {
-				request.getRequestDispatcher("/error/401.jsp").forward(request, response);
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			} else if (e instanceof ForbiddenException) {
-				request.getRequestDispatcher("/error/403.jsp").forward(request, response);
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			} else if (e instanceof NotFoundException) {
-				request.getRequestDispatcher("/error/404.jsp").forward(request, response);
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			} else if (e instanceof MethodNotAllowedException) {
-				request.getRequestDispatcher("/error/405.jsp").forward(request, response);
+				response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 			} else {
-				request.getRequestDispatcher("/error/500.jsp").forward(request, response);
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
-
+			response.getWriter().print(gson.toJson(jsonMap));
 		}
 	}// service 메소드 끝
 
