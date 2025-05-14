@@ -1,6 +1,7 @@
 package site.greentable.controller;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -69,16 +70,16 @@ public class DispatcherServlet extends HttpServlet {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("error", e);
-			if (e instanceof BadRequestException) {
+			request.setAttribute("error", e.getCause());
+			if (e.getCause() instanceof BadRequestException) {
 				request.getRequestDispatcher("/error/400.jsp").forward(request, response);
-			} else if (e instanceof UnAuthorizedException) {
+			} else if (e.getCause() instanceof UnAuthorizedException) {
 				request.getRequestDispatcher("/error/401.jsp").forward(request, response);
-			} else if (e instanceof ForbiddenException) {
+			} else if (e.getCause() instanceof ForbiddenException) {
 				request.getRequestDispatcher("/error/403.jsp").forward(request, response);
-			} else if (e instanceof NotFoundException) {
+			} else if (e.getCause() instanceof NotFoundException) {
 				request.getRequestDispatcher("/error/404.jsp").forward(request, response);
-			} else if (e instanceof MethodNotAllowedException) {
+			} else if (e.getCause() instanceof MethodNotAllowedException) {
 				request.getRequestDispatcher("/error/405.jsp").forward(request, response);
 			} else {
 				request.getRequestDispatcher("/error/500.jsp").forward(request, response);

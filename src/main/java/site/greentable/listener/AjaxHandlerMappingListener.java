@@ -9,6 +9,7 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import site.greentable.controller.Controller;
+import site.greentable.controller.RestController;
 
 /**
  * Application Lifecycle Listener implementation class HandlerMappingListener
@@ -19,13 +20,14 @@ import site.greentable.controller.Controller;
 public class AjaxHandlerMappingListener implements ServletContextListener {
 
 	public void contextInitialized(ServletContextEvent event) {
+		System.out.println("AjaxHandlerMappingLister 초기화");
 
 		// actionMapping.properties파일 로딩
 		ResourceBundle rb = ResourceBundle.getBundle("ajaxMapping"); // resources/actionMapping.properties
 		
 		// 반복문 안헤서 key와 value를 분리해서
 
-		Map<String, Controller> ajaxMap = new HashMap<String, Controller>();
+		Map<String, RestController> ajaxMap = new HashMap<String, RestController>();
 
 		try {
 			for (String key : rb.keySet()) {
@@ -35,7 +37,7 @@ public class AjaxHandlerMappingListener implements ServletContextListener {
 				Class<?> className = Class.forName(value);
 
 				// 생성 - value를 객체로 만들고
-				Controller con = (Controller) className.getDeclaredConstructor().newInstance();
+				RestController con = (RestController) className.getDeclaredConstructor().newInstance();
 				System.out.println("key" + " = " + value + "con" + " = " + con);
 
 				// Map에 저장한다.

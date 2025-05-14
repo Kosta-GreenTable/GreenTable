@@ -19,6 +19,7 @@ import site.greentable.controller.Controller;
 public class HandlerMappingListener implements ServletContextListener {
 
 	public void contextInitialized(ServletContextEvent event) {
+		System.out.println("HandlerMappingListener 초기화됨");
 
 		// actionMapping.properties파일 로딩
 		ResourceBundle rb = ResourceBundle.getBundle("actionMapping"); // resources/actionMapping.properties
