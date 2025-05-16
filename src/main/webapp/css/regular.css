@@ -1,0 +1,77 @@
+/* 정기배송 상품 페이지 전용 스타일 */
+
+/* 정기배송 상품 배지 스타일 */
+.subscription-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #4caf50;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 1;
+}
+
+/* 정기배송 상품 카테고리 배너 스타일 */
+.category-banner img {
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.category-banner:hover img {
+  transform: scale(1.01);
+}
+
+/* 구독 주기 선택 섹션 스타일 */
+.subscription-options {
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.subscription-title {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.subscription-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.subscription-btn {
+  flex: 1;
+  padding: 5px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background-color: #f9f9f9;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.subscription-btn:hover {
+  background-color: #e8f5e9;
+  color: #4caf50;
+}
+
+.subscription-btn.active {
+  background-color: #4caf50;
+  color: white;
+  border-color: #4caf50;
+}
+
+/* 활성화된 정기배송 네비게이션 스타일 */
+.main-nav ul li.active {
+  border-bottom: 3px solid #4caf50;
+}
+
+.main-nav ul li.active a {
+  color: #4caf50;
+  font-weight: 600;
+}
