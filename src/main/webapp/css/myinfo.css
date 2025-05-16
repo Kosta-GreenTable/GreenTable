@@ -1,0 +1,401 @@
+/* 회원정보 수정 페이지 스타일 */
+
+/* 비밀번호 확인 섹션 스타일 */
+.password-confirm-section {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.section-header p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.password-confirm-form {
+  margin-top: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.form-group input[type="password"],
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.btn-cancel,
+.btn-confirm,
+.btn-save {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel {
+  background-color: #f1f1f1;
+  color: #666;
+}
+
+.btn-confirm,
+.btn-save {
+  background-color: #00c471;
+  color: white;
+}
+
+.btn-confirm:hover,
+.btn-save:hover {
+  background-color: #00a65a;
+}
+
+/* 회원정보 수정 폼 스타일 */
+.member-info-section {
+  margin-bottom: 40px;
+}
+
+.member-info-form {
+  margin-top: 30px;
+}
+
+.form-section {
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #eee;
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+}
+
+.form-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.input-with-text {
+  position: relative;
+}
+
+.input-with-text input {
+  width: 100%;
+}
+
+.input-guide {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-top: 8px;
+}
+
+.input-with-button {
+  display: flex;
+  gap: 10px;
+}
+
+.input-with-button input {
+  flex: 1;
+}
+
+.btn-verify,
+.btn-address-search {
+  padding: 10px 15px;
+  background-color: #f1f1f1;
+  color: #666;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.form-description {
+  font-size: 12px;
+  color: #888;
+  margin-top: 8px;
+}
+
+/* 체크박스 그룹 스타일 */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* 폼 제출 버튼 스타일 */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.action-left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.action-right {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-withdraw {
+  padding: 10px 20px;
+  background-color: transparent;
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-withdraw:hover {
+  background-color: #ffeaea;
+}
+
+/* 회원 탈퇴 모달 스타일 */
+.modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 500px;
+  max-width: 90%;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #999;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.withdraw-notice {
+  margin-bottom: 20px;
+}
+
+.warning-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ff6b6b;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notice-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.notice-list li {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 12px;
+  line-height: 1.5;
+}
+
+.notice-list li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #999;
+}
+
+.withdraw-reason-section {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.withdraw-reason-section h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.withdraw-reason-section p {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.withdraw-reason-section select,
+.withdraw-reason-section textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.withdraw-reason-section textarea {
+  resize: vertical;
+  height: 80px;
+}
+
+.withdraw-confirm {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.withdraw-confirm .checkbox-item {
+  margin-bottom: 15px;
+}
+
+.password-confirm input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-withdraw-confirm {
+  padding: 10px 20px;
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-withdraw-confirm:hover {
+  background-color: #ff5252;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .input-with-button {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-verify,
+  .btn-address-search {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .action-left {
+    order: 2;
+    justify-content: center;
+  }
+
+  .action-right {
+    order: 1;
+    justify-content: center;
+  }
+}

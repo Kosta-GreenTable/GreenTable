@@ -1,0 +1,60 @@
+/* 관리자 테이블 열 정렬 수정 */
+.product-table .action-column {
+    width: 130px;
+    text-align: center;
+}
+
+.product-table td.action-column {
+    padding: 8px 5px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+/* 향상된 페이지네이션 스타일 */
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.page-numbers {
+    display: flex;
+    list-style: none;
+    gap: 5px;
+}
+
+.page-numbers li {
+    margin: 0;
+}
+
+.page-numbers li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+}
+
+.page-numbers li a:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+}
+
+.page-numbers li.active a {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.page-numbers li i {
+    font-size: 14px;
+}

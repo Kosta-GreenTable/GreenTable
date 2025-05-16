@@ -52,6 +52,7 @@ public class AdminCheckFilter implements Filter {
 			return;
 		}
 
+		/**
 		if (key.equals("admin")) {
 
 			HttpSession session = req.getSession();
@@ -71,6 +72,7 @@ public class AdminCheckFilter implements Filter {
 				return;// 함수를 빠져나가라
 			}
 		}
+		**/
 
 		chain.doFilter(request, response);
 	}

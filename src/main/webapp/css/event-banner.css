@@ -1,0 +1,102 @@
+/* 배너 오버레이 스타일 */
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-text {
+  padding: 30px;
+  color: white;
+  max-width: 80%;
+  text-align: center;
+}
+
+.banner-text h3 {
+  font-size: 32px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.banner-text p {
+  font-size: 18px;
+  margin-bottom: 15px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.banner-date {
+  display: inline-block;
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 5px 15px;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+.banner-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: none;
+}
+
+.banner-status.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.banner-status.upcoming {
+  background-color: #2196f3;
+  color: white;
+}
+
+.banner-status.ended {
+  background-color: #9e9e9e;
+  color: white;
+}
+
+.banner-more-btn {
+  display: inline-block;
+  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #333;
+  padding: 10px 25px;
+  border-radius: 30px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.banner-more-btn:hover {
+  background-color: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.banner-more-btn i {
+  margin-left: 5px;
+}
+
+.banner-slide a {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  cursor: pointer;
+}
