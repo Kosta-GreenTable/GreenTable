@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/reset.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/order/cart.css">
 </head>
-<body>
+<body data-contextpath="${pageContext.request.contextPath}" data-userid="${sessionScope.userId}">
   <div class="cart-container hd__inner1100">
     <div class="cart-title">
     	<h1>장바구니</h1>
@@ -42,15 +42,12 @@
       </thead>
       <tbody>
       	<c:forEach var="cart" items="${cartList}">
-      		<tr data-userid="${cart.userId}" data-productid="${cart.productId}" 
-      			data-discountrate="${cart.discountRate}" data-price="${cart.price}">
-				<!-- <tr data-userid="${cart.userId}" data-productid="${cart.productId}"> -->
+      		<tr data-userid="${cart.userId}" data-product-id="${cart.productId}" >
 		  		<td><input type="checkbox"></td>
 		  		<td class="product-info">
 					<img src="${cart.imageName}" alt="상품 이미지">
 					<div>
 			  			<p>${cart.productName}</p>
-			  			<button class="option-btn">옵션 변경</button>
 					</div>
 		  		</td>
 		  		<td class="quantity-cell">
@@ -62,7 +59,6 @@
 		  		<td>
 		            <div class="action-buttons">
 		              <button class="order-btn">주문</button>
-		              <button class="wishlist-btn">관심상품</button>
 		              <button class="delete-btn">삭제</button>
 		            </div>
 		  		</td>
@@ -94,7 +90,7 @@
       <div class="cart-buttons">
         <button class="continue-btn">쇼핑 계속하기</button>
         <button class="order-selected-btn">선택 상품 주문</button>
-        <a href="${pageContext.request.contextPath}/order/order.jsp"><button class="order-all-btn">전체 주문</button></a>
+        <button class="order-all-btn">전체 주문</button>
       </div>
     	
       </c:otherwise>

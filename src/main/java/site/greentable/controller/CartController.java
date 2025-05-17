@@ -7,12 +7,17 @@ import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import site.greentable.dto.CartDTO;
+import site.greentable.dto.Product;
 import site.greentable.exception.NotFoundException;
 import site.greentable.service.CartService;
 import site.greentable.service.CartServiceImpl;
+import site.greentable.service.ProductService;
+import site.greentable.service.ProductServiceImpl;
 
 public class CartController implements Controller {
 	CartService cartService = new CartServiceImpl();
+	ProductService productService = new ProductServiceImpl();
+	
 	public CartController() {
 		System.out.println("cartController 호출");
 	}
@@ -47,16 +52,16 @@ public class CartController implements Controller {
 			int quantity = Integer.parseInt(request.getParameter("quantity"));
 			
 			// 상품 DB에서 정확한 할인율 다시 조회
-//		    ProductDTO product = productService.getProductById(productId);
+		    Product product = productService.getProductDetail(productId);
 			
 			// 예외 처리
-			//if (product == null) throw new NotFoundException("상품 정보를 찾을 수 없습니다.");
+			if (product == null) throw new NotFoundException("상품 정보를 찾을 수 없습니다.");
 			
 			CartDTO cart = new CartDTO(quantity, productId, userId);
-			//cart.setPrice(product.getPrice());
-			//cart.setDiscountRate(product.getDiscountRate()); //할인율 반영
-			//cart.setProductName(product.getName());
-			//cart.setImageName(product.getMainImageName());
+			cart.setPrice(product.getPrice());
+			cart.setDiscountRate(product.getDiscountRate()); //할인율 반영
+			cart.setProductName(product.getName());
+			cart.setImageName(product.getMainImageName());
 			
 			cartService.insertCart(cart);
 				

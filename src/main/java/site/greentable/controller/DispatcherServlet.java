@@ -48,6 +48,9 @@ public class DispatcherServlet extends HttpServlet {
 		try {
 
 			Controller con = map.get(key);
+			System.out.println("요청 key = " + key);
+			System.out.println("요청 method = " + methodName);
+			System.out.println("컨트롤러 = " + con);
 
 			if (con == null) {
 				throw new NotFoundException("잘못된 경로입니다");
@@ -55,6 +58,7 @@ public class DispatcherServlet extends HttpServlet {
 			Method method = null;
 			try {
 				method = con.getClass().getMethod(methodName, HttpServletRequest.class, HttpServletResponse.class);
+				System.out.println("찾은 메서드 = " + method);
 			} catch (NoSuchMethodException e) {
 				throw new NotFoundException("잘못된 경로입니다");
 			}
@@ -69,7 +73,7 @@ public class DispatcherServlet extends HttpServlet {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("errorMsg", e.getCause().getMessage());
+			request.setAttribute("error", e);
 			if (e instanceof BadRequestException) {
 				request.getRequestDispatcher("/error/400.jsp").forward(request, response);
 			} else if (e instanceof UnAuthorizedException) {

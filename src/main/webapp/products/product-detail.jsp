@@ -9,19 +9,17 @@
     <title>그린테이블 - 제품 상세</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/products/product-detail.css" />    <script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/products/product-detail.css" />    
+    <script>
       // 컨텍스트 경로를 JavaScript 변수로 설정
       var contextPath = "${pageContext.request.contextPath}";
+      
+      var userId = "${sessionScope.userId != null ? sessionScope.userId : '0'}";
       
       // 가격 정보를 JavaScript 변수로 설정
       var originalPrice = <c:out value="${product.price}"/>; // 원래 가격
       var discountRate = <c:out value="${product.discountRate > 0 ? product.discountRate : 0}"/>; // 할인율
       var finalPrice = <c:out value="${product.discountRate > 0 ? product.price * (100 - product.discountRate) / 100 : product.price}"/>; // 최종 가격 (할인 적용)
-      
-      // 천 단위 구분 기능
-      function formatPrice(price) {
-        return Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
     </script>
   </head>
   <body>

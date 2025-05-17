@@ -1,5 +1,6 @@
 package site.greentable.controller;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,7 @@ public class CartRestController implements RestController {
      * 상품 수량 수정
      * 장바구니 페이지 -> -, + 버튼으로 수량 변경
      * */
-    public Map<String, Object> updateQuantity(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public Map<String, Object> updateCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
         
         try {
@@ -81,6 +82,56 @@ public class CartRestController implements RestController {
             e.printStackTrace();
         }
         
+        return resultMap;
+    }
+    
+    /**
+     * 비회원 장바구니 가격 계산
+     * */
+    public Map<String, Object> calculateGuestCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+            // 요청 본문에서 JSON 데이터 읽기
+            StringBuilder jsonBuilder = new StringBuilder();
+            try (BufferedReader reader = request.getReader()) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    jsonBuilder.append(line);
+                }
+            }
+            String requestJson = jsonBuilder.toString();
+
+            // JSON 데이터를 Java 객체로 변환
+            Gson gson = new Gson();
+            Map<String, Object> requestMap = gson.fromJson(requestJson, 
+                    new TypeToken<Map<String, Object>>(){}.getType());
+            
+            // items 필드에서 장바구니 아이템 추출
+            List<Map<String, Object>> itemsList = (List<Map<String, Object>>) requestMap.get("items");
+
+            // CartDTO 리스트로 변환
+            List<CartDTO> guestCartItems = new ArrayList<>();
+            for (Map<String, Object> item : itemsList) {
+                CartDTO cartItem = new CartDTO();
+                cartItem.setProductId(((Number)item.get("productId")).intValue());
+                cartItem.setQuantity(((Number)item.get("quantity")).intValue());
+                guestCartItems.add(cartItem);
+            }
+            
+            // 상품 정보를 조회하여 장바구니 데이터 완성
+            List<CartDTO> cartItems = cartService.getGuestCartItems(guestCartItems);
+            
+            // 서비스 계층에서 가격 계산
+            Map<String, Object> priceMap = cartService.calculateGuestCartPrices(cartItems);
+            
+            resultMap.put("success", true);
+            resultMap.put("cartItems", cartItems);
+            resultMap.putAll(priceMap);
+        } catch (Exception e) {
+            resultMap.put("success", false);
+            resultMap.put("message", "오류 발생: " + e.getMessage());
+            e.printStackTrace();
+        }
         return resultMap;
     }
     
