@@ -26,17 +26,23 @@ public interface CartService {
         throws SQLException, ModifyException, SelectException;
 
 	/**
-     * 장바구니 가격 정보 계산
+     * 회원의 장바구니 가격 정보 계산
      * 총 상품금액, 총 할인금액, 배송비, 결제금액 등을 계산하여 반환
      * */
     Map<String, Object> calculateCartPrices(int userId) throws SQLException, SelectException;
     
+    /** 회원 선택 상품 가격 계산 */
+    Map<String, Object> calculateSelectedProducts(int userId, List<Integer> productIds) 
+        throws SQLException, SelectException;
+    
     /** 장바구니 상품 삭제 및 가격 재계산 */
     Map<String, Object> deleteCart(int userId, int productId) throws SQLException, DeleteException;
     
-   /**선택된 상품만 계산 */
-    Map<String, Object> calculateSelectedProducts(int userId, List<Integer> productIds) 
-        throws SQLException, SelectException;
+    /** 비회원 장바구니의 상품id로 정보 꺼내기 */
+    List<CartDTO> getGuestCartItems(List<CartDTO> guestCartItems) throws SQLException;
+    
+    /** 비회원 장바구니 가격 계산 */
+    public Map<String, Object> calculateGuestCartPrices(List<CartDTO> guestCartItems) throws SQLException;
     
     /** 비회원 로그인시 장바구니 이관 */
     boolean migrateGuestCart(List<CartDTO> cartItems) throws SQLException, AddException;
