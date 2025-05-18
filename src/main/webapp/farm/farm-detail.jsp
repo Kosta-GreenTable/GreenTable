@@ -23,6 +23,10 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     />
     <link
       rel="stylesheet"
+      href="${pageContext.request.contextPath}/css/farm-detail-styles.css"
+    />
+    <link
+      rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
   </head>
@@ -51,12 +55,13 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           <h2 class="section-title">농장 소개</h2>
           <div class="farm-intro-content">
             <div class="farm-intro-text">
-              <p>${farm.detailDescription}</p>
-              <c:if test="${not empty farm.philosophy}">
-                <p>${farm.philosophy}</p>
+              <!-- 존재하는 필드만 사용하도록 수정 -->
+              <p>${farm.description}</p>
+              <c:if test="${not empty farm.detailDescription}">
+                <p>${farm.detailDescription}</p>
               </c:if>
-              <c:if test="${not empty farm.history}">
-                <p>${farm.history}</p>
+              <c:if test="${not empty farm.mainProducts}">
+                <p><strong>주요 작물:</strong> ${farm.mainProducts}</p>
               </c:if>
             </div>
             <div class="farm-intro-image">
@@ -89,6 +94,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                       <img
                         src="${pageContext.request.contextPath}/assets/images/products/${product.mainImageName}"
                         alt="${product.name}"
+                        onerror="this.src='https://picsum.photos/seed/product${product.productId}/300/180'"
                       />
                     </div>
                     <div class="product-info">

@@ -50,6 +50,13 @@ uri="http://java.sun.com/jsp/jstl/core" %>
             </li>
             <li>
               <a
+                href="${pageContext.request.contextPath}/front?key=farm&methodName=adminList"
+              >
+                <i class="fas fa-tractor"></i> 농가 현황
+              </a>
+            </li>
+            <li>
+              <a
                 href="${pageContext.request.contextPath}/front?key=admin&methodName=statistics"
                 ><i class="fas fa-chart-line"></i> 통계</a
               >
