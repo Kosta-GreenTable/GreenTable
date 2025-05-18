@@ -10,7 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
     container.innerHTML = `<div class="loading-indicator">
       <div class="spinner"></div>
       <p>${categoryName} 콘텐츠를 불러오는 중...</p>
-    </div>`;    // 컨텍스트 경로를 사용하여 URL 구성
+    </div>`;
+    
+    // 컨텍스트 경로를 사용하여 URL 구성
     const contextPath = window.contextPath || "";
     return fetch(`${contextPath}/front?key=product&methodName=category&category=${categoryName}&pageNo=1`)
       .then((response) => {
@@ -62,7 +64,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .join("");
         } else {
           productsHtml = `<div class="no-products-message">상품 준비 중입니다.</div>`;
-        } // HTML 생성 (배너 제외)
+        } 
+        
+        // HTML 생성 (배너 제외)
         let sectionHTML = `
           <section class="category-section-preview" id="${categoryName}-preview">
             <h2 class="section-title">${title}</h2>
@@ -89,11 +93,35 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error(`${categoryName} 섹션 로딩 실패:`, error);
         container.innerHTML = `<div class="error-message">${categoryName} 콘텐츠를 로드하는 중 오류가 발생했습니다.</div>`;
       });
-  }  // 농가 소개 섹션 로드 함수
+  }  
+  
+  // 이미지 로드 상태 체크 함수 (기존 코드에 추가)
+  function checkFarmImagesLoaded() {
+    console.log('[농가 이미지 체크] 이미지 로드 상태 확인 시작');
+    const farmImages = document.querySelectorAll('.farm-img img');
+    
+    farmImages.forEach((img, index) => {
+      console.log(`[농가 이미지 #${index}] 경로: ${img.src}`);
+      
+      img.addEventListener('load', function() {
+        console.log(`[농가 이미지 #${index}] 이미지 로드 성공: ${img.src}`);
+      });
+      
+      // 오류 이벤트 리스너 추가
+      img.addEventListener('error', function() {
+        console.error(`[농가 이미지 #${index}] 이미지 로드 실패: ${img.src}`);
+        // 대체 이미지 설정
+        this.onerror = null; // 무한 루프 방지
+        this.src = `https://picsum.photos/seed/farm${index}/300/250`;
+      });
+    });
+  }
+  
+  // 농가 소개 섹션 로드 함수
   function loadFarmSection(containerId) {
     const container = document.getElementById(containerId);
-    if (!container) return;
-
+    if (!container) return Promise.reject(`${containerId} 요소를 찾을 수 없습니다.`);
+    
     const contextPath = window.contextPath || "";
     
     // 로딩 상태 표시
@@ -102,135 +130,109 @@ document.addEventListener("DOMContentLoaded", function () {
       <p>농가 정보를 불러오는 중...</p>
     </div>`;
     
-    // 농가 데이터를 서버에서 가져오기
-    return fetch(`${contextPath}/front?key=farm&methodName=list&format=json`)
+    // 요청 URL 구성 - 카테고리 로드 방식과 동일하게 변경
+    const requestUrl = `${contextPath}/front?key=farm&methodName=category&category=farm&pageNo=1`;
+    console.log(`[농가 데이터] 요청 URL: ${requestUrl}`);
+    
+    return fetch(requestUrl)
       .then(response => {
+        console.log(`[농가 데이터] 응답 상태: ${response.status} ${response.statusText}`);
         if (!response.ok) {
-          throw new Error(`농가 정보를 불러올 수 없습니다. (${response.status})`);
+          throw new Error(`응답 오류: ${response.status} ${response.statusText}`);
         }
-        return response.json();
+        return response.text(); // JSON 대신 HTML을 받음
       })
-      .then(data => {
-        // 농가 데이터가 있는 경우
-        const farmList = data.farmList || [];
-        const farmCount = farmList.length;
+      .then(html => {
+        console.log(`[농가 데이터] HTML 응답 받음 (길이: ${html.length})`);
+        container.innerHTML = html;
         
-        // 농가 카드 HTML 생성 (최대 4개만 표시)
-        let farmCardsHTML = '';
-        const displayFarms = farmList.slice(0, 4);
+        // 이미지 로드 상태 확인
+        setTimeout(checkFarmImagesLoaded, 100);
         
-        if (displayFarms.length > 0) {
-          farmCardsHTML = displayFarms.map(farm => `
-            <div class="farm-card">
-              <div class="farm-img">
-                <img 
-                  src="${contextPath}/assets/images/farms/${farm.farmImg}" 
-                  alt="${farm.name}" 
-                  onerror="this.src='https://picsum.photos/seed/farm${farm.farmId}/300/250'"
-                />
-              </div>
-              <div class="farm-info">
-                <h3 class="farm-name">${farm.name}</h3>
-                <p class="farm-desc">${farm.description}</p>
-                <p class="farm-location"><i class="fas fa-map-marker-alt"></i>${farm.address}</p>
-              </div>
-            </div>
-          `).join('');
-        } else {
-          // 기본 예시 농가들
-          farmCardsHTML = `
-            <div class="farm-card">
-              <div class="farm-img">
-                <img src="https://picsum.photos/seed/farm1/300/250" alt="농가 사진" />
-              </div>
-              <div class="farm-info">
-                <h3 class="farm-name">그린 팜</h3>
-                <p class="farm-desc">유기농 채소 전문 농장</p>
-                <p class="farm-location"><i class="fas fa-map-marker-alt"></i>강원도 원주시</p>
-              </div>
-            </div>
-            <div class="farm-card">
-              <div class="farm-img">
-                <img src="https://picsum.photos/seed/farm2/300/250" alt="농가 사진" />
-              </div>
-              <div class="farm-info">
-                <h3 class="farm-name">자연 농원</h3>
-                <p class="farm-desc">친환경 과일 농장</p>
-                <p class="farm-location"><i class="fas fa-map-marker-alt"></i>경상북도 상주시</p>
-              </div>
-            </div>
-            <div class="farm-card">
-              <div class="farm-img">
-                <img src="https://picsum.photos/seed/farm3/300/250" alt="농가 사진" />
-              </div>
-              <div class="farm-info">
-                <h3 class="farm-name">평화 목장</h3>
-                <p class="farm-desc">무항생제 유기농 목장</p>
-                <p class="farm-location"><i class="fas fa-map-marker-alt"></i>전라남도 순천시</p>
-              </div>
-            </div>
-            <div class="farm-card">
-              <div class="farm-img">
-                <img src="https://picsum.photos/seed/farm4/300/250" alt="농가 사진" />
-              </div>
-              <div class="farm-info">
-                <h3 class="farm-name">행복 농장</h3>
-                <p class="farm-desc">제철 채소 전문 농장</p>
-                <p class="farm-location"><i class="fas fa-map-marker-alt"></i>충청남도 공주시</p>
-              </div>
-            </div>
-          `;
-        }
+        // 슬라이더 초기화
+        setTimeout(initFarmSlider, 300);
         
-        // 농가 섹션 HTML 추가
-        container.innerHTML = `
-          <section class="farm-intro">
-            <h2 class="section-title">농가 소개</h2>
-            <div class="farm-intro-header">
-              <div class="farm-count">현재 협약 중인 농가 <strong>${farmCount > 0 ? farmCount : '10+'}</strong> 곳</div>
-              <a href="${contextPath}/front?key=farm&methodName=list" class="view-more-btn">농가 더보기</a>
-            </div>
-            <div class="farm-slider">
-              <button class="arrow arrow-left">
-                <i class="fas fa-chevron-left"></i>
-              </button>
-              <div class="farm-container" style="display: flex; gap: 20px; transition: transform 0.3s ease; overflow: hidden;">
-                ${farmCardsHTML}
-              </div>
-              <button class="arrow arrow-right">
-                <i class="fas fa-chevron-right"></i>
-              </button>
-            </div>
-          </section>
-        `;
-        
-        // 농가 슬라이더 초기화 - DOM이 완전히 렌더링된 후 실행
-        setTimeout(() => {
-          if (typeof initFarmSlider === "function") {
-            try {
-              initFarmSlider();
-            } catch (error) {
-              console.error("농가 슬라이더 초기화 오류:", error);
-            }
-          }
-        }, 300);
-
-        return "farm"; // 성공적으로 로드되었음을 알림
+        return 'farm-success';
       })
       .catch(error => {
-        console.error("농가 섹션 로딩 실패:", error);
+        console.error('[농가 데이터] 로드 오류:', error);
         container.innerHTML = `
-          <section class="farm-intro">
-            <h2 class="section-title">농가 소개</h2>
-            <div class="farm-intro-header">
-              <div class="farm-count">현재 협약 중인 농가 <strong>10+</strong> 곳</div>
-              <a href="${contextPath}/front?key=farm&methodName=list" class="view-more-btn">농가 더보기</a>
+          <div class="farm-error-container">
+            <div class="error-message">
+              <p>농가 정보를 불러오는데 실패했습니다</p>
+              <p class="error-details">${error.message}</p>
             </div>
-            <div class="error-message">농가 정보를 로드하는 중 오류가 발생했습니다.</div>
-          </section>
+            <button class="retry-button" onclick="retryLoadFarm('${containerId}')">
+              <i class="fas fa-sync-alt"></i> 다시 시도
+            </button>
+          </div>
         `;
-        return "farm-error";
+        return 'farm-error';
       });
+  }
+
+  // farm-section이 로드된 후 이미지 패스 디버깅
+  function logFarmImagesPath() {
+    const farmImages = document.querySelectorAll('.farm-img img');
+    console.log(`[농가 이미지] 총 ${farmImages.length}개 이미지 찾음`);
+    
+    farmImages.forEach((img, index) => {
+      console.log(`[농가 이미지 #${index}] src: ${img.src}, alt: ${img.alt}`);
+      // 이미지 로드 이벤트 리스너 추가
+      img.addEventListener('error', function() {
+        console.error(`[농가 이미지 #${index}] 이미지 로드 실패: ${img.src}`);
+        // 기본 이미지 설정 (이미 onerror에 설정되어 있지만 명시적으로 설정)
+        this.src = `${window.contextPath || ''}/images/farm/default-farm.jpg`;
+      });
+      
+      // 이미지가 이미 로드된 경우를 대비하여 현재 완료 상태 확인
+      if (img.complete) {
+        if (img.naturalHeight === 0) {
+          console.warn(`[농가 이미지 #${index}] 이미지가 로드되었지만 내용이 없음: ${img.src}`);
+        } else {
+          console.log(`[농가 이미지 #${index}] 이미 로드됨: ${img.naturalWidth}x${img.naturalHeight}`);
+        }
+      }
+    });
+  }
+
+  // 재시도 함수
+  window.retryLoadFarm = function(containerId) {
+    console.log('[농가 데이터] 재시도');
+    loadFarmSection(containerId);
+  };
+
+  // 농가 슬라이더 초기화 함수
+  function initFarmSlider() {
+    const container = document.querySelector('.farm-container');
+    const leftArrow = document.querySelector('.farm-slider .arrow-left');
+    const rightArrow = document.querySelector('.farm-slider .arrow-right');
+    
+    if (!container || !leftArrow || !rightArrow) {
+      console.warn('[농가 슬라이더] 슬라이더 요소를 찾을 수 없습니다.');
+      return;
+    }
+    
+    let position = 0;
+    const itemWidth = 280; // 카드 하나당 대략적인 너비 + 간격
+    const farmCards = container.querySelectorAll('.farm-card');
+    const maxPosition = Math.max(0, farmCards.length - 4) * itemWidth;
+    
+    // 초기 상태 설정
+    container.style.transition = 'transform 0.3s ease';
+    
+    // 화살표 버튼 이벤트 리스너
+    leftArrow.addEventListener('click', function() {
+      position = Math.max(0, position - itemWidth);
+      container.style.transform = `translateX(-${position}px)`;
+    });
+    
+    rightArrow.addEventListener('click', function() {
+      position = Math.min(maxPosition, position + itemWidth);
+      container.style.transform = `translateX(-${position}px)`;
+    });
+    
+    console.log('[농가 슬라이더] 초기화 완료');
   }
 
   // 콘솔에 로딩 상태 메시지 표시
@@ -246,31 +248,33 @@ document.addEventListener("DOMContentLoaded", function () {
     { name: "salad", id: "salad-container" },
   ];
 
-  // 카테고리 로딩 순서대로 처리
+  // 카테고리 로딩 부분에 농가 섹션도 추가
   categories
-    .reduce((promise, category) => {
-      return promise
-        .then(() => {
-          logLoadingStatus(category.name, "로딩 시작");
-          return loadCategorySection(category.name, category.id);
-        })
-        .then(() => {
-          logLoadingStatus(category.name, "로딩 완료");
-        })
-        .catch((error) => {
-          logLoadingStatus(category.name, `로딩 실패: ${error}`);
-        });
-    }, Promise.resolve())
-    .then(() => {
-      // 모든 카테고리 로딩 후 농가 섹션 로드
-      logLoadingStatus("farm", "로딩 시작");
-      return loadFarmSection("farm-container");
-    })
-    .then(() => {
-      logLoadingStatus("farm", "로딩 완료");
-      console.log("[카테고리 로더] 모든 섹션 로딩 완료");
-    })
-    .catch((error) => {
-      logLoadingStatus("farm", `로딩 실패: ${error}`);
-    });
+  .reduce((promise, category) => {
+    return promise
+      .then(() => {
+        logLoadingStatus(category.name, "로딩 시작");
+        return loadCategorySection(category.name, category.id);
+      })
+      .then(() => {
+        logLoadingStatus(category.name, "로딩 완료");
+      })
+      .catch((error) => {
+        logLoadingStatus(category.name, `로딩 실패: ${error}`);
+      });
+  }, Promise.resolve())
+  .then(() => {
+    // 모든 제품 카테고리 로드 후 농가 섹션 로드
+    logLoadingStatus("farm", "로딩 시작");
+    return loadFarmSection("farm-container");
+  })
+  .then(() => {
+    console.log("[카테고리 로더] 모든 섹션 로딩 완료");
+  })
+  .catch((error) => {
+    console.error("[카테고리 로더] 초기화 중 오류:", error);
+  });
+    
+  // 전역 스코프에 함수 노출
+  window.initFarmSlider = initFarmSlider;
 });

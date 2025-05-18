@@ -27,6 +27,11 @@
   border-top: 4px solid #69db7c;
 }
 
+/* 농가 소개 섹션 상단 액센트 추가 */
+#farm-preview {
+  border-top: 4px solid #00c471;
+}
+
 /* 각 섹션별 타이틀 색상 - 초록색 계열로 통일 */
 #best-preview .section-title {
   color: #2ecc71;
@@ -42,6 +47,11 @@
 
 #salad-preview .section-title {
   color: #2b8a3e;
+}
+
+/* 농가 소개 섹션 타이틀 색상 */
+#farm-preview .section-title {
+  color: #00c471;
 }
 
 /* 섹션 배경 효과 */
@@ -73,6 +83,11 @@
   background-color: #69db7c;
 }
 
+/* 농가 소개 섹션 배경 효과 */
+#farm-preview::before {
+  background-color: #00c471;
+}
+
 /* 로딩 표시기 스타일 */
 .loading-indicator {
   display: flex;
@@ -98,6 +113,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -120,6 +136,14 @@
   position: relative;
   text-align: center;
   color: #333;
+}
+
+/* 섹션 헤더 스타일 - 더보기 버튼을 오른쪽으로 배치 */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 /* 초록색 선 제거 - after 가상요소 제거 */
@@ -186,6 +210,16 @@
   border: 1px solid #8ce99a;
 }
 
+/* 농가 소개 섹션 더보기 버튼 스타일 */
+#farm-preview .view-more-btn {
+  background-color: #e1f5ed;
+  color: #00c471;
+  border: 1px solid #00c471;
+  display: inline-block;
+  text-decoration: none;
+  font-size: 14px;
+}
+
 /* 각 섹션별 제품 그리드 악센트 - 초록색 계열로 통일 */
 #best-preview .product-grid {
   border-left: 2px solid rgba(46, 204, 113, 0.2);
@@ -207,8 +241,14 @@
   padding-left: 15px;
 }
 
+/* 농가 컨테이너 왼쪽 테두리 스타일 */
+#farm-preview .farm-container {
+  border-left: 2px solid rgba(0, 196, 113, 0.2);
+  padding-left: 15px;
+}
+
 /* 섹션 간 분리 영역 */
-.category-section-preview + .category-section-preview {
+.category-section-preview+.category-section-preview {
   margin-top: 80px;
 }
 
@@ -234,6 +274,12 @@
 
 #salad-preview .view-more-btn:hover {
   background-color: #2b8a3e;
+  color: white;
+}
+
+/* 농가 더보기 버튼 호버 효과 */
+#farm-preview .view-more-btn:hover {
+  background-color: #00c471;
   color: white;
 }
 

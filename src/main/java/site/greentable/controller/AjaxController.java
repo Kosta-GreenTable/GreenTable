@@ -1,10 +1,18 @@
 package site.greentable.controller;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import site.greentable.dto.Farm;
 import site.greentable.dto.Product;
+import site.greentable.service.FarmService;
+import site.greentable.service.FarmServiceImpl;
 import site.greentable.service.ProductService;
 import site.greentable.service.ProductServiceImpl;
 
@@ -14,6 +22,8 @@ import site.greentable.service.ProductServiceImpl;
 public class AjaxController implements RestController {
 
     private ProductService productService = new ProductServiceImpl();
+    private FarmService farmService = new FarmServiceImpl();
+    private Gson gson = new Gson();
 
     /**
      * 상품 재고를 확인하는 메소드
