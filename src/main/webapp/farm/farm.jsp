@@ -23,8 +23,150 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     />
     <link
       rel="stylesheet"
+      href="${pageContext.request.contextPath}/css/farm-detail-styles.css"
+    />
+    <link
+      rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
+    <style>
+      /* 인라인 스타일은 최소화하고 외부 CSS 파일로 관리 */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .farm-page {
+        margin-top: 20px;
+        margin-bottom: 50px;
+      }
+
+      .farm-card {
+        height: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background-color: #ffffff;
+      }
+
+      .farm-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .farm-card a {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .farm-img img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .farm-card:hover .farm-img img {
+        transform: scale(1.05);
+      }
+
+      .farm-card .farm-info {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+      }
+
+      .farm-card .farm-name {
+        font-size: 18px;
+        margin-bottom: 8px;
+        color: #333;
+      }
+
+      .farm-card .farm-desc {
+        color: #666;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      .farm-card .farm-location {
+        color: #888;
+        font-size: 13px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      .farm-card .farm-location i {
+        color: #00c471;
+        margin-right: 5px;
+      }
+
+      .farm-card .farm-detail {
+        margin-top: auto;
+        padding-top: 10px;
+        border-top: 1px solid #eee;
+        font-size: 13px;
+        color: #777;
+      }
+
+      .no-farms-message {
+        grid-column: 1/-1;
+        text-align: center;
+        padding: 40px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        color: #666;
+      }
+
+      .no-farms-message p:first-child {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      /* 품질 관리 섹션 스타일 수정 */
+      .quality-control-section {
+        padding: 60px 0;
+        background-color: #f8f9fa;
+      }
+
+      .quality-control-section .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .quality-control-section .section-title {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .quality-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 30px;
+        justify-items: center;
+      }
+
+      .quality-step {
+        width: 100%;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 25px 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .quality-step:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+    </style>
   </head>
   <body>
     <!-- 헤더 인클루드 -->
@@ -99,177 +241,41 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             <c:choose>
               <c:when test="${not empty farmList}">
                 <c:forEach var="farm" items="${farmList}">
-                  <%-- 농가 카드 시작 - 데이터베이스의 정보로 대체 --%>
+                  <%-- 농가 카드 시작 - 데이터베이스의 정보로 표시 --%>
                   <div class="farm-card" data-category="${farm.category}">
-                    <div class="farm-img">
-                      <img
-                        src="${pageContext.request.contextPath}/assets/images/farms/${farm.farmImg}"
-                        alt="${farm.name} 이미지"
-                        onerror="this.src='https://picsum.photos/seed/farm${farm.farmId}/300/250'"
-                      />
-                    </div>
-                    <div class="farm-info">
-                      <h3 class="farm-name">${farm.name}</h3>
-                      <p class="farm-desc">${farm.description}</p>
-                      <p class="farm-location">
-                        <i class="fas fa-map-marker-alt"></i>${farm.address}
-                      </p>
-                      <div class="farm-detail">
-                        <p>${farm.detailDescription}</p>
-                        <c:if test="${not empty farm.mainProducts}">
-                          <p>주요 작물: ${farm.mainProducts}</p>
-                        </c:if>
+                    <a
+                      href="${pageContext.request.contextPath}/front?key=farm&methodName=detail&farmId=${farm.farmId}"
+                      class="farm-card-link"
+                    >
+                      <div class="farm-img">
+                        <img
+                          src="${pageContext.request.contextPath}/assets/images/farms/${farm.farmImg}"
+                          alt="${farm.name} 이미지"
+                          onerror="this.onerror=null; this.src='https://picsum.photos/seed/farm${farm.farmId}/300/250';"
+                        />
                       </div>
-                    </div>
+                      <div class="farm-info">
+                        <h3 class="farm-name">${farm.name}</h3>
+                        <p class="farm-desc">${farm.description}</p>
+                        <p class="farm-location">
+                          <i class="fas fa-map-marker-alt"></i> ${farm.address}
+                        </p>
+                        <div class="farm-detail">
+                          <p>${farm.detailDescription}</p>
+                          <c:if test="${not empty farm.mainProducts}">
+                            <p>주요 작물: ${farm.mainProducts}</p>
+                          </c:if>
+                        </div>
+                      </div>
+                    </a>
                   </div>
                   <%-- 농가 카드 끝 --%>
                 </c:forEach>
               </c:when>
               <c:otherwise>
-                <%-- 데이터가 없을 경우 기본 예시 농가들 표시 --%>
-                <!-- 농가 카드 1 -->
-                <div class="farm-card" data-category="vege">
-                  <div class="farm-img">
-                    <img
-                      src="https://picsum.photos/seed/farm1/300/250"
-                      alt="그린 팜 농장 이미지"
-                    />
-                  </div>
-                  <div class="farm-info">
-                    <h3 class="farm-name">그린 팜</h3>
-                    <p class="farm-desc">유기농 채소 전문 농장</p>
-                    <p class="farm-location">
-                      <i class="fas fa-map-marker-alt"></i>강원도 원주시
-                    </p>
-                    <div class="farm-detail">
-                      <p>
-                        2010년부터 친환경 농법으로 채소를 재배해온 그린 팜은
-                        깨끗한 강원도의 자연환경 속에서 건강한 채소를
-                        생산합니다.
-                      </p>
-                      <p>주요 작물: 상추, 시금치, 깻잎, 쌈채소</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 농가 카드 2 -->
-                <div class="farm-card" data-category="fruit">
-                  <div class="farm-img">
-                    <img
-                      src="https://picsum.photos/seed/farm2/300/250"
-                      alt="자연 농원 농장 이미지"
-                    />
-                  </div>
-                  <div class="farm-info">
-                    <h3 class="farm-name">자연 농원</h3>
-                    <p class="farm-desc">친환경 과일 농장</p>
-                    <p class="farm-location">
-                      <i class="fas fa-map-marker-alt"></i>경상북도 상주시
-                    </p>
-                    <div class="farm-detail">
-                      <p>
-                        3대째 이어온 과수원으로, 최소한의 농약만을 사용하여
-                        안전하고 맛있는 과일을 생산합니다.
-                      </p>
-                      <p>주요 작물: 사과, 배, 복숭아, 자두</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 농가 카드 3 -->
-                <div class="farm-card" data-category="dairy">
-                  <div class="farm-img">
-                    <img
-                      src="https://picsum.photos/seed/farm3/300/250"
-                      alt="평화 목장 이미지"
-                    />
-                  </div>
-                  <div class="farm-info">
-                    <h3 class="farm-name">평화 목장</h3>
-                    <p class="farm-desc">무항생제 유기농 목장</p>
-                    <p class="farm-location">
-                      <i class="fas fa-map-marker-alt"></i>전라남도 순천시
-                    </p>
-                    <div class="farm-detail">
-                      <p>
-                        넓은 초원에서 자유롭게 풀을 뜯는 소들을 통해 건강한
-                        우유와 유제품을 만듭니다.
-                      </p>
-                      <p>주요 제품: 우유, 요거트, 치즈</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 농가 카드 4 -->
-                <div class="farm-card" data-category="vege">
-                  <div class="farm-img">
-                    <img
-                      src="https://picsum.photos/seed/farm4/300/250"
-                      alt="행복 농장 이미지"
-                    />
-                  </div>
-                  <div class="farm-info">
-                    <h3 class="farm-name">행복 농장</h3>
-                    <p class="farm-desc">제철 채소 전문 농장</p>
-                    <p class="farm-location">
-                      <i class="fas fa-map-marker-alt"></i>충청남도 공주시
-                    </p>
-                    <div class="farm-detail">
-                      <p>
-                        20년 경력의 농부가 계절마다 가장 맛있는 제철 채소를
-                        정성껏 재배합니다.
-                      </p>
-                      <p>주요 작물: 토마토, 오이, 가지, 파프리카</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 농가 카드 5 -->
-                <div class="farm-card" data-category="others">
-                  <div class="farm-img">
-                    <img
-                      src="https://picsum.photos/seed/farm5/300/250"
-                      alt="들판 양봉원 이미지"
-                    />
-                  </div>
-                  <div class="farm-info">
-                    <h3 class="farm-name">들판 양봉원</h3>
-                    <p class="farm-desc">친환경 꿀 전문 양봉장</p>
-                    <p class="farm-location">
-                      <i class="fas fa-map-marker-alt"></i>경상남도 하동군
-                    </p>
-                    <div class="farm-detail">
-                      <p>
-                        청정지역에서 자연 그대로의 벌꿀을 채취하여 건강하고
-                        달콤한 꿀을 생산합니다.
-                      </p>
-                      <p>주요 제품: 아카시아꿀, 밤꿀, 잡화꿀, 프로폴리스</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 농가 카드 6 -->
-                <div class="farm-card" data-category="fruit">
-                  <div class="farm-img">
-                    <img
-                      src="https://picsum.photos/seed/farm6/300/250"
-                      alt="햇살농원 이미지"
-                    />
-                  </div>
-                  <div class="farm-info">
-                    <h3 class="farm-name">햇살농원</h3>
-                    <p class="farm-desc">유기농 딸기 전문 농장</p>
-                    <p class="farm-location">
-                      <i class="fas fa-map-marker-alt"></i>충청북도 청주시
-                    </p>
-                    <div class="farm-detail">
-                      <p>
-                        천연 퇴비만을 사용하여 건강하고 달콤한 딸기를 연중
-                        재배합니다.
-                      </p>
-                      <p>주요 작물: 설향딸기, 장희딸기, 금실딸기</p>
-                    </div>
-                  </div>
+                <div class="no-farms-message">
+                  <p>등록된 농가가 없습니다.</p>
+                  <p>곧 다양한 협력 농가들을 소개해 드릴 예정입니다.</p>
                 </div>
               </c:otherwise>
             </c:choose>
@@ -277,10 +283,13 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         </div>
       </section>
 
-      <!-- 품질 관리 섹션 -->
+      <!-- 품질 관리 섹션 수정 -->
       <section class="quality-control-section">
         <div class="container">
           <h2 class="section-title">그린테이블 품질 관리</h2>
+          <p class="quality-intro">
+            그린테이블은 철저한 품질 관리 시스템을 통해 최상의 제품만을 고객님께 전달합니다.
+          </p>
           <div class="quality-steps">
             <div class="quality-step">
               <div class="step-icon">
@@ -313,12 +322,48 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           </div>
         </div>
       </section>
-    </main>
 
     <!-- 푸터 인클루드 -->
     <jsp:include page="../common/footer.jsp" />
 
     <!-- 자바스크립트 -->
     <script src="${pageContext.request.contextPath}/js/farm.js"></script>
+    <script>
+      // 농가 필터링 기능
+      document.addEventListener("DOMContentLoaded", function () {
+        const filterButtons = document.querySelectorAll(".farm-filter-btn");
+        const farmCards = document.querySelectorAll(".farm-card");
+
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            // 버튼 활성화 상태 전환
+            filterButtons.forEach((btn) => btn.classList.remove("active"));
+            this.classList.add("active");
+
+            const filter = this.getAttribute("data-filter");
+
+            // 농가 카드 필터링
+            farmCards.forEach((card) => {
+              if (
+                filter === "all" ||
+                card.getAttribute("data-category") === filter
+              ) {
+                card.style.display = "";
+                setTimeout(() => {
+                  card.style.opacity = "1";
+                  card.style.transform = "translateY(0)";
+                }, 10);
+              } else {
+                card.style.opacity = "0";
+                card.style.transform = "translateY(20px)";
+                setTimeout(() => {
+                  card.style.display = "none";
+                }, 300);
+              }
+            });
+          });
+        });
+      });
+    </script>
   </body>
 </html>

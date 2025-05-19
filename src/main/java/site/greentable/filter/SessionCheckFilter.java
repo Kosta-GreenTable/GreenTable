@@ -56,7 +56,7 @@ public class SessionCheckFilter implements Filter {
 
 			HttpSession session = req.getSession();
 
-			if (session.getAttribute("userId") == null) {
+			if (session.getAttribute("loginUser") == null) {
 				// 동기 요청일 경우 에러 메시지 세팅 후 401에러페이지로 포워딩한다
 				if (requestURI.contains("front")) {
 					req.setAttribute("error", new Exception("로그인하고 이용해주세요^^."));

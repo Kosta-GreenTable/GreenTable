@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Env {
-	public static Properties pr;
+	public static Properties pr = new Properties();
 
 	static {
 		InputStream is = Env.class.getClassLoader().getResourceAsStream("env.properties");

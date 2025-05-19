@@ -116,4 +116,13 @@ public interface ProductDAO {
      * 샐러드 상품 개수 조회
      */
     int getSaladProductCount() throws SQLException;
+
+    /**
+     * 추천 상품 목록 조회
+     * 
+     * @param productId 현재 조회 중인 상품 ID
+     * @param limit     조회할 추천 상품 개수
+     * @return 추천 상품 목록
+     */
+    List<Product> selectRecommendedProducts(int productId, int limit) throws SQLException;
 }

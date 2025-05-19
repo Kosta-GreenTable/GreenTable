@@ -1,6 +1,7 @@
 package site.greentable.controller;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import site.greentable.exception.UnAuthorizedException;
 		maxFileSize = 1024 * 1024 * 5, // 5M - 한 번에 업로드 할 수 있는 파일 크기 제한
 		maxRequestSize = 1024 * 1024 * 50 // 50M -전체 요청의 크기 제한. 기본값은 무제한
 )
-@WebServlet(urlPatterns = "/front", loadOnStartup = 1)
+@WebServlet(urlPatterns = "/front", loadOnStartup = 2)
 public class DispatcherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -36,6 +37,8 @@ public class DispatcherServlet extends HttpServlet {
 		System.out.println("DispatcherServlet init....");
 		ServletContext application = super.getServletContext();
 		map = (Map<String, Controller>) application.getAttribute("map");
+		
+		System.out.println("======= DispatcherServlet init(), map: " + map);
 
 	}
 
@@ -44,13 +47,16 @@ public class DispatcherServlet extends HttpServlet {
 
 		String key = request.getParameter("key");
 		String methodName = request.getParameter("methodName");
+		Controller controller = map.get(key);
+		
+		System.out.println("==================DispatcherServlet.service() called  ================");
+		System.out.println("key=" + key + ", methodName=" + methodName);
+		System.out.println("Controller instance: " + controller);
+
 
 		try {
 
 			Controller con = map.get(key);
-			System.out.println("요청 key = " + key);
-			System.out.println("요청 method = " + methodName);
-			System.out.println("컨트롤러 = " + con);
 
 			if (con == null) {
 				throw new NotFoundException("잘못된 경로입니다");
@@ -73,16 +79,16 @@ public class DispatcherServlet extends HttpServlet {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("error", e);
-			if (e instanceof BadRequestException) {
+			request.setAttribute("error", e.getCause());
+			if (e.getCause() instanceof BadRequestException) {
 				request.getRequestDispatcher("/error/400.jsp").forward(request, response);
-			} else if (e instanceof UnAuthorizedException) {
+			} else if (e.getCause() instanceof UnAuthorizedException) {
 				request.getRequestDispatcher("/error/401.jsp").forward(request, response);
-			} else if (e instanceof ForbiddenException) {
+			} else if (e.getCause() instanceof ForbiddenException) {
 				request.getRequestDispatcher("/error/403.jsp").forward(request, response);
-			} else if (e instanceof NotFoundException) {
+			} else if (e.getCause() instanceof NotFoundException) {
 				request.getRequestDispatcher("/error/404.jsp").forward(request, response);
-			} else if (e instanceof MethodNotAllowedException) {
+			} else if (e.getCause() instanceof MethodNotAllowedException) {
 				request.getRequestDispatcher("/error/405.jsp").forward(request, response);
 			} else {
 				request.getRequestDispatcher("/error/500.jsp").forward(request, response);

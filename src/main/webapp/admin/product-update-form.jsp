@@ -11,33 +11,15 @@
 </head>
 <body>
     <div class="admin-container">
-        <!-- 사이드 메뉴 -->
-        <aside class="admin-sidebar">
-            <div class="admin-logo">
-                <h2>그린테이블 관리자</h2>
-            </div>
-            <nav class="admin-nav">
-                <ul>
-                    <li><a href="${pageContext.request.contextPath}/admin/index.jsp"><i class="fas fa-home"></i> 대시보드</a></li>
-                    <li class="active"><a href="${pageContext.request.contextPath}/front?key=admin&methodName=productList"><i class="fas fa-box"></i> 상품 관리</a></li>
-                    <li><a href="#"><i class="fas fa-users"></i> 회원 관리</a></li>
-                    <li><a href="#"><i class="fas fa-shopping-cart"></i> 주문 관리</a></li>
-                    <li><a href="#"><i class="fas fa-chart-line"></i> 통계</a></li>
-                    <li><a href="#"><i class="fas fa-cog"></i> 설정</a></li>
-                </ul>
-            </nav>
-        </aside>
+        <!-- 사이드바 포함 -->
+        <jsp:include page="common/admin-sidebar.jsp" />
 
         <!-- 메인 내용 -->
         <main class="admin-content">
-            <header class="admin-header">
-                <h1>상품 수정</h1>
-                <div class="admin-user">
-                    <span>관리자</span>
-                    <a href="${pageContext.request.contextPath}/" class="btn-secondary"><i class="fas fa-home"></i> 사이트로 이동</a>
-                    <button class="btn-danger"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
-                </div>
-            </header>
+            <!-- 상단 헤더 포함 -->
+            <jsp:include page="common/admin-top-header.jsp">
+                <jsp:param name="pageTitle" value="상품 수정" />
+            </jsp:include>
 
             <div class="product-form-container">
                 <div class="form-navigation">

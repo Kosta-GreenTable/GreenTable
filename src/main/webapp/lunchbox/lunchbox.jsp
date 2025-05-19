@@ -48,8 +48,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       <div class="product-header">
         <div class="product-count">
           총
-          <strong>${totalPages > 0 ? totalPages * PageCnt.pagesize : 0}</strong
-          >개 상품
+          <strong>${not empty productList ? productList.size() : 0}</strong>개
+          상품
         </div>
         <div class="product-sort">
           <button data-sort="popular">인기순</button>
