@@ -1,0 +1,57 @@
+/* 베스트 상품 배지 스타일 */
+.best-badge {
+  position: absolute;
+  background-color: #ff6b6b;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* BEST 상위 3개 특별 스타일 */
+.product-item[data-best-rank="1"] .best-badge {
+  background-color: #FF4500;
+}
+
+.product-item[data-best-rank="2"] .best-badge {
+  background-color: #FF4500;
+}
+
+.product-item[data-best-rank="3"] .best-badge {
+  background-color: #FF4500;
+}
+
+/* 정렬 버튼 활성화 스타일 수정 */
+.product-sort button.active {
+  color: #00c471;
+  font-weight: 600;
+  border-bottom: 2px solid #00c471;
+  background-color: transparent;
+}
+
+/* 기존 버튼 스타일 재정의 */
+.product-sort button {
+  background-color: transparent;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.product-sort button:hover {
+  color: #00c471;
+}
+
+/* 헤더에 표시되는 BEST 배지 제거 */
+body>.best-badge,
+header .best-badge,
+.navigation .best-badge,
+.site-header .best-badge,
+.main-nav .best-badge,
+nav .best-badge,
+.category-banner .best-badge {
+  display: none !important;
+}
