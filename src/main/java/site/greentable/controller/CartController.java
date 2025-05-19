@@ -6,9 +6,11 @@ import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import site.greentable.dto.CartDTO;
 import site.greentable.dto.Product;
 import site.greentable.exception.NotFoundException;
+import site.greentable.exception.UnAuthorizedException;
 import site.greentable.service.CartService;
 import site.greentable.service.CartServiceImpl;
 import site.greentable.service.ProductService;
@@ -27,7 +29,11 @@ public class CartController implements Controller {
 	 * */
 	public ModelAndView selectCartByUserId(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-			int userId = Integer.parseInt(request.getParameter("userId"));
+			//int userId = Integer.parseInt(request.getParameter("userId"));
+			//세션에서 userId 가져오기
+			HttpSession session = request.getSession();
+		    Integer userId = (Integer) session.getAttribute("userId");
+		    if (userId == null) throw new UnAuthorizedException("로그인이 필요합니다.");
 
 			Map<String, Object> priceMap = cartService.calculateCartPrices(userId);
 	        
@@ -47,14 +53,16 @@ public class CartController implements Controller {
 	 * */
 	public ModelAndView insertCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-			int userId = Integer.parseInt(request.getParameter("userId"));
+			HttpSession session = request.getSession();
+		    Integer userId = (Integer) session.getAttribute("userId");
+		    if (userId == null) throw new UnAuthorizedException("로그인이 필요합니다.");
+			
 			int productId = Integer.parseInt(request.getParameter("productId"));
 			int quantity = Integer.parseInt(request.getParameter("quantity"));
 			
 			// 상품 DB에서 정확한 할인율 다시 조회
 		    Product product = productService.getProductDetail(productId);
 			
-			// 예외 처리
 			if (product == null) throw new NotFoundException("상품 정보를 찾을 수 없습니다.");
 			
 			CartDTO cart = new CartDTO(quantity, productId, userId);

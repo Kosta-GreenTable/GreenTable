@@ -46,17 +46,20 @@ public class AjaxDispatcherServlet extends HttpServlet {
 		String key = request.getParameter("key"); // customer
 		String methodName = request.getParameter("methodName"); // idCheck , insert , selectAll
 		response.setContentType("application/json;charset=utf-8");
-
+		
 		try {
 			RestController controller = ajaxMap.get(key);
 			Method method = controller.getClass().getMethod(methodName, HttpServletRequest.class,
 					HttpServletResponse.class);
 
+			System.out.println("ajax 요청 key = " + key + " | 요청 method = " + methodName);
+			System.out.println("ajax 응답 컨트롤러 = " + controller + " | 응답 method = " + method);
+			
 			Object obj = method.invoke(controller, request, response);
 
 			String data = gson.toJson(obj);
 //			System.out.println("data = " + data);
-
+			
 			response.getWriter().print(data);
 
 		} catch (Exception e) {

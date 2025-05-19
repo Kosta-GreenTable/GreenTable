@@ -18,8 +18,8 @@ public class CartDaoImpl implements CartDAO {
 	private Properties proFile = new Properties();
 
 	public CartDaoImpl() {
-		
 		try {
+			// properties 파일 로딩
 			InputStream is = getClass().getClassLoader().getResourceAsStream("dbQuery.properties");
 			proFile.load(is);
 		} catch (Exception e) {

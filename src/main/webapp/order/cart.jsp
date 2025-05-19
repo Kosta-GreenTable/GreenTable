@@ -87,12 +87,17 @@
           <p class="price-cell"><fmt:formatNumber value="${totalPayPrice}" />원</p>
         </div>
       </div>
-      <div class="cart-buttons">
-        <button class="continue-btn">쇼핑 계속하기</button>
-        <button class="order-selected-btn">선택 상품 주문</button>
-        <button class="order-all-btn">전체 주문</button>
-      </div>
-    	
+      <form id="orderForm" method="post" action="${pageContext.request.contextPath}/ajax?key=orderRest&methodName=processOrder" >
+	      <input type="hidden" name="productIds" id="productIds" >
+		    <input type="hidden" name="quantity" id="quantity">
+			      
+	      <div class="cart-buttons">
+	        <button type="button" class="continue-btn">쇼핑 계속하기</button>
+	        <button type="button" class="order-selected-btn">선택 상품 주문</button>
+	        <button type="button" class="order-all-btn">전체 주문</button>
+	      </div>
+      </form>
+     
       </c:otherwise>
     </c:choose>
       

@@ -142,7 +142,8 @@ CREATE TABLE carts (
 	product_id	INT			NOT NULL,
 	user_id		INT			NOT NULL,
     FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES user_login(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (user_id) REFERENCES user_login(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE KEY uq_user_product (user_id, product_id)
 );
 
 CREATE TABLE product_qna (
@@ -168,16 +169,20 @@ CREATE TABLE order_seq (
 
 CREATE TABLE orders (
 	order_id			INT				PRIMARY KEY,
-	order_code			VARCHAR(50)		NOT NULL	UNIQUE,
-	order_name			VARCHAR(20)		NOT NULL,
-	order_phone			VARCHAR(20)		NOT NULL,
-	zip_code			INT				NOT NULL,
-	shipping_address	VARCHAR(255)	NOT NULL,
-	detail_address		VARCHAR(40)		NOT NULL,
-	total_price			INT				NOT NULL,
+	merchant_uid		VARCHAR(50)		NOT NULL	UNIQUE,
+	customer_name		VARCHAR(20)		NOT NULL,
+	customer_phone		VARCHAR(20)		NOT NULL,
+	customer_email 		VARCHAR(50) 	NOT NULL,
+    recipient			VARCHAR(20)		NOT NULL,
+    recipient_phone		VARCHAR(20)		NOT NULL,
+    zip_code			VARCHAR(20)  	NOT NULL,
+	address				VARCHAR(255)	NOT NULL,
+	address_detail		VARCHAR(255),
+	guest_password      VARCHAR(255),
+    total_amount		INT				NOT NULL,
 	used_point			INT				NOT NULL	DEFAULT 0,
 	order_status	ENUM('배송준비중','배송중','배송완료','주문취소','환불신청','환불완료')	NOT NULL	DEFAULT '배송준비중',
-	order_date			DATETIME		NOT NULL	DEFAULT now(),
+	order_at			DATETIME		NOT NULL	DEFAULT now(),
 	user_id				INT,
     FOREIGN KEY (order_id) REFERENCES order_seq(order_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES user_login(user_id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -195,16 +200,19 @@ CREATE TABLE order_details (
 
 CREATE TABLE subscription_orders (
 	order_id			INT				PRIMARY KEY,
-	order_code			VARCHAR(50)		NOT NULL,
-	order_name			VARCHAR(20)		NOT NULL,
-	order_phone			VARCHAR(20)		NOT NULL,
-	zip_code			INT				NOT NULL,
-	shipping_address	VARCHAR(255)	NOT NULL,
-	detail_address		VARCHAR(40)		NOT NULL,
-	total_price			INT				NOT NULL,
+	merchant_uid		VARCHAR(100)	NOT NULL,
+	customer_name		VARCHAR(20)		NOT NULL,
+	customer_phone		VARCHAR(20)		NOT NULL,
+    customer_email 		VARCHAR(50) 	NOT NULL,
+    recipient			VARCHAR(20)		NOT NULL,
+    recipient_phone		VARCHAR(20)		NOT NULL,
+	zip_code			VARCHAR(20)  	NOT NULL,
+	address				VARCHAR(255)	NOT NULL,
+	address_detail		VARCHAR(255),
+	total_amount		INT				NOT NULL,
 	used_point			INT				NOT NULL	DEFAULT 0,
 	order_status	ENUM('배송준비중','배송중', '배송완료','주문취소','환불신청', '환불완료')	NOT NULL	DEFAULT '배송준비중',
-	order_date			DATETIME		NOT NULL	DEFAULT now(),
+	order_at			DATETIME		NOT NULL	DEFAULT now(),
 	user_id				INT				NOT NULL,
 	subscription_id		INT				NOT NULL,
     FOREIGN KEY (order_id) REFERENCES order_seq(order_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -225,13 +233,14 @@ CREATE TABLE sub_delivery_schedules (
 
 CREATE TABLE payments (
 	payment_id		INT PRIMARY KEY AUTO_INCREMENT,
-	payment_method	ENUM('CARD', 'KAKAO_PAY', 'TOSS_PAY'),
-	payment_price	INT	NOT NULL,
+	pay_method		ENUM('CREDIT_CARD', 'KAKAO_PAY', 'TOSS_PAY'),
+	paid_amount		INT	NOT NULL,
 	payment_status	ENUM('결제 성공', '결제 실패', '결제 대기', '환불')	DEFAULT '결제 대기',
-	payment_time	DATETIME	NOT NULL	DEFAULT now(),
-	approval_code	VARCHAR(100),
-	order_id		INT	NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES subscription_orders(order_id) ON DELETE CASCADE ON UPDATE CASCADE
+	paid_at			DATETIME	NOT NULL	DEFAULT now(),
+	imp_uid			VARCHAR(200),
+    merchant_uid 	varchar(100),
+    order_id		INT	NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES order_seq(order_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE refunds (
@@ -290,24 +299,25 @@ CREATE TABLE sub_review_images (
 );
 
 CREATE TABLE farms (
-	farm_id			INT PRIMARY KEY AUTO_INCREMENT,
-	name			VARCHAR(100),
-	description		TEXT,
-	address			VARCHAR(255),
-	farm_img		VARCHAR(100)	NOT NULL,
-	latitude		DECIMAL(9,6),
-	longitude		DECIMAL(9,6),
-	contract_status	ENUM('활성', '종료')	NOT NULL	DEFAULT '활성'
+	farm_id INT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(100) NOT NULL,
+	description TEXT,
+	address VARCHAR(255),
+	farm_img VARCHAR(255),
+	latitude DOUBLE,
+	longitude DOUBLE,
+	contract_status VARCHAR(50) DEFAULT '활성',
+	category VARCHAR(50) DEFAULT '일반'
 );
 
 CREATE TABLE product_farms (
 	product_farm_id	INT	PRIMARY KEY AUTO_INCREMENT,
 	farm_id	INT	NOT NULL,
 	product_id	INT	NOT NULL,
-    FOREIGN KEY (farm_id) REFERENCES farms(farm_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (farm_id) REFERENCES farms(farm_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
+	
 CREATE TABLE coupons (
 	coupon_id		INT	PRIMARY KEY AUTO_INCREMENT,
 	coupon_name		VARCHAR(100) NOT NULL,
@@ -346,4 +356,3 @@ CREATE TABLE events (
 	read_count	INT 	 	NOT NULL	DEFAULT 0,
 	created_at	DATETIME 	NOT NULL	DEFAULT now()
 );
-
