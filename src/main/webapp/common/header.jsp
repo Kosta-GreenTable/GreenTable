@@ -8,9 +8,8 @@
             if (loginUser != null) {
                 email = loginUser.getEmail();
             } %>
-
+            
 <title>그린테이블</title>
-<%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/reset.css" /> --%>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/common/header.css" />
 <link rel="stylesheet"
@@ -74,7 +73,7 @@
 							href="${pageContext.request.contextPath}/front?key=event&methodName=list">이벤트</a>
 						</li>
 						<li class="cate"><a
-							href="${pageContext.request.contextPath}/front?key=farm&methodName=list">농가소개</a>
+							href="${pageContext.request.contextPath}">농가소개</a>
 						</li>
 					</ul>
 				</nav>

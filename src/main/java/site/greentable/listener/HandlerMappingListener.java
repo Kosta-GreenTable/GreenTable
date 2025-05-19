@@ -1,7 +1,9 @@
 package site.greentable.listener;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import jakarta.servlet.ServletContext;
@@ -32,6 +34,7 @@ public class HandlerMappingListener implements ServletContextListener {
         
         // 컨텍스트 경로 저장
         application.setAttribute("path", application.getContextPath()); // ${path}
+        
     }
     
     /**
@@ -88,4 +91,5 @@ public class HandlerMappingListener implements ServletContextListener {
         
         return map;
     }
+    
 }
