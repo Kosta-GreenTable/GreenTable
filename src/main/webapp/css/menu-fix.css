@@ -1,0 +1,72 @@
+/* 햄버거 메뉴 수정 CSS */
+.menu-btn {
+  display: none; /* 햄버거 버튼 기본적으로 숨김 */
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  margin-right: 15px;
+  padding: 5px;
+  z-index: 1000;
+}
+
+.menu-btn:hover {
+  color: rgb(0, 196, 113);
+}
+
+/* 메인 네비게이션 스타일 */
+.main-nav {
+  display: block;
+}
+
+.main-nav ul {
+  display: flex; /* 항상 보이도록 변경 */
+  flex-direction: row; /* 기본값 행 방향으로 */
+  background-color: #ffffff;
+  z-index: 999;
+  padding: 0;
+}
+
+.main-nav li {
+  margin: 0 10px;
+}
+
+.main-nav a {
+  display: inline-block;
+  padding: 8px 0;
+}
+
+/* 모바일 뷰에서의 스타일 */
+@media (max-width: 992px) {
+  .main-nav {
+    width: 100%;
+  }
+
+  .main-nav ul {
+    flex-wrap: wrap; /* 모바일에서 줄바꿈 허용 */
+    justify-content: center; /* 중앙 정렬 */
+  }
+
+  .main-nav li {
+    margin: 5px 10px;
+  }
+}
+
+/* 매우 작은 화면에서의 스타일 */
+@media (max-width: 480px) {
+  .category-container {
+    flex-direction: column;
+  }
+
+  .category-right {
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+}
