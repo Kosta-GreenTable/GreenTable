@@ -16,7 +16,7 @@ public interface UserDAO {
 	UserDTO selectUserByEmail(String email, String password) throws ServerException;
 
 	//사용자 추가(회원가입)
-	int insertUser(UserDTO userDto) throws AddException;
+	int insertUser(UserDTO userDto, Connection con) throws AddException;
 
 	//사용자 추가시 user_infos에도 추가해야 하므로 해당 메서드(트랜잭션 유지)
 	int insertUserInfo(UserInfoDTO userInfoDto, Connection conn) throws AddException;
@@ -33,5 +33,7 @@ public interface UserDAO {
 
 	//사용자 탈퇴(회원탈퇴)
 	int deleteUser(int userId) throws DeleteException;
+	
+	UserInfoDTO findUserInfoByUserId(int userId);
 
 }

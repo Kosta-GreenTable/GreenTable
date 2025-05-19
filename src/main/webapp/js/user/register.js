@@ -6,6 +6,7 @@
  * - 휴대폰 번호 자동 포맷팅
  * - 생년월일 날짜 옵션 설정
  */
+
 document.addEventListener("DOMContentLoaded", function () {
   // 이메일 인증 버튼 이벤트
   const verifyEmailBtn = document.querySelector(".verify-email-btn");
@@ -62,36 +63,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // 이메일 인증 버튼 클릭 이벤트
   if (verifyEmailBtn) {
-    verifyEmailBtn.addEventListener("click",async function () {
-      const email = emailInput.value.trim();
-      if (!validateEmail(email)) {
-        alert("올바른 이메일 주소를 입력해주세요.");
-        emailInput.focus();
-        return;
-      }
+  verifyEmailBtn.addEventListener("click", async function () {
+    const email = emailInput.value.trim();
+    if (!validateEmail(email)) {
+      alert("올바른 이메일 주소를 입력해주세요.");
+      emailInput.focus();
+      return;
+    }
 
-      // 이메일 인증 코드 발송 로직 (실제로는 서버와 통신)
-	  try{
-	  	const response = await fetch(`/greentable/ajax?key=user&methodName=verifyEmail&email=${email}`);
-		
-		
-		const result = await response.json();
-		if(!response.ok){
-			
-			throw new Error(result.errorMsg)
-		}
-		alert("인증번호가 전송되었습니다");
-		
-	  }catch(e){
-		alert(e.message);
-		return;		
-	  }
-	  
-	  
-	  
-	  
+    // 이메일 인증 코드 발송 로직 (서버와 통신)
+    try {
+      const response = await fetch(
+       `${contextPath}/ajax?key=user&methodName=verifyEmail&email=${email}`,
+        {
+          method: "POST",
+        }
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.errorMsg);
+      }
+      alert("인증번호가 전송되었습니다");
+
       verifyEmailBtn.disabled = true;
       verifyEmailBtn.textContent = "인증번호 발송됨";
 
@@ -100,8 +95,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 5분 타이머 시작
       startTimer(5 * 60);
-    });
-  }
+    } catch (e) {
+      alert(e.message);
+      console.error("이메일 인증 오류:", e.message);
+    }
+  });
+}
 
   // 인증번호 확인 버튼 클릭 이벤트
   if (verifyCodeBtn) {
@@ -116,7 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
       // 인증번호 확인 로직 (실제로는 서버와 통신)
       // 예시로 '123456'을 유효한 인증번호로 가정
 	  try{
-	    	const response = await fetch(`/greentable/ajax?key=user&methodName=verifyEmailOk&code=${code}`);
+	    	const response = await fetch(`${contextPath}/ajax?key=user&methodName=verifyEmailOk&code=${code}`);
+
 	  	
 	  	
 	  		const result = await response.json();
@@ -157,24 +157,28 @@ document.addEventListener("DOMContentLoaded", function () {
   // 주소찾기 버튼 클릭 이벤트
   if (findAddressBtn) {
     findAddressBtn.addEventListener("click", function () {
-      openModal(addressModal);
+      execDaumPostcode();
     });
   }
+  
+  // 다음 우편번호 서비스 연동 함수
+  function execDaumPostcode() {
+    new daum.Postcode({
+      oncomplete: function (data) {
+        // 도로명 주소가 있으면 그걸, 아니면 지번주소 사용
+        const addr = data.roadAddress || data.jibunAddress;
 
-  // 주소 검색 버튼 클릭 이벤트
-  if (searchAddressBtn) {
-    searchAddressBtn.addEventListener("click", function () {
-      const searchQuery = searchZipcodeInput.value.trim();
-      if (!searchQuery) {
-        alert("검색어를 입력해주세요.");
-        searchZipcodeInput.focus();
-        return;
+        // 주소를 입력창에 채워 넣기
+        document.getElementById("zipCode").value = data.zonecode;
+        document.getElementById("address1").value = addr;
+
+        // 상세주소 입력창으로 포커스 이동
+        document.getElementById("address2").focus();
       }
-
-      // 주소 검색 결과 표시 (실제로는 API와 통신)
-      searchAddress(searchQuery);
-    });
+    }).open();
   }
+
+  
 
   // 주소 검색 모달 닫기 버튼
   if (closeAddressBtn) {
@@ -224,16 +228,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 회원가입 폼 제출 이벤트
   if (registerForm) {
-    registerForm.addEventListener("submit", function (e) {
-      e.preventDefault();
+  registerForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-      // 폼 유효성 검사
-      if (validateForm()) {
-        // 성공 모달 표시
-        openModal(registerSuccessModal);
-      }
-    });
-  }
+    if (validateForm()) {
+      console.log("AJAX 호출 시작");
+      const url = `${contextPath}/ajax?key=user&methodName=register`;
+
+      // 폼 데이터 객체로 만들기 (필요한 필드만)
+      const data = {
+        email: document.getElementById("email").value.trim(),
+        password: document.getElementById("password").value,
+        userName: document.getElementById("name").value.trim(),
+        phone: document.getElementById("phone").value,
+        zipCode: document.getElementById("zipCode").value.trim(),
+        address: document.getElementById("address1").value.trim(),
+        detailAddress: document.getElementById("address2").value.trim()
+      };
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),  // 수정: data로 통일
+      })
+        .then((res) => res.text())  // JSON이 아닌 텍스트로 받음
+        .then((text) => {
+          console.log("서버 응답 텍스트:", text);
+          const cleanedText = text.replace(/null$/, '').trim();
+          try {
+            const data = JSON.parse(cleanedText);
+        if (data.success) {
+            openModal(registerSuccessModal);
+        } else {
+            alert("회원가입 실패: " + data.message);
+        }
+    } catch (e) {
+        console.error("JSON 파싱 오류:", e.message);
+        alert("회원가입 중 오류: " + e.message + "\n서버 응답: " + text);
+    }
+        })
+        .catch((err) => {
+          console.error("오류 발생:", err);
+          alert(`회원가입 중 오류: ${err.message}`);
+        });
+    }
+  });
+}
+
 
   // 취소 버튼 클릭 이벤트
   if (cancelBtn) {
@@ -343,7 +386,9 @@ document.addEventListener("DOMContentLoaded", function () {
       mobileMiddleInput.focus();
       return false;
     }else{
-		document.getElementById('phone').value = mobileFirstInput+mobileMiddleInput+mobileLastInput;
+		const fullPhone = mobileFirstInput.value + mobileMiddleInput.value + mobileLastInput.value;
+    document.getElementById('phone').value = mobileFirstInput.value + mobileMiddleInput.value + mobileLastInput.value;
+
 	}
 /*
     // 생년월일 검증
@@ -366,6 +411,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return false;
     }
 	*/
+  
+
     return true;
   }
 	
@@ -415,46 +462,65 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // 주소 검색 함수 (실제로는 API 연동 필요)
-  function searchAddress(query) {
-    // 예시 주소 데이터 (실제로는 API에서 받아옴)
-    const mockResults = [
-      { zipcode: "06134", address: "서울특별시 강남구 테헤란로 427" },
-      { zipcode: "06133", address: "서울특별시 강남구 테헤란로 415" },
-      { zipcode: "06130", address: "서울특별시 강남구 테헤란로 401" },
-      { zipcode: "06142", address: "서울특별시 강남구 테헤란로 432" },
-    ];
+  function execDaumPostcode() {
+      new daum.Postcode({
+          oncomplete: function(data) {
+              let addr = ''; 
+              let extraAddr = ''; 
 
-    // 검색 결과 표시
-    addressResultsList.innerHTML = "";
+              if (data.userSelectedType === 'R') {
+                  addr = data.roadAddress;
+              } else {
+                  addr = data.jibunAddress;
+              }
 
-    if (mockResults.length === 0) {
-      const noResult = document.createElement("p");
-      noResult.className = "no-result";
-      noResult.textContent = "검색 결과가 없습니다.";
-      addressResultsList.appendChild(noResult);
-    } else {
-      mockResults.forEach((item) => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <div class="address-item">
-            <div class="zipcode">[${item.zipcode}]</div>
-            <div class="address-text">${item.address}</div>
-          </div>
-        `;
+              if (data.userSelectedType === 'R') {
+                  if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                      extraAddr += data.bname;
+                  }
+                  if (data.buildingName !== '' && data.apartment === 'Y') {
+                      extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                  }
+                  if (extraAddr !== '') {
+                      addr += ' (' + extraAddr + ')';
+                  }
+              }
 
-        // 주소 선택 이벤트
-        li.addEventListener("click", function () {
-          zipcodeInput.value = item.zipcode;
-          address1Input.value = item.address;
-          closeModal(addressModal);
-          document.getElementById("address2").focus();
-        });
-
-        addressResultsList.appendChild(li);
-      });
-    }
+              document.getElementById('zipCode').value = data.zonecode;
+              document.getElementById('address1').value = addr;
+              document.getElementById('address2').focus();
+          }
+      }).open();
   }
+  
+  let validationSuccess = true;
+  
+  document.addEventListener('DOMContentLoaded', function () {
+    
+    document.querySelector('.submit-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (validationSuccess) {
+            document.getElementById('register-form').submit();
+        } else {
+            alert("입력값을 확인하세요");
+        }
+    });
+  });
+  
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelector('.cancel-btn').addEventListener('click', function() {
+        window.location.href = '../index.jsp'; 
+    });
+  });
+
+  document.getElementById('register-form').addEventListener('submit', function(e) {
+      var mobileFirst = document.getElementById('mobile-first').value;
+      var mobileMiddle = document.getElementById('mobile-middle').value;
+      var mobileLast = document.getElementById('mobile-last').value;
+      
+      var phone = mobileFirst + "-" + mobileMiddle + "-" + mobileLast;
+      document.getElementById('phone').value = phone;
+  });
 
   // 모달 열기 함수
   function openModal(modal) {

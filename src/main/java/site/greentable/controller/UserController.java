@@ -33,5 +33,7 @@ public interface UserController extends Controller {
 
 	//구글 로그인 콜백 
 	ModelAndView loginGoogleCallback(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	
+	ModelAndView main(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 }

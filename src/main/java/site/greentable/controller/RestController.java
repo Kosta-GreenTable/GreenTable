@@ -2,6 +2,6 @@ package site.greentable.controller;
 
 
 
-public interface RestController {
+public interface RestController extends Controller {
     
 }

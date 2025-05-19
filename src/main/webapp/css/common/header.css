@@ -1,0 +1,150 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+header {
+    width: 100%;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #fff;
+}
+
+/* .header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 0;
+} */
+
+/* 상단 메뉴바 */
+.top-menu-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+}
+
+.user-menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.user-menu li a {
+    color: #333;
+    text-decoration: none;
+}
+
+.user-menu li a:hover {
+    color: rgb(0, 196, 113);
+}
+
+.admin-link {
+    background-color: #007bff;
+    color: white !important;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+  
+ .admin-link:hover {
+   background-color: #0056b3;
+ }
+
+/* 로고 영역 */
+.logo-container {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    gap: 20px;
+}
+
+.logo-container img {
+    width: 200x;
+    height: 100px;
+    object-fit: cover;
+}
+
+.logo-container h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #222;
+}
+
+/* 카테고리 메뉴 바 */
+.category-section {
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.category-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding: 12px 20px;
+}
+
+.category-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+.category-nav li.cate {
+    margin-right: 20px;
+}
+
+.cate a {
+    text-decoration: none;
+    font-size: 16px;
+    color: #111;
+    font-weight: 500;
+    padding: 5px 10px;
+}
+
+.category-nav li.cate a:hover {
+    color: #60a020;
+}
+
+/* 검색창 */
+.search-container {
+    position: relative;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #999;
+    padding: 3px 5px;
+    overflow: hidden;
+}
+
+#search-input {
+    border: none;
+    outline: none;
+    font-size: 13px;
+    padding: 7px 10px;
+    width: 200px;
+    background: transparent;
+}
+
+.search-box .search-btn {
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 5px 10px;
+    color: #333;
+}
+
+.search-box .search-btn:hover {
+    color: #4caf50;
+}
+
+.search-box .search-btn i {
+    /* width: 18px;
+    height: 18px; */
+    font-size: 16px;
+}
