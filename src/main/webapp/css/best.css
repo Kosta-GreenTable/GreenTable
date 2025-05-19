@@ -1,61 +1,57 @@
-/* 베스트 상품 페이지 전용 스타일 */
-
 /* 베스트 상품 배지 스타일 */
 .best-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
   background-color: #ff6b6b;
   color: white;
   padding: 5px 10px;
-  border-radius: 3px;
-  font-size: 12px;
+  border-radius: 4px;
   font-weight: bold;
-  z-index: 1;
+  font-size: 14px;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* 베스트 상품 카테고리 배너 스타일 */
-.category-banner img {
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 196, 113, 0.1);
-  transition: transform 0.3s ease;
+/* BEST 상위 3개 특별 스타일 */
+.product-item[data-best-rank="1"] .best-badge {
+  background-color: #FF4500;
 }
 
-.category-banner:hover img {
-  transform: scale(1.01);
+.product-item[data-best-rank="2"] .best-badge {
+  background-color: #FF4500;
 }
 
-/* 베스트 상품 특화 스타일 */
-.product-item[data-id="1"],
-.product-item[data-id="2"],
-.product-item[data-id="3"] {
-  border: 2px solid #ffeb3b;
-  box-shadow: 0 10px 20px rgba(255, 107, 107, 0.1);
+.product-item[data-best-rank="3"] .best-badge {
+  background-color: #FF4500;
 }
 
-/* 상품 이름 강조 스타일 */
-.product-item[data-id="1"] .product-name,
-.product-item[data-id="2"] .product-name,
-.product-item[data-id="3"] .product-name {
-  color: #ff6b6b;
-  font-weight: 700;
-}
-
-/* 상품 가격 강조 스타일 */
-.product-item[data-id="1"] .product-price,
-.product-item[data-id="2"] .product-price,
-.product-item[data-id="3"] .product-price {
-  color: #ff6b6b;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-/* 활성화된 베스트 네비게이션 스타일 */
-.main-nav ul li.active {
-  border-bottom: 3px solid #ff6b6b;
-}
-
-.main-nav ul li.active a {
-  color: #ff6b6b;
+/* 정렬 버튼 활성화 스타일 수정 */
+.product-sort button.active {
+  color: #00c471;
   font-weight: 600;
+  border-bottom: 2px solid #00c471;
+  background-color: transparent;
+}
+
+/* 기존 버튼 스타일 재정의 */
+.product-sort button {
+  background-color: transparent;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.product-sort button:hover {
+  color: #00c471;
+}
+
+/* 헤더에 표시되는 BEST 배지 제거 */
+body>.best-badge,
+header .best-badge,
+.navigation .best-badge,
+.site-header .best-badge,
+.main-nav .best-badge,
+nav .best-badge,
+.category-banner .best-badge {
+  display: none !important;
 }

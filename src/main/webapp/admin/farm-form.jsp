@@ -1,3 +1,4 @@
+<!-- filepath: c:\Users\user\git\GreenTable\src\main\webapp\admin\farm-form.jsp -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -5,6 +6,10 @@ pageEncoding="UTF-8"%>
   <head>
     <meta charset="UTF-8" />
     <title>그린테이블 관리자 - 농가 등록</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
     <link
       rel="stylesheet"
       href="${pageContext.request.contextPath}/admin/css/admin-style.css"
@@ -16,13 +21,12 @@ pageEncoding="UTF-8"%>
       <!-- 사이드바 포함 -->
       <jsp:include page="common/admin-sidebar.jsp" />
 
-      <!-- 메인 컨텐츠 영역 -->
-      <div class="admin-content">
+      <!-- 메인 내용 -->
+      <main class="admin-content">
         <!-- 상단 헤더 포함 -->
         <jsp:include page="common/admin-top-header.jsp">
           <jsp:param name="pageTitle" value="농가 등록" />
         </jsp:include>
-        <h2>농가 등록</h2>
 
         <form
           id="farmForm"
@@ -118,7 +122,7 @@ pageEncoding="UTF-8"%>
             >
           </div>
         </form>
-      </div>
+      </main>
     </div>
 
     <script>

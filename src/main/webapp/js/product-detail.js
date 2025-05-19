@@ -1,3 +1,139 @@
+// 전역 함수 정의
+function setupImageSlider() {
+  const images = document.querySelectorAll(".product-image-container img");
+  const leftNav = document.querySelector(".image-navigation.left");
+  const rightNav = document.querySelector(".image-navigation.right");
+  const imageCounter = document.querySelector(".image-counter");
+  
+  if (!images.length || !leftNav || !rightNav || !imageCounter) {
+    console.warn("이미지 슬라이더 요소를 찾을 수 없습니다");
+    return;
+  }
+  
+  console.log(`이미지 슬라이더 초기화: ${images.length}개 이미지`);
+  
+  let currentIndex = 0;
+  const totalImages = images.length;
+
+  // 이미지 표시 업데이트
+  const updateSlider = () => {
+    images.forEach((img, index) => {
+      img.style.display = index === currentIndex ? "block" : "none";
+    });
+    imageCounter.textContent = `${currentIndex + 1} / ${totalImages}`;
+    console.log(`이미지 변경: ${currentIndex + 1} / ${totalImages}`);
+  };
+
+  // 이전 이미지 버튼
+  leftNav.addEventListener("click", () => {
+    currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+    updateSlider();
+  });
+
+  // 다음 이미지 버튼
+  rightNav.addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % totalImages;
+    updateSlider();
+  });
+
+  // 초기 슬라이더 설정
+  updateSlider();
+}
+
+// 리뷰 슬라이더 설정
+function setupReviewSlider() {
+  const reviewImages = document.querySelector(".review-images");
+  const reviewLeftNav = document.querySelector(".review-navigation.left");
+  const reviewRightNav = document.querySelector(".review-navigation.right");
+  
+  if (!reviewImages || !reviewLeftNav || !reviewRightNav) {
+    console.warn("리뷰 슬라이더 요소를 찾을 수 없습니다");
+    return;
+  }
+  
+  const reviewImageCount = document.querySelectorAll(".review-images img").length;
+  if (reviewImageCount <= 1) {
+    console.log("리뷰 이미지가 1개 이하이므로 슬라이더를 초기화하지 않습니다");
+    return;
+  }
+  
+  console.log(`리뷰 슬라이더 초기화: ${reviewImageCount}개 이미지`);
+  
+  const imagesPerView = window.innerWidth < 768 ? 2 : 4; // 모바일에서는 2개, 데스크탑에서는 4개
+  let currentReviewIndex = 0;
+
+  // 리뷰 슬라이더 업데이트
+  const updateReviewSlider = () => {
+    const maxOffset = Math.max(0, reviewImageCount - imagesPerView);
+    const normalizedIndex = Math.min(currentReviewIndex, maxOffset);
+
+    // 이미지 너비(+갭)에 따라 이동 거리 계산
+    const imageWidth = 160; // 이미지 너비 + 갭
+    reviewImages.style.transform = `translateX(-${normalizedIndex * imageWidth}px)`;
+    console.log(`리뷰 슬라이더 위치 업데이트: ${normalizedIndex} / ${maxOffset}`);
+  };
+
+  // 이전 리뷰 이미지 버튼
+  reviewLeftNav.addEventListener("click", () => {
+    currentReviewIndex = Math.max(0, currentReviewIndex - 1);
+    updateReviewSlider();
+  });
+
+  // 다음 리뷰 이미지 버튼
+  reviewRightNav.addEventListener("click", () => {
+    const maxIndex = Math.max(0, reviewImageCount - imagesPerView);
+    currentReviewIndex = Math.min(maxIndex, currentReviewIndex + 1);
+    updateReviewSlider();
+  });
+
+  // 초기 리뷰 슬라이더 설정
+  updateReviewSlider();
+}
+
+// 탭 기능 설정
+function setupTabs() {
+  const tabs = document.querySelectorAll(".tabs button");
+  const tabContents = document.querySelectorAll(".tab-content");
+  
+  if (!tabs.length || !tabContents.length) {
+    console.warn("탭 요소를 찾을 수 없습니다");
+    return;
+  }
+  
+  console.log(`탭 초기화: ${tabs.length}개 탭, ${tabContents.length}개 컨텐츠`);
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => {
+      console.log(`${index + 1}번째 탭 클릭됨`);
+      
+      // 모든 탭 및 콘텐츠 비활성화
+      tabs.forEach(t => t.classList.remove("active"));
+      tabContents.forEach(c => c.style.display = "none");
+      
+      // 클릭한 탭 및 해당 콘텐츠 활성화
+      tab.classList.add("active");
+      
+      if (index < tabContents.length) {
+        tabContents[index].style.display = "block";
+      } else {
+        console.error(`탭 인덱스(${index})에 해당하는 컨텐츠가 없습니다`);
+      }
+    });
+  });
+  
+  // 첫 번째 탭이 기본적으로 활성화되도록 설정
+  if (tabs.length > 0 && tabContents.length > 0) {
+    tabs[0].classList.add("active");
+    tabContents[0].style.display = "block";
+  }
+}
+
+// 가격 포맷팅 함수
+function formatPrice(price) {
+  return Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// 메인 이벤트 리스너
 document.addEventListener("DOMContentLoaded", () => {
   console.log("상품 상세 페이지 초기화 중...");
   
@@ -306,6 +442,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const quickAddButtons = document.querySelectorAll(".quick-add");
   quickAddButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation(); // 부모 요소의 클릭 이벤트 방지 (상품 상세로 이동하는 것 방지)
+      
       const productId = button.getAttribute('data-product-id');
       if (!productId) return;
       
@@ -327,14 +466,23 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log('빠른 장바구니 응답:', data);
         
         if (data.success) {
-          if (confirm('상품이 장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?')) {
-            window.location.href = `${contextPath}/front?key=cart&methodName=viewCart`;
-          }
+          // 버튼 텍스트 및 스타일 변경으로 직관적인 피드백 제공
+          const originalText = button.innerHTML;
+          button.innerHTML = '<i class="fas fa-check"></i> 담기 완료';
+          button.style.backgroundColor = '#00c471';
+          button.style.color = 'white';
+          
+          // 3초 후 원래 상태로 복원
+          setTimeout(() => {
+            button.innerHTML = originalText;
+            button.style.backgroundColor = '';
+            button.style.color = '';
+          }, 2000);
           
           // 장바구니 아이콘 업데이트 (옵션)
           const cartCount = document.querySelector('.cart-count');
           if (cartCount) {
-            cartCount.textContent = data.cartCount;
+            cartCount.textContent = data.cartCount || parseInt(cartCount.textContent || '0') + 1;
           }
         } else {
           if (data.needLogin) {
@@ -358,135 +506,6 @@ document.addEventListener("DOMContentLoaded", () => {
   
   console.log("상품 상세 페이지 초기화 완료");
 });
-
-// 이미지 슬라이더 설정
-function setupImageSlider() {
-  const images = document.querySelectorAll(".product-image-container img");
-  const leftNav = document.querySelector(".image-navigation.left");
-  const rightNav = document.querySelector(".image-navigation.right");
-  const imageCounter = document.querySelector(".image-counter");
-  
-  if (!images.length || !leftNav || !rightNav || !imageCounter) {
-    console.warn("이미지 슬라이더 요소를 찾을 수 없습니다");
-    return;
-  }
-  
-  console.log(`이미지 슬라이더 초기화: ${images.length}개 이미지`);
-  
-  let currentIndex = 0;
-  const totalImages = images.length;
-
-  // 이미지 표시 업데이트
-  const updateSlider = () => {
-    images.forEach((img, index) => {
-      img.style.display = index === currentIndex ? "block" : "none";
-    });
-    imageCounter.textContent = `${currentIndex + 1} / ${totalImages}`;
-    console.log(`이미지 변경: ${currentIndex + 1} / ${totalImages}`);
-  };
-
-  // 이전 이미지 버튼
-  leftNav.addEventListener("click", () => {
-    currentIndex = (currentIndex - 1 + totalImages) % totalImages;
-    updateSlider();
-  });
-
-  // 다음 이미지 버튼
-  rightNav.addEventListener("click", () => {
-    currentIndex = (currentIndex + 1) % totalImages;
-    updateSlider();
-  });
-
-  // 초기 슬라이더 설정
-  updateSlider();
-}
-
-// 리뷰 슬라이더 설정
-function setupReviewSlider() {
-  const reviewImages = document.querySelector(".review-images");
-  const reviewLeftNav = document.querySelector(".review-navigation.left");
-  const reviewRightNav = document.querySelector(".review-navigation.right");
-  
-  if (!reviewImages || !reviewLeftNav || !reviewRightNav) {
-    console.warn("리뷰 슬라이더 요소를 찾을 수 없습니다");
-    return;
-  }
-  
-  const reviewImageCount = document.querySelectorAll(".review-images img").length;
-  if (reviewImageCount <= 1) {
-    console.log("리뷰 이미지가 1개 이하이므로 슬라이더를 초기화하지 않습니다");
-    return;
-  }
-  
-  console.log(`리뷰 슬라이더 초기화: ${reviewImageCount}개 이미지`);
-  
-  const imagesPerView = window.innerWidth < 768 ? 2 : 4; // 모바일에서는 2개, 데스크탑에서는 4개
-  let currentReviewIndex = 0;
-
-  // 리뷰 슬라이더 업데이트
-  const updateReviewSlider = () => {
-    const maxOffset = Math.max(0, reviewImageCount - imagesPerView);
-    const normalizedIndex = Math.min(currentReviewIndex, maxOffset);
-
-    // 이미지 너비(+갭)에 따라 이동 거리 계산
-    const imageWidth = 160; // 이미지 너비 + 갭
-    reviewImages.style.transform = `translateX(-${normalizedIndex * imageWidth}px)`;
-    console.log(`리뷰 슬라이더 위치 업데이트: ${normalizedIndex} / ${maxOffset}`);
-  };
-
-  // 이전 리뷰 이미지 버튼
-  reviewLeftNav.addEventListener("click", () => {
-    currentReviewIndex = Math.max(0, currentReviewIndex - 1);
-    updateReviewSlider();
-  });
-
-  // 다음 리뷰 이미지 버튼
-  reviewRightNav.addEventListener("click", () => {
-    const maxIndex = Math.max(0, reviewImageCount - imagesPerView);
-    currentReviewIndex = Math.min(maxIndex, currentReviewIndex + 1);
-    updateReviewSlider();
-  });
-
-  // 초기 리뷰 슬라이더 설정
-  updateReviewSlider();
-}
-
-// 탭 기능 설정
-function setupTabs() {
-  const tabs = document.querySelectorAll(".tabs button");
-  const tabContents = document.querySelectorAll(".tab-content");
-  
-  if (!tabs.length || !tabContents.length) {
-    console.warn("탭 요소를 찾을 수 없습니다");
-    return;
-  }
-  
-  console.log(`탭 초기화: ${tabs.length}개 탭, ${tabContents.length}개 컨텐츠`);
-
-  tabs.forEach((tab, index) => {
-    tab.addEventListener("click", () => {
-      console.log(`${index + 1}번째 탭 클릭됨`);
-      
-      // 모든 탭 및 콘텐츠 비활성화
-      tabs.forEach(t => t.classList.remove("active"));
-      tabContents.forEach(c => c.style.display = "none");
-      
-      // 클릭한 탭 및 해당 콘텐츠 활성화
-      tab.classList.add("active");
-      
-      if (index < tabContents.length) {
-        tabContents[index].style.display = "block";
-      } else {
-        console.error(`탭 인덱스(${index})에 해당하는 컨텐츠가 없습니다`);
-      }
-    });
-  });
-}
-
-// 가격 포맷팅 함수
-function formatPrice(price) {
-  return Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
 
 // 화면 크기에 따른 반응형 조정
 window.addEventListener("resize", () => {

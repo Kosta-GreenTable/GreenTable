@@ -187,9 +187,9 @@
 }
 
 #best-preview .view-more-btn {
-  background-color: #ebfef1;
-  color: #2ecc71;
-  border: 1px solid #2ecc71;
+  background-color: #e6f8ef;
+  color: #27ae60;
+  border: 1px solid #27ae60;
 }
 
 #regular-preview .view-more-btn {
@@ -199,51 +199,43 @@
 }
 
 #lunchbox-preview .view-more-btn {
-  background-color: #e1f5ed;
-  color: #00c471;
-  border: 1px solid #00c471;
+  background-color: #e6f8ef;
+  color: #27ae60;
+  border: 1px solid #27ae60;
 }
 
 #salad-preview .view-more-btn {
-  background-color: #ebfbee;
-  color: #2b8a3e;
-  border: 1px solid #8ce99a;
+  background-color: #e6f8ef;
+  color: #27ae60;
+  border: 1px solid #27ae60;
 }
 
 /* 농가 소개 섹션 더보기 버튼 스타일 */
 #farm-preview .view-more-btn {
-  background-color: #e1f5ed;
-  color: #00c471;
-  border: 1px solid #00c471;
-  display: inline-block;
-  text-decoration: none;
-  font-size: 14px;
+  background-color: #e6f8ef;
+  color: #27ae60;
+  border: 1px solid #27ae60;
 }
 
 /* 각 섹션별 제품 그리드 악센트 - 초록색 계열로 통일 */
 #best-preview .product-grid {
-  border-left: 2px solid rgba(46, 204, 113, 0.2);
   padding-left: 15px;
 }
 
 #regular-preview .product-grid {
-  border-left: 2px solid rgba(39, 174, 96, 0.2);
   padding-left: 15px;
 }
 
 #lunchbox-preview .product-grid {
-  border-left: 2px solid rgba(0, 196, 113, 0.2);
   padding-left: 15px;
 }
 
 #salad-preview .product-grid {
-  border-left: 2px solid rgba(105, 219, 124, 0.2);
   padding-left: 15px;
 }
 
 /* 농가 컨테이너 왼쪽 테두리 스타일 */
 #farm-preview .farm-container {
-  border-left: 2px solid rgba(0, 196, 113, 0.2);
   padding-left: 15px;
 }
 
@@ -258,7 +250,7 @@
 }
 
 #best-preview .view-more-btn:hover {
-  background-color: #2ecc71;
+  background-color: #27ae60;
   color: white;
 }
 
@@ -268,18 +260,18 @@
 }
 
 #lunchbox-preview .view-more-btn:hover {
-  background-color: #00c471;
+  background-color: #27ae60;
   color: white;
 }
 
 #salad-preview .view-more-btn:hover {
-  background-color: #2b8a3e;
+  background-color: #27ae60;
   color: white;
 }
 
 /* 농가 더보기 버튼 호버 효과 */
 #farm-preview .view-more-btn:hover {
-  background-color: #00c471;
+  background-color: #27ae60;
   color: white;
 }
 

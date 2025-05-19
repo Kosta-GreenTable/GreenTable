@@ -298,23 +298,43 @@
         </div>
       </div>
     </section>
-    
+
     <!-- 추천 상품 섹션 -->
     <section class="recommended-products">
       <h2>함께 구매하면 좋은 상품</h2>
       <div class="product-list">
         <c:forEach var="recommended" items="${recommendedProducts}">
-          <div class="product-card">
+          <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/front?key=product&methodName=detail&productId=${recommended.productId}'">
             <img src="${pageContext.request.contextPath}/assets/images/products/${recommended.mainImageName}" 
-                 alt="${recommended.name}" 
-                 onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/assets/images/no-image.jpg';" />
+                alt="${recommended.name}" 
+                onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/assets/images/no-image.jpg';" />
             <h3>${recommended.name}</h3>
-            <p class="product-price">
-              <fmt:formatNumber value="${recommended.price}" pattern="#,###" />원
-            </p>
-            <button class="quick-add" data-product-id="${recommended.productId}">장바구니 담기</button>
+            
+            <c:choose>
+              <c:when test="${recommended.discountRate > 0}">
+                <p class="product-price">
+                  <span class="original-price"><fmt:formatNumber value="${recommended.price}" pattern="#,###" />원</span>
+                  <span class="discount-rate">${recommended.discountRate}%</span>
+                  <span class="final-price"><fmt:formatNumber value="${recommended.price * (100 - recommended.discountRate) / 100}" pattern="#,###" />원</span>
+                </p>
+              </c:when>
+              <c:otherwise>
+                <p class="product-price"><fmt:formatNumber value="${recommended.price}" pattern="#,###" />원</p>
+              </c:otherwise>
+            </c:choose>
+            
+            <button class="quick-add" data-product-id="${recommended.productId}" onclick="event.stopPropagation();">
+              <i class="fas fa-shopping-cart"></i> 장바구니 담기
+            </button>
           </div>
         </c:forEach>
+        
+        <!-- 추천 상품이 없는 경우 -->
+        <c:if test="${empty recommendedProducts}">
+          <div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: #999;">
+            <i class="fas fa-info-circle"></i> 추천 상품이 없습니다.
+          </div>
+        </c:if>
       </div>
     </section>
     

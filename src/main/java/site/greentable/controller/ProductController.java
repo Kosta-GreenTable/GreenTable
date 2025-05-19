@@ -157,7 +157,12 @@ public class ProductController implements Controller {
         request.setAttribute("productDetail", productDetail);
         request.setAttribute("productImages", productImages);
 
+        // 추천 상품 가져오기 (4개까지 제한)
+        List<Product> recommendedProducts = productService.getRecommendedProducts(productId, 4);
+        request.setAttribute("recommendedProducts", recommendedProducts);
+
         return new ModelAndView("/products/product-detail.jsp");
+
     }
 
     /**
