@@ -20,8 +20,8 @@ public class MypageControllerImpl implements Controller {
 	        return new ModelAndView("/user/mypage.jsp");
 	    }
 
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return mypage(request, response);
-	}
+//	@Override
+//	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		return mypage(request, response);
+//	}
 }
