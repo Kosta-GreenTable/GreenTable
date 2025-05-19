@@ -198,4 +198,9 @@ public class ProductServiceImpl implements ProductService {
     public int getTotalProductCount() throws SQLException {
         return productDAO.getTotalProductCount();
     }
+    
+    @Override
+    public List<Product> getRecommendedProducts(int productId, int limit) throws SQLException {
+        return productDAO.selectRecommendedProducts(productId, limit);
+    }
 }

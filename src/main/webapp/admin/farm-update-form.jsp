@@ -1,3 +1,4 @@
+<!-- filepath: c:\Users\user\git\GreenTable\src\main\webapp\admin\farm-update-form.jsp -->
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
@@ -5,14 +6,21 @@
 <head>
     <meta charset="UTF-8">
     <title>그린테이블 관리자 - 농가 수정</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/admin/css/admin-style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="admin-container">
+        <!-- 사이드바 포함 -->
+        <jsp:include page="common/admin-sidebar.jsp" />
         
-        <div class="admin-content">
-            <h2>농가 정보 수정</h2>
+        <!-- 메인 내용 -->
+        <main class="admin-content">
+            <!-- 상단 헤더 포함 -->
+            <jsp:include page="common/admin-top-header.jsp">
+                <jsp:param name="pageTitle" value="농가 정보 수정" />
+            </jsp:include>
             
             <form id="farmUpdateForm" action="${pageContext.request.contextPath}/front?key=farm&methodName=update" method="post">
                 <input type="hidden" name="farmId" value="${farm.farmId}">
@@ -32,17 +40,17 @@
                     <input type="text" id="address" name="address" value="${farm.address}" required class="form-control">
                 </div>
                 
-				<div class="form-group">
-				  <label for="category">카테고리</label>
-				  <select id="category" name="category" class="form-control">
-				    <option value="일반" ${farm.category eq '일반' ? 'selected' : ''}>일반</option>
-				    <option value="채소" ${farm.category eq '채소' ? 'selected' : ''}>채소</option>
-				    <option value="과일" ${farm.category eq '과일' ? 'selected' : ''}>과일</option>
-				    <option value="곡물" ${farm.category eq '곡물' ? 'selected' : ''}>곡물</option>
-				    <option value="축산물" ${farm.category eq '축산물' ? 'selected' : ''}>축산물</option>
-				    <option value="유기농" ${farm.category eq '유기농' ? 'selected' : ''}>유기농</option>
-				  </select>
-				</div>
+                <div class="form-group">
+                    <label for="category">카테고리</label>
+                    <select id="category" name="category" class="form-control">
+                        <option value="일반" ${farm.category eq '일반' ? 'selected' : ''}>일반</option>
+                        <option value="채소" ${farm.category eq '채소' ? 'selected' : ''}>채소</option>
+                        <option value="과일" ${farm.category eq '과일' ? 'selected' : ''}>과일</option>
+                        <option value="곡물" ${farm.category eq '곡물' ? 'selected' : ''}>곡물</option>
+                        <option value="축산물" ${farm.category eq '축산물' ? 'selected' : ''}>축산물</option>
+                        <option value="유기농" ${farm.category eq '유기농' ? 'selected' : ''}>유기농</option>
+                    </select>
+                </div>
                 
                 <div class="form-group">
                     <label for="farmImg">이미지 URL</label>
@@ -62,20 +70,19 @@
                 </div>
                 
                 <div class="form-group">
-    				<label for="contractStatus">계약 상태</label>
-    					<select id="contractStatus" name="contractStatus" class="form-control">
-				        <option value="활성" ${farm.contractStatus eq '활성' ? 'selected' : ''}>활성</option>
-				        <option value="종료" ${farm.contractStatus eq '종료' ? 'selected' : ''}>종료</option>
-				    </select>
-				</div>
+                    <label for="contractStatus">계약 상태</label>
+                    <select id="contractStatus" name="contractStatus" class="form-control">
+                        <option value="활성" ${farm.contractStatus eq '활성' ? 'selected' : ''}>활성</option>
+                        <option value="종료" ${farm.contractStatus eq '종료' ? 'selected' : ''}>종료</option>
+                    </select>
+                </div>
                 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">수정 저장</button>
                     <a href="${pageContext.request.contextPath}/front?key=farm&methodName=adminList" class="btn btn-secondary">취소</a>
                 </div>
             </form>
-        </div>
-        
+        </main>
     </div>
     
     <script>

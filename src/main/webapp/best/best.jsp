@@ -46,19 +46,12 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 
       <!-- 2. 상품 목록 헤더 -->
       <div class="product-header">
-        <!-- 수정 후 -->
         <div class="product-count">
           총
           <strong>${not empty productList ? productList.size() : 0}</strong>개
           상품
         </div>
-        <div class="product-sort">
-          <button data-sort="popular">인기순</button>
-          <button data-sort="newest">최신순</button>
-          <button data-sort="priceAsc">낮은가격순</button>
-          <button data-sort="priceDesc">높은가격순</button>
-          <button data-sort="rating">리뷰평점순</button>
-        </div>
+        <!-- 정렬 버튼 섹션 제거 -->
       </div>
 
       <!-- 상품 목록 -->
