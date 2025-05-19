@@ -136,19 +136,33 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p class="price-cell">0원</p>
                 </div>
             `;
+
+            // 폼 생성
+            const orderForm = document.createElement('form');
+            orderForm.id = 'guestOrderForm';
+            orderForm.method = 'POST';
+            orderForm.action = `${contextPath}/ajax?key=orderRest&methodName=processOrder`;
             
-            // 버튼 컨테이너 생성
+            // 히든 필드 추가 (상품id, quantity 보낼지체크)
+            const productsInput = document.createElement('input');
+            productsInput.type = 'hidden';
+            productsInput.name = 'guestProducts';
+            productsInput.id = 'guestProducts';
+            orderForm.appendChild(productsInput);
+            
+            // 버튼 컨테이너를 폼 안에 추가
             const buttonContainer = document.createElement('div');
             buttonContainer.className = 'cart-buttons';
             buttonContainer.innerHTML = `
-                <button class="continue-btn">쇼핑 계속하기</button>
-                <button class="order-selected-btn">선택 상품 주문</button>
-                <button class="order-all-btn">전체 주문</button>
+                <button type="button" class="continue-btn">쇼핑 계속하기</button>
+                <button type="button" class="order-selected-btn">선택 상품 주문</button>
+                <button type="button" class="order-all-btn">전체 주문</button>
             `;
+            orderForm.appendChild(buttonContainer);
     
             container.appendChild(cartTable);
             container.appendChild(priceContainer);
-            container.appendChild(buttonContainer);
+            container.appendChild(orderForm);
         }
 
         // 비회원 장바구니가 있는 경우 테이블 채우기
@@ -242,7 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: new URLSearchParams({
                     key: "cartRest",
                     methodName: "updateQuantity",
-                    userId: userId,
                     productId: productId,
                     quantity: quantity
                 })
@@ -527,99 +540,112 @@ document.addEventListener("DOMContentLoaded", () => {
     
     //////////////////////////////////////////////////////////////////
     /**
-     * 주문 버튼 이벤트
+     * 주문 버튼 이벤트 설정
      */
     function setupOrderButtons() {
-        // 개별 주문 버튼
-        document.querySelectorAll(".order-btn").forEach(btn => {
-            btn.addEventListener("click", function() {
-                const row = this.closest("tr");
-                const productId = row.dataset.productid;
-                const quantity = row.querySelector(".quantity-input").value;
-                
-                orderProducts([{
-                    productId: parseInt(productId),
-                    quantity: parseInt(quantity)
-                }]);
-            });
-        });
-        
         // 선택 상품 주문 버튼
-        const orderSelectedBtn = document.querySelector(".order-selected-btn");
-        if (orderSelectedBtn) {
-            orderSelectedBtn.addEventListener("click", function() {
-                const selectedProducts = [];
-                
-                document.querySelectorAll("tbody input[type=checkbox]:checked").forEach(checkbox => {
-                    const row = checkbox.closest("tr");
-                    if (row) {
-                        selectedProducts.push({
-                            productId: parseInt(row.dataset.productid),
-                            quantity: parseInt(row.querySelector(".quantity-input").value)
-                        });
-                    }
-                });
-                
-                if (selectedProducts.length === 0) {
-                    alert("선택된 상품이 없습니다.");
-                    return;
-                }
-                
-                orderProducts(selectedProducts);
-            });
-        }
-        
-        // 전체 상품 주문 버튼
-        const orderAllBtn = document.querySelector(".order-all-btn");
-        if (orderAllBtn) {
-            orderAllBtn.addEventListener("click", function() {
-                const allProducts = [];
-                
-                document.querySelectorAll("tbody tr").forEach(row => {
-                    allProducts.push({
-                        productId: parseInt(row.dataset.productid),
-                        quantity: parseInt(row.querySelector(".quantity-input").value)
-                    });
-                });
-                
-                if (allProducts.length === 0) {
-                    alert("장바구니에 상품이 없습니다.");
-                    return;
-                }
-                
-                orderProducts(allProducts);
-            });
-        }
-    }
-    
-    /**
-     * 주문 처리 함수
-     */
-    function orderProducts(products) {
-        if (!isLoggedIn) {
-            if (confirm("로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?")) {
-                localStorage.setItem("pendingOrder", JSON.stringify(products));
-                window.location.href = `${contextPath}/user/login.jsp`;
+        document.querySelector(".order-selected-btn").addEventListener("click", function () {
+            const selectedProducts = getSelectedProducts();
+            if (selectedProducts.length === 0) {
+                alert("선택된 상품이 없습니다.");
+                return;
             }
-            return;
-        }
-        
-        // 주문 폼 생성 및 제출
-        const orderForm = document.createElement('form');
-        orderForm.method = 'POST';
-        orderForm.action = `${contextPath}/front?key=order&methodName=orderFromCart`;
-        
-        // 선택한 상품 정보 추가
-        const productsInput = document.createElement('input');
-        productsInput.type = 'hidden';
-        productsInput.name = 'selectedProducts';
-        productsInput.value = JSON.stringify(products);
-        orderForm.appendChild(productsInput);
-        
-        document.body.appendChild(orderForm);
-        orderForm.submit();
+            submitOrder(selectedProducts);
+        });
+
+        // 전체 상품 주문 버튼
+        document.querySelector(".order-all-btn").addEventListener("click", function () {
+            const allProducts = getAllProducts();
+            if (allProducts.length === 0) {
+                alert("장바구니에 상품이 없습니다.");
+                return;
+            }
+            submitOrder(allProducts);
+        });
     }
-    
+
+    /**
+     * 선택된 상품 가져오기
+     */
+    function getSelectedProducts() {
+        const selectedRows = [...document.querySelectorAll("tbody input[type=checkbox]:checked")].map(checkbox =>
+            checkbox.closest("tr")
+        );
+        return selectedRows.map(row => ({
+            productId: parseInt(row.dataset.productId),
+            quantity: parseInt(row.querySelector(".quantity-input").value)
+        }));
+    }
+
+    /**
+     * 모든 상품 가져오기
+     */
+    function getAllProducts() {
+        const rows = [...document.querySelectorAll("tbody tr")];
+        return rows.map(row => ({
+            productId: parseInt(row.dataset.productId),
+            quantity: parseInt(row.querySelector(".quantity-input").value)
+        }));
+    }
+
+    /**
+     * 주문 데이터 전송
+     */
+    function submitOrder(products) {
+        // 가격 정보 추출
+        const priceElements = document.querySelectorAll(".price-cell");
+        const totalProductPrice = priceElements[0].textContent.replace(/[^0-9]/g, '');
+        const totalDiscount = priceElements[1].textContent.replace(/[^0-9]/g, '');
+        const deliveryFee = priceElements[2].textContent.replace(/[^0-9]/g, '');
+        const totalPayPrice = priceElements[3].textContent.replace(/[^0-9]/g, '');
+
+        if (isLoggedIn) {
+            // 회원 - 서버로 폼 데이터 전송
+            const orderForm = document.getElementById("orderForm");
+            // 액션 URL 명시적으로 설정 - 수정 필요
+            orderForm.action = `${contextPath}/ajax?key=orderRest&methodName=processOrder`;
+
+            document.getElementById("productIds").value = JSON.stringify(products.map(p => p.productId));
+            document.getElementById("quantity").value = JSON.stringify(products.map(p => p.quantity));
+            
+            // 가격 정보 폼에 추가
+            addHiddenField(orderForm, "totalProductPrice", totalProductPrice);
+            addHiddenField(orderForm, "totalDiscount", totalDiscount);
+            addHiddenField(orderForm, "deliveryFee", deliveryFee);  
+            addHiddenField(orderForm, "totalPayPrice", totalPayPrice);       
+                
+            orderForm.submit();
+        } else {
+            // 비회원 - 동적으로 생성된 폼을 통해 데이터 전송
+            const guestOrderForm = document.getElementById("guestOrderForm");
+            guestOrderForm.action = `${contextPath}/ajax?key=orderRest&methodName=processOrder`;
+            
+            const guestProductsInput = document.getElementById("guestProducts");
+            guestProductsInput.value = JSON.stringify(products);
+
+            // 가격 정보 폼에 추가
+            addHiddenField(guestOrderForm, "totalProductPrice", totalProductPrice);
+            addHiddenField(guestOrderForm, "totalDiscount", totalDiscount);
+            addHiddenField(guestOrderForm, "deliveryFee", deliveryFee);         
+            addHiddenField(guestOrderForm, "totalPayPrice", totalPayPrice);
+            
+            guestOrderForm.submit();
+        }
+    }
+
+    // 폼에 hidden 필드 추가하는 헬퍼 함수
+    function addHiddenField(form, name, value) {
+        let field = document.getElementById(name);
+        if (!field) {
+            field = document.createElement("input");
+            field.type = "hidden";
+            field.id = name;
+            field.name = name;
+            form.appendChild(field);
+        }
+        field.value = value;
+    }
+
     // 비회원 로그인 후 장바구니 이관을 위한 코드
     // 로그인 후 리다이렉트 된 페이지가 장바구니 페이지라면 이관 시도
     if (isLoggedIn && localStorage.getItem('guestCart')) {

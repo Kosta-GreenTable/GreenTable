@@ -11,7 +11,9 @@ import com.google.gson.reflect.TypeToken;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import site.greentable.dto.CartDTO;
+import site.greentable.exception.UnAuthorizedException;
 import site.greentable.service.CartService;
 import site.greentable.service.CartServiceImpl;
 
@@ -26,7 +28,10 @@ public class CartRestController implements RestController {
         Map<String, Object> resultMap = new HashMap<>();
         
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
+        	HttpSession session = request.getSession();
+		    Integer userId = (Integer) session.getAttribute("userId");
+		    if (userId == null) throw new UnAuthorizedException("로그인이 필요합니다.");
+            
             int productId = Integer.parseInt(request.getParameter("productId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
             
@@ -47,7 +52,10 @@ public class CartRestController implements RestController {
         Map<String, Object> resultMap = new HashMap<>();
         
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
+        	HttpSession session = request.getSession();
+		    Integer userId = (Integer) session.getAttribute("userId");
+		    if (userId == null) throw new UnAuthorizedException("로그인이 필요합니다.");
+            
             int productId = Integer.parseInt(request.getParameter("productId"));
             
             resultMap = cartService.deleteCart(userId, productId);
@@ -67,7 +75,10 @@ public class CartRestController implements RestController {
         Map<String, Object> resultMap = new HashMap<>();
         
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
+        	HttpSession session = request.getSession();
+		    Integer userId = (Integer) session.getAttribute("userId");
+		    if (userId == null) throw new UnAuthorizedException("로그인이 필요합니다.");
+            
             String productIdsJson = request.getParameter("productIds");
             
             Gson gson = new Gson();
@@ -142,7 +153,10 @@ public class CartRestController implements RestController {
         Map<String, Object> resultMap = new HashMap<>();
         
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
+        	HttpSession session = request.getSession();
+		    Integer userId = (Integer) session.getAttribute("userId");
+		    if (userId == null) throw new UnAuthorizedException("로그인이 필요합니다.");
+		    
             String guestCartJson = request.getParameter("guestCart");
             
             Gson gson = new Gson();
