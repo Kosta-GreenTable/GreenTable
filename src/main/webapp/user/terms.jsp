@@ -6,7 +6,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>이용약관 | Green Table</title>
-        <link rel="stylesheet" href="${path}/css/user/styles.css" />
+        <link rel="stylesheet" href="${path}/css/common/styles.css" />
         <link rel="stylesheet" href="${path}/css/user/register.css" />
         <link
             rel="stylesheet"

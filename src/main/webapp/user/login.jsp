@@ -1,12 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${pageContext.request.contextPath}" />
+
+
 <!DOCTYPE html>
 <html lang="ko">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>로그인 | Green Table</title>
-        <link rel="stylesheet" href="${path}/css/user/styles.css" />
+        <link rel="stylesheet" href="${path}/css/common/styles.css" />
         <link rel="stylesheet" href="${path}/css/user/login.css" />
         <link
             rel="stylesheet"
@@ -15,7 +18,7 @@
     </head>
     <body>
         <!-- 헤더 컨테이너: header.html이 로드됩니다 -->
-        <div id="header-container"><jsp:include page="/common/header.html"/></div>
+        <div id="header-container"><jsp:include page="/common/header.jsp"/></div>
 
         <!-- 메인 컨텐츠 - 로그인 섹션 -->
         <main class="login-container">
@@ -75,27 +78,6 @@
                         <button type="submit" class="login-btn">로그인</button>
                     </form>
 
-                    <!-- 소셜 로그인 -->
-                    <div class="social-login">
-                        <h3>간편 로그인</h3>
-                        <div class="social-btns">
-                            <button class="social-btn kakao">
-                                <img
-                                    src="https://picsum.photos/seed/kakao/20/20"
-                                    alt="카카오 로그인"
-                                />
-                                카카오 로그인
-                            </button>
-                            <button class="social-btn google">
-                                <img
-                                    src="https://picsum.photos/seed/google/20/20"
-                                    alt="구글 로그인"
-                                />
-                                구글 로그인
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- 비회원 주문조회 폼 -->
                 <div class="tab-content" id="non-member-tab">
@@ -145,7 +127,7 @@
             </div>
         </main>
         <!-- 푸터 컨테이너: footer.html이 로드됩니다 -->
-        <div id="footer-container"><jsp:include page="/common/footer.html"/></div>
+        <div id="footer-container"><jsp:include page="/common/footer.jsp"/></div>
 
         <!-- 아이디/비밀번호 찾기 모달 -->
         <div class="modal" id="find-modal">

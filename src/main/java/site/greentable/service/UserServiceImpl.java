@@ -1,6 +1,8 @@
 package site.greentable.service;
 
 import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -15,10 +17,12 @@ import javax.mail.internet.MimeMessage;
 import site.greentable.dao.UserDAO;
 import site.greentable.dao.UserDAOImpl;
 import site.greentable.dto.UserDTO;
+import site.greentable.dto.UserInfoDTO;
 import site.greentable.exception.AddException;
 import site.greentable.exception.EmailVerifyException;
 import site.greentable.exception.NotFoundException;
 import site.greentable.exception.ServerException;
+import site.greentable.util.DbUtil;
 import site.greentable.util.Env;
 
 public class UserServiceImpl implements UserService {
@@ -28,7 +32,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDTO login(String userEmail, String userPwd) throws NotFoundException, ServerException {
 		UserDTO userDto = userDao.selectUserByEmail(userEmail, userPwd);
-		if (userDto == null)
+		if (userDto != null) {
+			UserInfoDTO userInfo = userDao.findUserInfoByUserId(userDto.getUserId());
+	        userDto.setUserInfoDto(userInfo); 
+		} else
 			throw new NotFoundException("<script>alert('아이디 혹은 비밀번호가 틀렸습니다');history.back()</script>");
 
 		return userDto;
@@ -36,9 +43,49 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void register(UserDTO userDto) throws AddException {
-		// TODO Auto-generated method stub
+	    Connection con = null;
+	    System.out.println("==== register 진입 ====");
 
+	    try {
+	        con = DbUtil.getConnection();
+	        con.setAutoCommit(false); // 트랜잭션 시작
+	        
+	        System.out.println("*************** con 객체 상태: " + con);
+
+	        UserDAO userDAO = new UserDAOImpl();
+
+	     // 1. 기본 사용자 정보 insert -> user_id 생성
+	        int userId = userDAO.insertUser(userDto, con);
+
+	        // 2. userInfoDto 가져와서 userId 세팅
+	        UserInfoDTO userInfoDto = userDto.getUserInfoDto();
+	        if (userInfoDto == null) {
+	        	throw new AddException("UserInfoDTO가 null입니다. 회원 상세정보가 필요합니다.");
+	        }
+	        userInfoDto.setUserId(userId);
+
+	        // 3. 상세 정보 insert
+	        userDAO.insertUserInfo(userInfoDto, con);
+
+	        con.commit();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (con != null) {
+	            try {
+	                con.rollback();
+	                System.out.println("회원가입 트랜잭션 롤백");
+	            } catch (SQLException se) {
+	                se.printStackTrace();
+	            }
+	        }
+	        throw new AddException("회원가입 실패: " + e.getMessage());
+	    } finally {
+	        DbUtil.dbClose(con, null);
+	        System.out.println("DB 연결 종료");
+	    }
 	}
+
 
 	@Override
 	public String verifyEmail(String email) throws EmailVerifyException {
@@ -80,38 +127,49 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String findUserEmail(String name, String phone) throws NotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		UserDTO dto = userDao.selectUserByName(name, phone);
+        return dto.getEmail();
 	}
 
 	@Override
 	public void findUserPwd(String name, String email) throws NotFoundException {
-		// TODO Auto-generated method stub
+		UserDTO dto = userDao.selectUserByEmailAndName(email, name);
+        if (dto == null) {
+            throw new NotFoundException("해당 사용자 정보를 찾을 수 없습니다.");
+        }
+
+        // 보안상 실제 비밀번호를 보내면 안되므로, 비밀번호 재설정 링크를 이메일로 보내는 방식 권장
+        // 여기에 이메일 발송 로직이 들어갈 수 있음
 
 	}
 
 	@Override
 	public UserDTO loginKakao(String code) throws AddException {
-		// TODO Auto-generated method stub
+		// 걷어내기
 		return null;
 	}
 
 	@Override
 	public void kakaoJoin(UserDTO userDto) throws AddException {
-		// TODO Auto-generated method stub
+		// 걷어내기
 
 	}
 
 	@Override
 	public UserDTO loginGoogle(String code) throws AddException {
-		// TODO Auto-generated method stub
+		// 걷어내기
 		return null;
 	}
 
 	@Override
 	public void googleJoin(UserDTO userDto) throws AddException {
-		// TODO Auto-generated method stub
+		// 걷어내기
 
+	}
+
+	@Override
+	public UserInfoDTO getUserInfoByUserId(int userId) {
+		return userDao.findUserInfoByUserId(userId);
 	}
 
 }

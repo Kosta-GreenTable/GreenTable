@@ -11,4 +11,6 @@ public interface AjaxUserController extends RestController {
 
 	//이메일 인증번호 확인
 	Object verifyEmailOk(HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+	Object register(HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

@@ -26,7 +26,7 @@ import site.greentable.exception.UnAuthorizedException;
 		maxFileSize = 1024 * 1024 * 5, // 5M - 한 번에 업로드 할 수 있는 파일 크기 제한
 		maxRequestSize = 1024 * 1024 * 50 // 50M -전체 요청의 크기 제한. 기본값은 무제한
 )
-@WebServlet(urlPatterns = "/front", loadOnStartup = 1)
+@WebServlet(urlPatterns = "/front", loadOnStartup = 2)
 public class DispatcherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -37,6 +37,8 @@ public class DispatcherServlet extends HttpServlet {
 		System.out.println("DispatcherServlet init....");
 		ServletContext application = super.getServletContext();
 		map = (Map<String, Controller>) application.getAttribute("map");
+		
+		System.out.println("======= DispatcherServlet init(), map: " + map);
 
 	}
 
@@ -45,10 +47,18 @@ public class DispatcherServlet extends HttpServlet {
 
 		String key = request.getParameter("key");
 		String methodName = request.getParameter("methodName");
+		Controller controller = map.get(key);
+		
+		System.out.println("==================DispatcherServlet.service() called  ================");
+		System.out.println("key=" + key + ", methodName=" + methodName);
+		System.out.println("Controller instance: " + controller);
+
 
 		try {
 
 			Controller con = map.get(key);
+			System.out.println("Controller instance: " + con);
+
 
 			if (con == null) {
 				throw new NotFoundException("잘못된 경로입니다");

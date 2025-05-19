@@ -1,6 +1,7 @@
 package site.greentable.service;
 
 import site.greentable.dto.UserDTO;
+import site.greentable.dto.UserInfoDTO;
 import site.greentable.exception.AddException;
 import site.greentable.exception.EmailVerifyException;
 import site.greentable.exception.NotFoundException;
@@ -24,5 +25,7 @@ public interface UserService {
 	UserDTO loginGoogle(String code) throws AddException;
 
 	void googleJoin(UserDTO userDto) throws AddException;
-
+	
+	 UserInfoDTO getUserInfoByUserId(int userId);
+	
 }

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>404 에러 페이지</title>
+<title>405 에러 페이지</title>
 </head>
 <body>
 	${error.message }
