@@ -18,8 +18,12 @@ import site.greentable.controller.ModelAndView;
 import site.greentable.dto.Product;
 import site.greentable.dto.ProductDetail;
 import site.greentable.dto.ProductImage;
+import site.greentable.service.FarmService;
+import site.greentable.service.FarmServiceImpl;
 import site.greentable.service.ProductService;
 import site.greentable.service.ProductServiceImpl;
+import site.greentable.service.FarmService;
+import site.greentable.service.FarmServiceImpl;
 
 /**
  * AdminController - 관리자 전용 기능을 제공하는 컨트롤러
@@ -28,6 +32,7 @@ import site.greentable.service.ProductServiceImpl;
 public class AdminController implements Controller {
     private static final String UPLOAD_DIR = "/assets/images/products";
     private ProductService productService = new ProductServiceImpl();
+    private FarmService farmService = new FarmServiceImpl();
 
     /**
      * 관리자 권한 체크 메소드
@@ -509,5 +514,22 @@ public class AdminController implements Controller {
 
         // 상품 목록 페이지로 리다이렉트
         return new ModelAndView(request.getContextPath() + "/front?key=admin&methodName=productList", true);
+    }
+
+    public ModelAndView resetFarmId(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+            boolean result = farmService.reorderFarmIds();
+
+            if (result) {
+                request.setAttribute("successMessage", "농가 ID 시퀀스가 성공적으로 재설정되었습니다.");
+            } else {
+                request.setAttribute("errorMessage", "농가 ID 시퀀스 재설정에 실패했습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "농가 ID 시퀀스 재설정 중 오류가 발생했습니다: " + e.getMessage());
+        }
+
+        return new ModelAndView(request.getContextPath() + "/front?key=farm&methodName=adminList", true);
     }
 }

@@ -814,5 +814,80 @@ public class ProductDAOImpl implements ProductDAO {
         return product;
     }
 
-    // ...existing code...
+    @Override
+    public List<Product> selectRecommendedProducts(int productId, int limit) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<Product> recommendedProducts = new ArrayList<>();
+        
+        try {
+            conn = DbUtil.getConnection();
+            
+            // 1. 현재 상품의 카테고리 조회
+            String categoryQuery = "SELECT category FROM products WHERE product_id = ?";
+            pstmt = conn.prepareStatement(categoryQuery);
+            pstmt.setInt(1, productId);
+            rs = pstmt.executeQuery();
+            
+            String category = "";
+            if (rs.next()) {
+                category = rs.getString("category");
+            }
+            
+            rs.close();
+            pstmt.close();
+            
+            // 2. 동일 카테고리의 다른 상품 중에서 가져오기 (properties 파일에서 쿼리 가져오기)
+            pstmt = conn.prepareStatement(proFile.getProperty("product.getRecommendedByCategory"));
+            pstmt.setString(1, category);
+            pstmt.setInt(2, productId);
+            pstmt.setInt(3, limit);
+            
+            rs = pstmt.executeQuery();
+            
+            while(rs.next()) {
+                Product product = new Product();
+                product.setProductId(rs.getInt("product_id"));
+                product.setName(rs.getString("name"));
+                product.setPrice(rs.getInt("price"));
+                product.setDiscountRate(rs.getInt("discount_rate"));
+                product.setMainImageName(rs.getString("main_image"));
+                
+                recommendedProducts.add(product);
+            }
+            
+            // 추천 상품이 부족하면 다른 카테고리에서도 가져오기
+            if (recommendedProducts.size() < limit) {
+                rs.close();
+                pstmt.close();
+                
+                int remainingCount = limit - recommendedProducts.size();
+                
+                // 다른 카테고리 상품 가져오기 (properties 파일에서 쿼리 가져오기)
+                pstmt = conn.prepareStatement(proFile.getProperty("product.getRecommendedProducts"));
+                pstmt.setInt(1, productId);
+                pstmt.setString(2, category);  // 현재 카테고리와 다른 상품 찾기
+                pstmt.setInt(3, remainingCount);
+                
+                rs = pstmt.executeQuery();
+                
+                while(rs.next()) {
+                    Product product = new Product();
+                    product.setProductId(rs.getInt("product_id"));
+                    product.setName(rs.getString("name"));
+                    product.setPrice(rs.getInt("price"));
+                    product.setDiscountRate(rs.getInt("discount_rate"));
+                    product.setMainImageName(rs.getString("main_image"));
+                    
+                    recommendedProducts.add(product);
+                }
+            }
+            
+        } finally {
+            DbUtil.dbClose(conn, pstmt, rs);
+        }
+        
+        return recommendedProducts;
+    }
 }

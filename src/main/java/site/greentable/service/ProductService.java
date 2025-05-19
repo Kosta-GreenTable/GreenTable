@@ -113,4 +113,12 @@ public interface ProductService {
      * 전체 상품 개수 조회
      */
     int getTotalProductCount() throws SQLException;
+    
+    /**
+     * 현재 상품과 동일한 카테고리의 다른 상품 중 몇 개를 추천 상품으로 가져옵니다.
+     * @param productId 현재 상품의 ID
+     * @param limit 가져올 추천 상품 수
+     * @return 추천 상품 목록
+     */
+    List<Product> getRecommendedProducts(int productId, int limit) throws SQLException;
 }
