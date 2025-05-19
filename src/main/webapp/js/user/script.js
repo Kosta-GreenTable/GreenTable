@@ -1,26 +1,57 @@
 document.addEventListener("DOMContentLoaded", function () {
   // 헤더 고정 기능
-  initFixedHeader();
+  try {
+    initFixedHeader();
+  } catch (e) {
+    console.error("헤더 초기화 오류:", e);
+  }
 
   // 배너 슬라이더 기능
-  initBannerSlider();
+  try {
+    initBannerSlider();
+  } catch (e) {
+    console.error("배너 슬라이더 초기화 오류:", e);
+  }
 
   // 로그인 상태 체크 및 메뉴 변경
-  checkLoginStatus();
+  try {
+    checkLoginStatus();
+  } catch (e) {
+    console.error("로그인 상태 확인 오류:", e);
+  }
 
   // 상품 클릭 이벤트
-  initProductClicks();
+  try {
+    initProductClicks();
+  } catch (e) {
+    console.error("상품 클릭 이벤트 초기화 오류:", e);
+  }
 
   // 검색 기능
-  initSearchFunction();
+  try {
+    initSearchFunction();
+  } catch (e) {
+    console.error("검색 기능 초기화 오류:", e);
+  }
 
   // 농가 슬라이더 기능
-  initFarmSlider();
+  try {
+    initFarmSlider();
+  } catch (e) {
+    console.error("농가 슬라이더 초기화 오류:", e);
+  }
 });
 
 // 헤더 고정 기능
 function initFixedHeader() {
   const header = document.querySelector(".main-header");
+  
+  // null 체크 추가
+  if (!header) {
+    console.warn("main-header 요소를 찾을 수 없습니다");
+    return;
+  }
+  
   const headerOffsetTop = header.offsetTop;
 
   window.addEventListener("scroll", function () {
@@ -46,6 +77,9 @@ function initBannerSlider() {
   const nextBtn = banner.querySelector(".arrow-right");
   const currentPageSpan = banner.querySelector(".current-page");
   const totalPagesSpan = banner.querySelector(".total-pages");
+
+  // 슬라이더가 없으면 함수 종료
+  if (!bannerSlides.length) return;
 
   let currentSlide = 0;
   const totalSlides = bannerSlides.length;
@@ -147,18 +181,20 @@ function initBannerSlider() {
   });
 
   // 슬라이더가 화면에 보이는 경우에만 애니메이션 동작
-  const observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0].isIntersecting) {
-        resetAndStartProgressBar();
-      } else {
-        clearInterval(slideInterval);
-      }
-    },
-    { threshold: 0.3 }
-  );
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          resetAndStartProgressBar();
+        } else {
+          clearInterval(slideInterval);
+        }
+      },
+      { threshold: 0.3 }
+    );
 
-  observer.observe(banner);
+    observer.observe(banner);
+  }
 
   // 초기 슬라이드 설정
   showSlide(0);
@@ -180,7 +216,7 @@ function initFarmSlider() {
   const arrowLeft = document.querySelector(".farm-slider .arrow-left");
   const arrowRight = document.querySelector(".farm-slider .arrow-right");
 
-  if (!farmContainer || !arrowLeft || !arrowRight) return;
+  if (!farmContainer || !arrowLeft || !arrowRight || !farmCards.length) return;
 
   let currentPosition = 0;
   const cardWidth = farmCards.length > 0 ? farmCards[0].offsetWidth + 20 : 300; // card width + gap
@@ -270,6 +306,8 @@ function initProductClicks() {
     ".product-card, .large-product, .product-item"
   );
 
+  if (!productCards.length) return;
+
   productCards.forEach((card) => {
     // 상품 카드 클릭 시 상세 페이지로 이동
     card.addEventListener("click", function (e) {
@@ -277,10 +315,12 @@ function initProductClicks() {
       if (e.target.closest(".product-actions")) {
         return;
       }
-      const productName = this.querySelector(".product-name").textContent;
-      window.location.href = `#product-detail/${encodeURIComponent(
-        productName
-      )}`;
+      const productName = this.querySelector(".product-name")?.textContent;
+      if (productName) {
+        window.location.href = `#product-detail/${encodeURIComponent(
+          productName
+        )}`;
+      }
     });
   });
 
@@ -292,7 +332,7 @@ function initProductClicks() {
       chevronIcon.parentElement.style.cursor = "pointer";
       chevronIcon.parentElement.addEventListener("click", function () {
         const sectionTitle =
-          this.closest("section").querySelector(".section-title")
+          this.closest("section")?.querySelector(".section-title")
             ?.textContent || this.textContent.split("그린테이블")[0].trim();
         window.location.href = `#${sectionTitle}`;
       });
@@ -309,15 +349,20 @@ function initCartWishButtons() {
       e.stopPropagation(); // 이벤트 버블링 방지
       const productCard =
         this.closest(".product-card") || this.closest(".large-product");
-      const productName =
-        productCard.querySelector(".product-name").textContent;
+      if (!productCard) return;
+      
+      const productName = productCard.querySelector(".product-name")?.textContent;
+      const productPrice = productCard.querySelector(".product-price")?.textContent;
+      const productImage = productCard.querySelector("img")?.src;
+
+      if (!productName || !productPrice || !productImage) return;
 
       // 장바구니 데이터를 로컬 스토리지에 저장 (실제로는 서버에 전송)
       let cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
       cartItems.push({
         name: productName,
-        price: productCard.querySelector(".product-price").textContent,
-        image: productCard.querySelector("img").src,
+        price: productPrice,
+        image: productImage,
       });
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
 
@@ -326,10 +371,12 @@ function initCartWishButtons() {
 
       // 장바구니 아이콘 애니메이션
       const icon = this.querySelector("i");
-      icon.style.transform = "scale(1.5)";
-      setTimeout(() => {
-        icon.style.transform = "scale(1)";
-      }, 300);
+      if (icon) {
+        icon.style.transform = "scale(1.5)";
+        setTimeout(() => {
+          icon.style.transform = "scale(1)";
+        }, 300);
+      }
     });
   });
 
@@ -339,10 +386,17 @@ function initCartWishButtons() {
     button.addEventListener("click", function (e) {
       e.stopPropagation(); // 이벤트 버블링 방지
       const icon = this.querySelector("i");
+      if (!icon) return;
+      
       const productCard =
         this.closest(".product-card") || this.closest(".large-product");
-      const productName =
-        productCard.querySelector(".product-name").textContent;
+      if (!productCard) return;
+      
+      const productName = productCard.querySelector(".product-name")?.textContent;
+      const productPrice = productCard.querySelector(".product-price")?.textContent;
+      const productImage = productCard.querySelector("img")?.src;
+
+      if (!productName || !productPrice || !productImage) return;
 
       let wishItems = JSON.parse(localStorage.getItem("wishItems") || "[]");
 
@@ -355,8 +409,8 @@ function initCartWishButtons() {
 
         wishItems.push({
           name: productName,
-          price: productCard.querySelector(".product-price").textContent,
-          image: productCard.querySelector("img").src,
+          price: productPrice,
+          image: productImage,
         });
 
         localStorage.setItem("wishItems", JSON.stringify(wishItems));
@@ -378,6 +432,7 @@ function initCartWishButtons() {
 // 검색 기능
 function initSearchFunction() {
   const searchBoxes = document.querySelectorAll(".search-box");
+  if (!searchBoxes.length) return;
 
   searchBoxes.forEach((searchBox) => {
     const searchInput = searchBox.querySelector("input");
