@@ -68,7 +68,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <jsp:include page="common/header.jsp" />
 
     <c:choose>
-<<<<<<< HEAD
         <%-- 상품 목록 페이지인 경우 (productList 속성이 존재하는 경우) --%>
         <c:when test="${not empty productList}">
             <!-- 상품 목록 컨테이너 -->
@@ -176,46 +175,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         </c:otherwise>
     </c:choose>      <!-- 푸터 인클루드 -->
     <jsp:include page="common/footer.jsp" />    
-    <c:choose>
-      <%-- 상품 목록 페이지인 경우 (productList 속성이 존재하는 경우) --%>
-      <c:when test="${not empty productList}">
-        <!-- 상품 목록 컨테이너 -->
-        <main class="product-list-container">
-          <section class="product-category">
-            <!-- 상품 카테고리 내용 -->
-          </section>
-
-          <section class="product-grid">
-            <!-- 상품 그리드 내용 -->
-          </section>
-
-          <section class="pagination">
-            <!-- 페이지네이션 내용 -->
-          </section>
-        </main>
-      </c:when>
-
-      <%-- 메인 페이지인 경우 --%>
-      <c:otherwise>
-        <!-- 메인 배너 섹션 -->
-        <section class="main-banner">
-          <!-- 메인 배너 내용 -->
-        </section>
-
-        <!-- 메인 콘텐츠 컨테이너 -->
-        <main class="main-content">
-          <!-- 각 카테고리 컨테이너 - JS로 콘텐츠 로드 -->
-          <div id="best-container"></div>
-          <div id="regular-container"></div>
-          <div id="lunchbox-container"></div>
-          <div id="salad-container"></div>
-          <div id="farm-container"></div>
-        </main>
-      </c:otherwise>
-    </c:choose>
-
-    <!-- 푸터 인클루드 -->
-    <jsp:include page="common/footer.jsp" />
 
     <!-- 자바스크립트 -->
     <c:choose>

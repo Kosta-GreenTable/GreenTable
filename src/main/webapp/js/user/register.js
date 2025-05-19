@@ -7,6 +7,21 @@
  * - 생년월일 날짜 옵션 설정
  */
 
+// contextPath 변수 정의 - 여러 방법으로 시도
+// 1. meta 태그에서 불러오기
+const metaContextPath = document.querySelector('meta[name="context-path"]')?.getAttribute('content');
+// 2. 스크립트 태그의 src 속성에서 경로 추출 
+const scriptSrc = document.currentScript?.src || '';
+let extractedPath = '';
+if (scriptSrc.includes('/js/')) {
+  extractedPath = scriptSrc.split('/js/')[0];
+}
+// 최종 contextPath 결정 (우선순위: meta > 스크립트 경로 > 빈 문자열)
+const contextPath = metaContextPath || extractedPath || '';
+
+// 디버깅용 로그
+console.log("현재 사용 중인 contextPath:", contextPath);
+
 document.addEventListener("DOMContentLoaded", function () {
   // 이메일 인증 버튼 이벤트
   const verifyEmailBtn = document.querySelector(".verify-email-btn");
@@ -23,10 +38,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const passwordInput = document.getElementById("password");
   const passwordConfirmInput = document.getElementById("password-confirm");
 
+  // 비밀번호 필드에 autocomplete 속성 추가 (보안 경고 해결)
+  if (passwordInput) passwordInput.setAttribute("autocomplete", "new-password");
+  if (passwordConfirmInput) passwordConfirmInput.setAttribute("autocomplete", "new-password");
+
   // 주소 검색 관련 요소
   const findAddressBtn = document.querySelector(".find-address-btn");
   const addressModal = document.getElementById("address-modal");
-  const closeAddressBtn = addressModal.querySelector(".close-btn");
+  const closeAddressBtn = addressModal?.querySelector(".close-btn");
   const searchAddressBtn = document.getElementById("search-address-btn");
   const searchZipcodeInput = document.getElementById("search-zipcode");
   const addressResultsList = document.getElementById("address-results");
@@ -64,47 +83,59 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   if (verifyEmailBtn) {
-  verifyEmailBtn.addEventListener("click", async function () {
-    const email = emailInput.value.trim();
-    if (!validateEmail(email)) {
-      alert("올바른 이메일 주소를 입력해주세요.");
-      emailInput.focus();
-      return;
-    }
-
-    // 이메일 인증 코드 발송 로직 (서버와 통신)
-    try {
-      const response = await fetch(
-       `${contextPath}/ajax?key=user&methodName=verifyEmail&email=${email}`,
-        {
-          method: "POST",
-        }
-      );
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.errorMsg);
+    verifyEmailBtn.addEventListener("click", async function () {
+      const email = emailInput.value.trim();
+      if (!validateEmail(email)) {
+        alert("올바른 이메일 주소를 입력해주세요.");
+        emailInput.focus();
+        return;
       }
-      alert("인증번호가 전송되었습니다");
 
-      verifyEmailBtn.disabled = true;
-      verifyEmailBtn.textContent = "인증번호 발송됨";
+      // 이메일 인증 코드 발송 로직 (서버와 통신)
+      try {
+        const url = `${contextPath}/ajax?key=user&methodName=verifyEmail&email=${email}`;
+        console.log("요청 URL:", url);
+        
+        const response = await fetch(url, {
+          method: "POST",
+        });
 
-      // 인증번호 입력란 표시
-      verificationCodeGroup.classList.remove("hidden");
+        // 응답이 JSON이 아닐 수 있으므로 안전하게 처리
+        let result = null;
+        const contentType = response.headers.get("content-type");
+        
+        if (contentType && contentType.includes("application/json")) {
+          result = await response.json();
+        } else {
+          const text = await response.text();
+          console.log("JSON이 아닌 응답:", text);
+          throw new Error("서버에서 올바른 응답을 받지 못했습니다");
+        }
 
-      // 5분 타이머 시작
-      startTimer(5 * 60);
-    } catch (e) {
-      alert(e.message);
-      console.error("이메일 인증 오류:", e.message);
-    }
-  });
-}
+        if (!response.ok) {
+          throw new Error(result?.errorMsg || `서버 오류: ${response.status}`);
+        }
+        
+        alert("인증번호가 전송되었습니다");
+
+        verifyEmailBtn.disabled = true;
+        verifyEmailBtn.textContent = "인증번호 발송됨";
+
+        // 인증번호 입력란 표시
+        verificationCodeGroup?.classList.remove("hidden");
+
+        // 5분 타이머 시작
+        startTimer(5 * 60);
+      } catch (e) {
+        alert(`이메일 인증 오류: ${e.message}`);
+        console.error("이메일 인증 오류:", e.message);
+      }
+    });
+  }
 
   // 인증번호 확인 버튼 클릭 이벤트
   if (verifyCodeBtn) {
-    verifyCodeBtn.addEventListener("click",async function () {
+    verifyCodeBtn.addEventListener("click", async function () {
       const code = verificationCodeInput.value.trim();
       if (!code) {
         alert("인증번호를 입력해주세요.");
@@ -112,33 +143,42 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // 인증번호 확인 로직 (실제로는 서버와 통신)
-      // 예시로 '123456'을 유효한 인증번호로 가정
-	  try{
-	    	const response = await fetch(`${contextPath}/ajax?key=user&methodName=verifyEmailOk&code=${code}`);
-
-	  	
-	  	
-	  		const result = await response.json();
-	  	if(!response.ok){
-	  		
-	  		throw new Error(result.errorMsg)
-	  	}
-	  
-	  	
-	    }catch(e){
-	  		alert(e.message);
-	  	return;		
-	    }
-	    
+      // 인증번호 확인 로직
+      try {
+        const url = `${contextPath}/ajax?key=user&methodName=verifyEmailOk&code=${code}`;
+        console.log("요청 URL:", url);
+        
+        const response = await fetch(url);
+        
+        // 응답이 JSON이 아닐 수 있으므로 안전하게 처리
+        let result = null;
+        const contentType = response.headers.get("content-type");
+        
+        if (contentType && contentType.includes("application/json")) {
+          result = await response.json();
+        } else {
+          const text = await response.text();
+          console.log("JSON이 아닌 응답:", text);
+          throw new Error("서버에서 올바른 응답을 받지 못했습니다");
+        }
+        
+        if (!response.ok) {
+          throw new Error(result?.errorMsg || `서버 오류: ${response.status}`);
+        }
+        
         // 인증 성공 처리
-        emailVerifyModal.classList.add("active");
+        if (emailVerifyModal) {
+          emailVerifyModal.classList.add("active");
+        }
 
         // 이메일 입력란 비활성화
         emailInput.readOnly = true;
         verifyEmailBtn.disabled = true;
-        verificationCodeGroup.classList.add("hidden");
-     
+        verificationCodeGroup?.classList.add("hidden");
+      } catch (e) {
+        alert(`인증 오류: ${e.message}`);
+        return;
+      }
     });
   }
 
@@ -163,22 +203,29 @@ document.addEventListener("DOMContentLoaded", function () {
   
   // 다음 우편번호 서비스 연동 함수
   function execDaumPostcode() {
-    new daum.Postcode({
-      oncomplete: function (data) {
-        // 도로명 주소가 있으면 그걸, 아니면 지번주소 사용
-        const addr = data.roadAddress || data.jibunAddress;
+    if (typeof daum !== 'undefined' && daum.Postcode) {
+      new daum.Postcode({
+        oncomplete: function (data) {
+          // 도로명 주소가 있으면 그걸, 아니면 지번주소 사용
+          const addr = data.roadAddress || data.jibunAddress;
 
-        // 주소를 입력창에 채워 넣기
-        document.getElementById("zipCode").value = data.zonecode;
-        document.getElementById("address1").value = addr;
+          // 주소를 입력창에 채워 넣기
+          const zipCodeElement = document.getElementById("zipCode");
+          const address1Element = document.getElementById("address1");
+          
+          if (zipCodeElement) zipCodeElement.value = data.zonecode;
+          if (address1Element) address1Element.value = addr;
 
-        // 상세주소 입력창으로 포커스 이동
-        document.getElementById("address2").focus();
-      }
-    }).open();
+          // 상세주소 입력창으로 포커스 이동
+          const address2Element = document.getElementById("address2");
+          if (address2Element) address2Element.focus();
+        }
+      }).open();
+    } else {
+      console.error("Daum Postcode 라이브러리를 찾을 수 없습니다.");
+      alert("주소 검색 서비스를 불러올 수 없습니다. 페이지를 새로고침하거나 나중에 다시 시도해주세요.");
+    }
   }
-
-  
 
   // 주소 검색 모달 닫기 버튼
   if (closeAddressBtn) {
@@ -228,55 +275,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 회원가입 폼 제출 이벤트
   if (registerForm) {
-  registerForm.addEventListener("submit", function (e) {
-    e.preventDefault();
+    registerForm.addEventListener("submit", function (e) {
+      e.preventDefault();
 
-    if (validateForm()) {
-      console.log("AJAX 호출 시작");
-      const url = `${contextPath}/ajax?key=user&methodName=register`;
+      if (validateForm()) {
+        console.log("AJAX 호출 시작");
+        const url = `${contextPath}/ajax?key=user&methodName=register`;
+        console.log("요청 URL:", url);
 
-      // 폼 데이터 객체로 만들기 (필요한 필드만)
-      const data = {
-        email: document.getElementById("email").value.trim(),
-        password: document.getElementById("password").value,
-        userName: document.getElementById("name").value.trim(),
-        phone: document.getElementById("phone").value,
-        zipCode: document.getElementById("zipCode").value.trim(),
-        address: document.getElementById("address1").value.trim(),
-        detailAddress: document.getElementById("address2").value.trim()
-      };
+        // 폼 데이터 객체로 만들기 (필요한 필드만)
+        const data = {
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value,
+          userName: document.getElementById("name").value.trim(),
+          phone: document.getElementById("phone").value,
+          zipCode: document.getElementById("zipCode")?.value.trim() || "",
+          address: document.getElementById("address1")?.value.trim() || "",
+          detailAddress: document.getElementById("address2")?.value.trim() || ""
+        };
 
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),  // 수정: data로 통일
-      })
-        .then((res) => res.text())  // JSON이 아닌 텍스트로 받음
-        .then((text) => {
-          console.log("서버 응답 텍스트:", text);
-          const cleanedText = text.replace(/null$/, '').trim();
-          try {
-            const data = JSON.parse(cleanedText);
-        if (data.success) {
-            openModal(registerSuccessModal);
-        } else {
-            alert("회원가입 실패: " + data.message);
-        }
-    } catch (e) {
-        console.error("JSON 파싱 오류:", e.message);
-        alert("회원가입 중 오류: " + e.message + "\n서버 응답: " + text);
-    }
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data)
         })
-        .catch((err) => {
-          console.error("오류 발생:", err);
-          alert(`회원가입 중 오류: ${err.message}`);
-        });
-    }
-  });
-}
-
+          .then((res) => {
+            // 응답 상태 확인
+            if (!res.ok) {
+              throw new Error(`서버 오류: ${res.status}`);
+            }
+            return res.text();
+          })
+          .then((text) => {
+            console.log("서버 응답 텍스트:", text);
+            // 빈 응답이나 null 처리
+            if (!text || text.trim() === '' || text.trim() === 'null') {
+              throw new Error("서버에서 빈 응답이 반환되었습니다.");
+            }
+            
+            // JSON 파싱 시도
+            try {
+              // null 문자열 제거 후 파싱
+              const cleanedText = text.replace(/null$/, '').trim();
+              const data = JSON.parse(cleanedText);
+              
+              if (data.success) {
+                openModal(registerSuccessModal);
+              } else {
+                alert("회원가입 실패: " + (data.message || "알 수 없는 오류"));
+              }
+            } catch (e) {
+              console.error("JSON 파싱 오류:", e);
+              // HTML이 반환된 경우 (<!doctype으로 시작하는지 확인)
+              if (text.toLowerCase().includes('<!doctype')) {
+                alert("서버에서 오류 페이지가 반환되었습니다. 관리자에게 문의하세요.");
+              } else {
+                alert("응답 처리 중 오류가 발생했습니다: " + e.message);
+              }
+            }
+          })
+          .catch((err) => {
+            console.error("오류 발생:", err);
+            alert(`회원가입 중 오류: ${err.message}`);
+          });
+      }
+    });
+  }
 
   // 취소 버튼 클릭 이벤트
   if (cancelBtn) {
@@ -369,57 +435,28 @@ document.addEventListener("DOMContentLoaded", function () {
       return false;
     }
 
-    // 주소 검증
-   /* if (
-      !zipcodeInput.value ||
-      !address1Input.value ||
-      !document.getElementById("address2").value
-    ) {
-      alert("주소를 모두 입력해주세요.");
-      findAddressBtn.focus();
-      return false;
-    }*/
-
     // 휴대폰 번호 검증
     if (!mobileMiddleInput.value || !mobileLastInput.value) {
       alert("휴대폰 번호를 입력해주세요.");
       mobileMiddleInput.focus();
       return false;
-    }else{
-		const fullPhone = mobileFirstInput.value + mobileMiddleInput.value + mobileLastInput.value;
-    document.getElementById('phone').value = mobileFirstInput.value + mobileMiddleInput.value + mobileLastInput.value;
-
-	}
-/*
-    // 생년월일 검증
-    if (
-      !birthYearInput.value ||
-      birthMonthSelect.value === "" ||
-      birthDaySelect.value === ""
-    ) {
-      alert("생년월일을 모두 선택해주세요.");
-      birthYearInput.focus();
-      return false;
+    } else {
+      const fullPhone = mobileFirstInput.value + mobileMiddleInput.value + mobileLastInput.value;
+      const phoneInput = document.getElementById('phone');
+      if (phoneInput) {
+        phoneInput.value = fullPhone;
+      }
     }
-
-    // 유효한 생년월일 검사
-    const year = parseInt(birthYearInput.value);
-    const currentYear = new Date().getFullYear();
-    if (year < 1900 || year > currentYear) {
-      alert("유효한 생년월일을 입력해주세요.");
-      birthYearInput.focus();
-      return false;
-    }
-	*/
-  
 
     return true;
   }
-	
+    
   // 타이머 시작 함수
   function startTimer(duration) {
     let timer = duration;
     let minutes, seconds;
+    
+    if (!timerSpan) return;
 
     const timerInterval = setInterval(function () {
       minutes = parseInt(timer / 60, 10);
@@ -433,7 +470,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (--timer < 0) {
         clearInterval(timerInterval);
         timerSpan.textContent = "00:00";
-        verifyCodeBtn.disabled = true;
+        if (verifyCodeBtn) verifyCodeBtn.disabled = true;
         alert("인증 시간이 만료되었습니다. 다시 시도해주세요.");
       }
     }, 1000);
@@ -441,8 +478,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 날짜 옵션 업데이트 함수
   function updateDays() {
+    if (!birthMonthSelect || !birthDaySelect) return;
+    
     const selectedMonth = birthMonthSelect.value;
-    const selectedYear = birthYearInput.value;
+    const selectedYear = birthYearInput ? birthYearInput.value : null;
 
     if (!selectedMonth) return;
 
@@ -461,66 +500,6 @@ document.addEventListener("DOMContentLoaded", function () {
       birthDaySelect.appendChild(option);
     }
   }
-
-  function execDaumPostcode() {
-      new daum.Postcode({
-          oncomplete: function(data) {
-              let addr = ''; 
-              let extraAddr = ''; 
-
-              if (data.userSelectedType === 'R') {
-                  addr = data.roadAddress;
-              } else {
-                  addr = data.jibunAddress;
-              }
-
-              if (data.userSelectedType === 'R') {
-                  if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-                      extraAddr += data.bname;
-                  }
-                  if (data.buildingName !== '' && data.apartment === 'Y') {
-                      extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                  }
-                  if (extraAddr !== '') {
-                      addr += ' (' + extraAddr + ')';
-                  }
-              }
-
-              document.getElementById('zipCode').value = data.zonecode;
-              document.getElementById('address1').value = addr;
-              document.getElementById('address2').focus();
-          }
-      }).open();
-  }
-  
-  let validationSuccess = true;
-  
-  document.addEventListener('DOMContentLoaded', function () {
-    
-    document.querySelector('.submit-btn').addEventListener('click', function(e) {
-        e.preventDefault();
-        if (validationSuccess) {
-            document.getElementById('register-form').submit();
-        } else {
-            alert("입력값을 확인하세요");
-        }
-    });
-  });
-  
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelector('.cancel-btn').addEventListener('click', function() {
-        window.location.href = '../index.jsp'; 
-    });
-  });
-
-  document.getElementById('register-form').addEventListener('submit', function(e) {
-      var mobileFirst = document.getElementById('mobile-first').value;
-      var mobileMiddle = document.getElementById('mobile-middle').value;
-      var mobileLast = document.getElementById('mobile-last').value;
-      
-      var phone = mobileFirst + "-" + mobileMiddle + "-" + mobileLast;
-      document.getElementById('phone').value = phone;
-  });
 
   // 모달 열기 함수
   function openModal(modal) {

@@ -129,13 +129,6 @@ public class UserControllerImpl implements UserController {
 	
 	}
 
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-
 	
 
 }
