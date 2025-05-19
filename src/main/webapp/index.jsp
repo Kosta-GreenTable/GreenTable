@@ -68,7 +68,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <jsp:include page="common/header.jsp" />
 
     <c:choose>
-<<<<<<< HEAD
         <%-- 상품 목록 페이지인 경우 (productList 속성이 존재하는 경우) --%>
         <c:when test="${not empty productList}">
             <!-- 상품 목록 컨테이너 -->
