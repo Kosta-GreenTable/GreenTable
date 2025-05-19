@@ -57,8 +57,6 @@ public class DispatcherServlet extends HttpServlet {
 		try {
 
 			Controller con = map.get(key);
-			System.out.println("Controller instance: " + con);
-
 
 			if (con == null) {
 				throw new NotFoundException("잘못된 경로입니다");
@@ -66,6 +64,7 @@ public class DispatcherServlet extends HttpServlet {
 			Method method = null;
 			try {
 				method = con.getClass().getMethod(methodName, HttpServletRequest.class, HttpServletResponse.class);
+				System.out.println("찾은 메서드 = " + method);
 			} catch (NoSuchMethodException e) {
 				throw new NotFoundException("잘못된 경로입니다");
 			}

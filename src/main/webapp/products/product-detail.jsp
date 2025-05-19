@@ -10,9 +10,12 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/product-detail.css" />
+    
     <script>
       // 컨텍스트 경로를 JavaScript 변수로 설정
       var contextPath = "${pageContext.request.contextPath}";
+      
+      var userId = "${sessionScope.userId != null ? sessionScope.userId : '0'}";
       
       // 가격 정보를 JavaScript 변수로 설정
       var originalPrice = <c:out value="${product.price}"/>; // 원래 가격
@@ -81,7 +84,7 @@
             </tr>
             <tr>
               <th>배송비</th>
-              <td>3,000원 (40,000원 이상 무료 배송)</td>
+              <td>3,500원 (50,000원 이상 무료 배송)</td>
             </tr>
             <tr>
               <th>중량</th>
@@ -340,7 +343,6 @@
     
     <!-- 푸터 인클루드 -->
     <jsp:include page="../common/footer.jsp" />
-    
     <!-- 자바스크립트 -->
     <script src="${pageContext.request.contextPath}/js/product-detail.js"></script>
   </body>
