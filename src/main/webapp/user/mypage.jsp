@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 
 <!DOCTYPE html>
@@ -80,7 +82,7 @@
 						</div>
 					</div>
 
-					<div class="member-status">
+					<!-- <div class="member-status">
 						<div class="status-item">
 							<h4>쇼핑정보</h4>
 							<ul>
@@ -105,21 +107,70 @@
 								<li>환불<span>0</span></li>
 							</ul>
 						</div>
-					</div>
+					</div> -->
 				</section>
 
 				<section class="recent-orders">
 					<div class="section-header">
 						<h3>최근 주문내역</h3>
-						<p class="sub-text">최근 내역이 없습니다.</p>
+						<p class="sub-text">주문 건수: <c:out value="${fn:length(orderList)}" />건</p>
 					</div>
-
-					<div class="order-list">
-						<div class="no-orders">
-							<p>최근 6개월간 주문 내역이 없습니다.</p>
+					
+					<c:if test="${empty orderList }">
+						<div class="order-list">
+							<div class="no-orders">
+								<p>최근 6개월간 주문 내역이 없습니다.</p>
+							</div>
 						</div>
+					</c:if>
+					
+					<div class="order-list-container">
+					  <table class="order-table">
+					    <thead>
+					      <tr>
+					        <th>주문일</th>
+					        <th>상품정보</th>
+					        <th>결제금액</th>
+					        <th>배송상태</th>
+					        <th>주문번호</th>
+					      </tr>
+					    </thead>
+					    <tbody>
+						<c:forEach var="order" items="${orderList}">
+					      <tr>
+					        <td class="order-date">
+								<fmt:formatDate value="${order.orderAt}" pattern="yyyy. MM. dd" />
+							</td>
+					        <td class="product-info">
+					          <div class="product-box">
+					            <img src="${order.mainImageName}" alt="상품이미지">
+					            <div class="product-details">
+					              <p class="product-name">
+									<c:choose>
+										<c:when test="${not empty order.orderDetails}">
+										<c:set var="firstProduct" value="${order.orderDetails[0]}" />
+										<c:out value="${firstProduct.productName}" /> 
+										<c:if test="${order.orderDetails.size() > 1}">
+											외 ${order.orderDetails.size() - 1}개
+										</c:if>
+										</c:when>
+										<c:otherwise>
+										상품 정보 없음
+										</c:otherwise>
+									</c:choose>
+					            </div>
+					          </div>
+					        </td>
+					        <td class="order-price"><fmt:formatNumber value="${order.totalAmount}" />원</td>
+					        <td class="order-status">${order.orderStatus}</td>
+					        <td class="order-id">${order.merchantUid}</td>
+					      </tr>
+					</c:forEach>
+					 </tbody>
+					  </table>
 					</div>
-
+					
+					
 					<div class="view-more">
 						<a href="#" class="btn-view-more">더보기 <i
 							class="fas fa-angle-right"></i></a>

@@ -120,6 +120,7 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 	    return null;
 	}
 
+
 	@Override
 	public Object updateUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		 response.setContentType("application/json; charset=UTF-8");
@@ -167,4 +168,5 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 	}
 
 	
+
 }

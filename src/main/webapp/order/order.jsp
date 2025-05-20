@@ -1,14 +1,18 @@
+<%@page import="site.greentable.dto.UserDTO"%>
 <%@page import="site.greentable.dto.CartDTO"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%
 	Integer userId = (Integer) session.getAttribute("userId");
-	String userEmail = (String) session.getAttribute("userEmail");
-	String userName = (String) session.getAttribute("userName");
-	String userPhone = (String) session.getAttribute("userPhone");
+    UserDTO user = (UserDTO) session.getAttribute("loginUser");
+
+	String userEmail = user != null ? user.getEmail() : "";
+    String userName = user != null && user.getUserInfoDto() != null ? user.getUserInfoDto().getUserName() : "";
+    String userPhone = user != null && user.getUserInfoDto() != null ? user.getUserInfoDto().getPhone() : "";
 
     List<CartDTO> orderItems = (List<CartDTO>) session.getAttribute("orderItems");
 %>
@@ -21,19 +25,18 @@
 <title>그린테이블</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/reset.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/order/order.css">
-<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!--  <script src="https://cdn.portone.io/v2/browser-sdk.js"></script> -->
+<script src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 </head>
 <body data-context-path="${pageContext.request.contextPath}">
 <div class="order-container hd__inner1100">
     <h2 class="order-title">주문결제</h2>
-    <div class="order-container-inner">
+    
         <form id="orderForm" method="post" action="${pageContext.request.contextPath}/front?key=order&methodName=completeOrder">
-            <input type="hidden" name="merchantUid" id="merchantUid" value="${sessionScope.merchantUid}">
-            <input type="hidden" name="impUid" id="impUid" value="">
-            <input type="hidden" name="paymentMethod" id="paymentMethod" value="">
-            <input type="hidden" name="totalAmount" id="totalAmount" value="">
-            <input type="hidden" name="paymentStatus" id="paymentStatus" value="">
+            <div class="order-container-inner">
 
+            
             <div class="order-left">
                 <!-- 주문자 정보 -->
                 <section class="order-section" id="orderInfo">
@@ -41,14 +44,14 @@
                     <div class="form-group">
                         <label for="name">이름 *</label>
                         <div class="sub-group">
-                            <input type="text" id="name" name="name" placeholder="주문자 이름" required>
+                            <input type="text" id="name" name="name" placeholder="주문자 이름" value="${sessionScope.loginUser.userInfoDto.userName}" required >
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="email">이메일 *</label>
                         <div class="sub-group email-group">
-                            <input type="text" name="email1" id="email1" required><span>@</span>
-                            <input type="text" name="email2" id="email2" required>
+                            <input type="text" name="email1" id="email1" value="${fn:split(sessionScope.loginUser.email, '@')[0]}" required><span>@</span>
+                            <input type="text" name="email2" id="email2" value="${fn:split(sessionScope.loginUser.email, '@')[1]}" required>
                             <select id="emailSelect">
                                 <option value="">직접입력</option>
                                 <option value="gmail.com">gmail.com</option>
@@ -63,14 +66,14 @@
                         <div class="sub-group phone-group">
                             <select name="phonePrefix" required>
                                 <option value="">선택</option>
-                                <option value="010">010</option>
-                                <option value="011">011</option>
-                                <option value="016">016</option>
-                                <option value="017">017</option>
-                                <option value="018">018</option>
+                                <option value="010" <c:if test="${userPhone.startsWith('010')}">selected</c:if>>010</option>
+                                <option value="011" <c:if test="${userPhone.startsWith('011')}">selected</c:if>>011</option>
+                                <option value="016" <c:if test="${userPhone.startsWith('016')}">selected</c:if>>016</option>
+                                <option value="017" <c:if test="${userPhone.startsWith('017')}">selected</c:if>>017</option>
+                                <option value="018" <c:if test="${userPhone.startsWith('018')}">selected</c:if>>018</option>
                             </select><span>-</span>
-                            <input type="text" id="phone1" name="phone1" maxlength="4" required><span>-</span>
-                            <input type="text" id="phone2" name="phone2" maxlength="4" required>
+                            <input type="text" id="phone1" name="phone1" maxlength="4" value="${userPhone != null ? userPhone.substring(3, 7) : ''}" required><span>-</span>
+                            <input type="text" id="phone2" name="phone2" maxlength="4" value="${userPhone != null ? userPhone.substring(7) : ''}" required>
                         </div>                   
                     </div>
 
@@ -183,16 +186,16 @@
                 
                 </section>
             </div>
-        </form>             
+          
             <div class="order-right">
                 <!-- 주문 상품 정보 -->
                 <div class="sticky-box">
                     <div class="order-product-title">
                         <h3>주문상품</h3>
-                        <span>2개</span>
+                        <span>${orderList.size()} 개</span>
                     </div>
                     <div class="order-product-contents">
-                        <c:forEach var="item" items="${orderItems}">
+                        <c:forEach var="item" items="${orderList}">
                             <div class="product-info">
                                 <div class="product-image">
                                     <img src="${item.imageName}" alt="상품 이미지">
@@ -216,28 +219,23 @@
                                     <col style="width: auto">
                                 </colgroup>
                                 <tbody>
-                                    <c:set var="totalProductPrice" value="0" scope="page" />
-                                    <c:forEach var="item" items="${orderItems}">
-                                        <c:set var="itemTotal" value="${item.price * item.quantity}" />
-                                        <c:set var="totalProductPrice" value="${totalProductPrice + itemTotal}" />
-                                    </c:forEach>
                                     <tr>
                                         <th>상품금액</th>
-                                        <td><fmt:formatNumber value="${totalProductPrice}" type="number" />원</td>
+                                        <td><fmt:formatNumber value="${requestScope.totalProductPrice}" type="number" />원</td>
                                     </tr>
                                     <tr>
                                         <th>배송비</th>
-                                        <td>+<fmt:formatNumber value="${sessionScope.deliveryFee}" type="number" />원</td>
+                                        <td>+<fmt:formatNumber value="${requestScope.deliveryFee}" type="number" />원</td>
                                     </tr>
                                     <tr>
                                         <th>할인/부가결제</th>
-                                        <td><span class="discount">-<fmt:formatNumber value="${sessionScope.totalDiscount}" type="number" /></span>원</td>
+                                        <td><span class="discount">-<fmt:formatNumber value="${requestScope.totalDiscount}" type="number" /></span>원</td>
                                     </tr>
                                 </tbody>
                             </table>
                             <div class="total-price">
                                 <h3>총 결제 금액</h3>
-                                <strong><fmt:formatNumber value="${sessionScope.totalPayPrice}" type="number" />원</strong>
+                                <strong><fmt:formatNumber value="${requestScope.totalPayPrice}" type="number" />원</strong>
                             </div>
                         </div>  
                     </div>
@@ -252,10 +250,19 @@
                     </div>
                 </div>
             </div>
-         
+       
+            <input type="hidden" id="merchantUid"     name="merchantUid"    value="${merchantUid}"/>
+            <input type="hidden" id="impUid"          name="impUid"         />
+            <input type="hidden" id="paymentMethod"   name="paymentMethod"  value="CREDIT_CARD"/>
+            <input type="hidden" id="totalAmount"     name="totalAmount"    />
+            <input type="hidden" id="paymentStatus"   name="paymentStatus"  />       
+            
+        </form>
+
     </div>
 </div>
 <script src="${pageContext.request.contextPath}/js/order/order.js"></script>
+<script src="${pageContext.request.contextPath}/js/order/payment.js"></script>
 </body>
 </html>
 <jsp:include page="/common/footer.jsp"/>

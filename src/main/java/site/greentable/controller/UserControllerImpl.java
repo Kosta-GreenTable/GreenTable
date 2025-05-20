@@ -36,6 +36,7 @@ public class UserControllerImpl implements UserController {
 			// 세션에 저장			
 			HttpSession session = request.getSession();
 			session.setAttribute("loginUser", userDto);
+			session.setAttribute("userId", userDto.getUserId());
 
 			System.out.println("==========userDTO = " + userDto);
 			System.out.println("userInfoDto: " + userDto.getUserInfoDto()); // null이면 문제 있음
@@ -128,6 +129,7 @@ public class UserControllerImpl implements UserController {
         return new ModelAndView("/user/mypage.jsp");
 	
 	}
+
 	
 
 }

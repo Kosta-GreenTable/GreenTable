@@ -15,7 +15,7 @@ public interface OrderDAO {
 	int createOrderSeq(Connection con) throws SQLException;
 	
 	/** 주문 정보 등록 */
-	void insertOrder(Connection con, Map<String, Object> orderData) throws SQLException;
+	void insertOrder(Connection con, int orderId, Map<String, Object> orderData) throws SQLException;
 	
 	/** 주문 상세 정보 등록 */
     void insertOrderDetail(Connection con, int orderId, CartDTO item) throws SQLException;
