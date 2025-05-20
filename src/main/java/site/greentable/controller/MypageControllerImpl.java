@@ -36,5 +36,5 @@ public class MypageControllerImpl implements Controller {
 	        return new ModelAndView("/user/mypage.jsp");
 	    }
 
-	 
+
 }
