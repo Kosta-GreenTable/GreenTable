@@ -16,7 +16,8 @@
       var contextPath = "${pageContext.request.contextPath}";
       
       var userId = "${sessionScope.userId != null ? sessionScope.userId : '0'}";
-      
+      console.log("JSP에서 설정된 userId:", userId);
+
       // 가격 정보를 JavaScript 변수로 설정
       var originalPrice = <c:out value="${product.price}"/>; // 원래 가격
       var discountRate = <c:out value="${product.discountRate > 0 ? product.discountRate : 0}"/>; // 할인율

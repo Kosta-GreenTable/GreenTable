@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import site.greentable.dto.CartDTO;
 import site.greentable.dto.Product;
+import site.greentable.dto.UserDTO;
 import site.greentable.exception.NotFoundException;
 import site.greentable.exception.UnAuthorizedException;
 import site.greentable.service.CartService;
@@ -17,24 +18,23 @@ import site.greentable.service.ProductService;
 import site.greentable.service.ProductServiceImpl;
 
 public class CartController implements Controller {
-	CartService cartService = new CartServiceImpl();
-	ProductService productService = new ProductServiceImpl();
-	
-	public CartController() {
-		System.out.println("cartController 호출");
-	}
+	private CartService cartService = new CartServiceImpl();
+	private ProductService productService = new ProductServiceImpl();
 	
 	/**
 	 * 장바구니 목록 조회
 	 * */
 	public ModelAndView selectCartByUserId(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-			//int userId = Integer.parseInt(request.getParameter("userId"));
-			//세션에서 userId 가져오기
 			HttpSession session = request.getSession();
-		    Integer userId = (Integer) session.getAttribute("userId");
-		    if (userId == null) throw new UnAuthorizedException("로그인이 필요합니다.");
-
+//		    Integer userId = (Integer) session.getAttribute("userId");
+			UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+//		    if (loginUser == null) {
+//		        throw new UnAuthorizedException("로그인이 필요합니다.");
+//		    }
+//		    int userId = loginUser.getUserId();
+		    
+			if (loginUser != null) {
+			int userId = loginUser.getUserId();
 			Map<String, Object> priceMap = cartService.calculateCartPrices(userId);
 	        
 	        // 장바구니 목록과 가격 정보 저장
@@ -43,7 +43,7 @@ public class CartController implements Controller {
 	        request.setAttribute("totalDiscount", priceMap.get("totalDiscount"));
 	        request.setAttribute("deliveryFee", priceMap.get("deliveryFee"));
 	        request.setAttribute("totalPayPrice", priceMap.get("totalPayPrice"));
-	        
+		    }
 	        return new ModelAndView("order/cart.jsp");
 	}
 	

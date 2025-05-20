@@ -95,14 +95,6 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 	    return null;
 	}
 
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
 
 
 }
