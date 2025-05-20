@@ -3,11 +3,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const userId = document.body.dataset.userid || '';
     const isLoggedIn = !!userId;
     const contextPath = document.body.dataset.contextpath || '';
-    
+
     // 숫자 포맷 함수
     function formatNumber(num) {
         return new Intl.NumberFormat().format(num);
     }
+    
+    /**
+     * 페이지 초기화
+     */
+    async function initCart() {
+        if (!isLoggedIn) {
+            // 비회원 장바구니 데이터 로드 및 화면 표시
+           await guestCartInfo();
+        }
+        
+        // 장바구니 이벤트 등록 (회원/비회원 공통)
+        setupQuantityButtons();
+        setupDeleteButtons();
+        setupCheckboxEvents();
+        setupOrderButtons();
+
+        // 페이지 로드 시 체크박스 초기화
+        initializeCheckboxes();
+    }
+
+    // 페이지 초기화 - 회원/비회원 장바구니 데이터 로드
+    initCart();
 
     /**
      * 비회원 장바구니 데이터 서버로 전송 및 업데이트
@@ -56,25 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 페이지 초기화 - 회원/비회원 장바구니 데이터 로드
-    initCart();
     
-    /**
-     * 페이지 초기화
-     */
-    function initCart() {
-        if (!isLoggedIn) {
-            // 비회원 장바구니 데이터 로드 및 화면 표시
-            guestCartInfo();
-        }
-        
-        // 장바구니 이벤트 등록 (회원/비회원 공통)
-        setupQuantityButtons();
-        setupDeleteButtons();
-        setupCheckboxEvents();
-        setupOrderButtons();
-    }
-
     /**
      * 비회원 장바구니 렌더링
      */
@@ -176,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const totalPrice = discountedPrice * item.quantity;
             
             const row = document.createElement('tr');
-            row.dataset.productid = item.productId;
+            row.dataset.productId = item.productId;
             
             row.innerHTML = `
                 <td><input type="checkbox" class="cart-checkbox" checked></td>
@@ -219,7 +223,8 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.addEventListener("click", function() {
                 const isPlus = this.classList.contains("plus");
                 const row = this.closest("tr");
-                const productId = parseInt(row.dataset.productid);
+                const productId = parseInt(row.dataset.productId);
+                console.log("상품 ID:", productId);
                 
                 const quantityInput = row.querySelector(".quantity-input");
                 let quantity = parseInt(quantityInput.value);
@@ -248,14 +253,12 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     async function updateCartQuantity(userId, productId, quantity, row) {
         try {
-            const response = await fetch(`${contextPath}/ajax`, {
+            const response = await fetch(`${contextPath}/ajax?key=cartRest&methodName=updateCart`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
                 },
                 body: new URLSearchParams({
-                    key: "cartRest",
-                    methodName: "updateQuantity",
                     productId: productId,
                     quantity: quantity
                 })
@@ -313,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.addEventListener("click", function() {
                 if(confirm("상품을 장바구니에서 삭제하시겠습니까?")) {
                     const row = this.closest("tr");
-                    const productId = parseInt(row.dataset.productid);
+                    const productId = parseInt(row.dataset.productId);
                     
                     if (isLoggedIn) {
                         // 회원 - DB에서 삭제
@@ -332,14 +335,12 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     async function deleteCartItem(userId, productId, row) {
         try {
-            const response = await fetch(`${contextPath}/ajax`, {
+            const response = await fetch(`${contextPath}/ajax?key=cartRest&methodName=deleteCart`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
                 },
                 body: new URLSearchParams({
-                    key: "cartRest",
-                    methodName: "deleteCart",
                     userId: userId,
                     productId: productId
                 })
@@ -424,6 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     }
+
     
     /**
      * 체크된 상품만 계산하는 함수
@@ -431,7 +433,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function calculateSelectedTotal() {
         const checkedProductIds = [...document.querySelectorAll("tbody input[type=checkbox]:checked")].map(checkbox => {
             const row = checkbox.closest("tr");
-            return parseInt(row.dataset.productid);
+            return parseInt(row.dataset.productId);
         });
         
         if (checkedProductIds.length === 0) {
@@ -459,14 +461,12 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     async function calSelectedCart(userId, selectedItems) {
         try {
-            const response = await fetch(`${contextPath}/ajax`, {
+            const response = await fetch(`${contextPath}/ajax?key=cartRest&methodName=calculateSelected`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: new URLSearchParams({
-                    key: "cartRest",
-                    methodName: "calculateSelected",
                     userId: userId,
                     selectedItems: JSON.stringify(selectedItems)
                 })
@@ -491,7 +491,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function calSelectedGuestCart(productIds) {
         try {
             // 로컬스토리지에서 선택된 상품 정보 추출
-            const guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+            const guestCart = JSON.parse(localStorage.getItem('guestCart') || "[]");
             console.log("현재 저장된 guestCart:", guestCart); 
             
             const selectedItems = guestCart
@@ -543,108 +543,137 @@ document.addEventListener("DOMContentLoaded", () => {
      * 주문 버튼 이벤트 설정
      */
     function setupOrderButtons() {
-        // 선택 상품 주문 버튼
-        document.querySelector(".order-selected-btn").addEventListener("click", function () {
-            const selectedProducts = getSelectedProducts();
-            if (selectedProducts.length === 0) {
-                alert("선택된 상품이 없습니다.");
+        const form     = document.getElementById("cartForm");
+        const pidField = document.getElementById("productIds");
+        const qtyField = document.getElementById("quantities");
+        const selField = document.getElementById("selected");
+
+        // form 또는 필드가 없으면 이벤트 중단
+        if (!form || !pidField || !qtyField || !selField) return;
+        
+        // 선택 상품 주문 버튼          
+        document.querySelector(".order-selected-btn").addEventListener("click", () => {
+            const rows = [...document.querySelectorAll("tbody input[type=checkbox]:checked")]
+                        .map(cb => cb.closest("tr"));
+                const ids  = rows.map(r => r.dataset.productId);
+                const qtys = rows.map(r => r.querySelector(".quantity-input").value);
+
+                console.log("선택된 상품 ID:", ids);
+                console.log("선택된 상품 수량:", qtys);
+                if (ids.length === 0) {
+                alert("한 개 이상 선택해주세요.");
                 return;
-            }
-            submitOrder(selectedProducts);
-        });
+                }
+                pidField.value  = ids.join(",");
+                qtyField.value  = qtys.join(",");
+                selField.value  = "true";
+                form.submit();
+            });
+
 
         // 전체 상품 주문 버튼
         document.querySelector(".order-all-btn").addEventListener("click", function () {
-            const allProducts = getAllProducts();
-            if (allProducts.length === 0) {
-                alert("장바구니에 상품이 없습니다.");
-                return;
-            }
-            submitOrder(allProducts);
-        });
+                // (전부 주문 시 productIds, quantities를 컨트롤러 무시)
+                selField.value = "false";  
+                form.submit();
+            });
     }
 
     /**
      * 선택된 상품 가져오기
      */
-    function getSelectedProducts() {
-        const selectedRows = [...document.querySelectorAll("tbody input[type=checkbox]:checked")].map(checkbox =>
-            checkbox.closest("tr")
-        );
-        return selectedRows.map(row => ({
-            productId: parseInt(row.dataset.productId),
-            quantity: parseInt(row.querySelector(".quantity-input").value)
-        }));
-    }
+    // function getSelectedProducts() {
+    //     const selectedRows = [...document.querySelectorAll("tbody input[type=checkbox]:checked")].map(checkbox =>
+    //         checkbox.closest("tr")
+    //     );
+    //     return selectedRows.map(row => ({
+    //         productId: parseInt(row.dataset.productId),
+    //         quantity: parseInt(row.querySelector(".quantity-input").value)
+    //     }));
+    // }
 
     /**
      * 모든 상품 가져오기
      */
-    function getAllProducts() {
-        const rows = [...document.querySelectorAll("tbody tr")];
-        return rows.map(row => ({
-            productId: parseInt(row.dataset.productId),
-            quantity: parseInt(row.querySelector(".quantity-input").value)
-        }));
-    }
+    // function getAllProducts() {
+    //     const rows = [...document.querySelectorAll("tbody tr")];
+    //     return rows.map(row => ({
+    //         productId: parseInt(row.dataset.productId),
+    //         quantity: parseInt(row.querySelector(".quantity-input").value)
+    //     }));
+    // }
 
     /**
      * 주문 데이터 전송
      */
-    function submitOrder(products) {
-        // 가격 정보 추출
-        const priceElements = document.querySelectorAll(".price-cell");
-        const totalProductPrice = priceElements[0].textContent.replace(/[^0-9]/g, '');
-        const totalDiscount = priceElements[1].textContent.replace(/[^0-9]/g, '');
-        const deliveryFee = priceElements[2].textContent.replace(/[^0-9]/g, '');
-        const totalPayPrice = priceElements[3].textContent.replace(/[^0-9]/g, '');
+    // function submitOrder(products) {
+    //     // 가격 정보 추출
+    //     const priceElements = document.querySelectorAll(".price-cell");
+    //     const totalProductPrice = priceElements[0].textContent.replace(/[^0-9]/g, '');
+    //     const totalDiscount = priceElements[1].textContent.replace(/[^0-9]/g, '');
+    //     const deliveryFee = priceElements[2].textContent.replace(/[^0-9]/g, '');
+    //     const totalPayPrice = priceElements[3].textContent.replace(/[^0-9]/g, '');
 
-        if (isLoggedIn) {
-            // 회원 - 서버로 폼 데이터 전송
-            const orderForm = document.getElementById("orderForm");
-            // 액션 URL 명시적으로 설정 - 수정 필요
-            orderForm.action = `${contextPath}/ajax?key=orderRest&methodName=processOrder`;
+    //     if (isLoggedIn) {
+    //         // 회원 - 서버로 폼 데이터 전송
+    //         const orderForm = document.getElementById("orderForm");
+    //         // 액션 URL 명시적으로 설정 - 수정 필요
+    //         orderForm.action = `${contextPath}/ajax?key=orderRest&methodName=processOrder`;
 
-            document.getElementById("productIds").value = JSON.stringify(products.map(p => p.productId));
-            document.getElementById("quantity").value = JSON.stringify(products.map(p => p.quantity));
+    //         document.getElementById("productIds").value = JSON.stringify(products.map(p => p.productId));
+    //         document.getElementById("quantity").value = JSON.stringify(products.map(p => p.quantity));
             
-            // 가격 정보 폼에 추가
-            addHiddenField(orderForm, "totalProductPrice", totalProductPrice);
-            addHiddenField(orderForm, "totalDiscount", totalDiscount);
-            addHiddenField(orderForm, "deliveryFee", deliveryFee);  
-            addHiddenField(orderForm, "totalPayPrice", totalPayPrice);       
+    //         // 가격 정보 폼에 추가
+    //         addHiddenField(orderForm, "totalProductPrice", totalProductPrice);
+    //         addHiddenField(orderForm, "totalDiscount", totalDiscount);
+    //         addHiddenField(orderForm, "deliveryFee", deliveryFee);  
+    //         addHiddenField(orderForm, "totalPayPrice", totalPayPrice);       
                 
-            orderForm.submit();
-        } else {
-            // 비회원 - 동적으로 생성된 폼을 통해 데이터 전송
-            const guestOrderForm = document.getElementById("guestOrderForm");
-            guestOrderForm.action = `${contextPath}/ajax?key=orderRest&methodName=processOrder`;
-            
-            const guestProductsInput = document.getElementById("guestProducts");
-            guestProductsInput.value = JSON.stringify(products);
+    //         orderForm.submit();
+    //     } else {
+    //         // 비회원 - 동적으로 생성된 폼을 통해 데이터 전송
+    //         const guestOrderForm = document.getElementById("guestOrderForm");
+    //         guestOrderForm.action = `${contextPath}/ajax?key=orderRest&methodName=processOrder`;
 
-            // 가격 정보 폼에 추가
-            addHiddenField(guestOrderForm, "totalProductPrice", totalProductPrice);
-            addHiddenField(guestOrderForm, "totalDiscount", totalDiscount);
-            addHiddenField(guestOrderForm, "deliveryFee", deliveryFee);         
-            addHiddenField(guestOrderForm, "totalPayPrice", totalPayPrice);
+    //         const guestProductsInput = document.getElementById("guestProducts");
             
-            guestOrderForm.submit();
-        }
-    }
+    //         // 각 상품의 모든 정보(이미지, 가격, 이름 등)를 포함하도록 확장
+    //         const completeProducts = products.map(product => {
+    //             // 해당 제품의 행에서 필요한 정보 추출
+    //             const row = document.querySelector(`tr[data-product-id="${product.productId}"]`);
+    //             const imageName = row.querySelector(".product-info img").src;
+    //             const productName = row.querySelector(".product-info p").textContent;
+    //             const price = parseInt(row.querySelector(".product-price").textContent.replace(/[^0-9]/g, '')) / product.quantity;
+                
+    //             return {
+    //                 productId: product.productId,
+    //                 quantity: product.quantity,
+    //                 productName: productName,
+    //                 imageName: imageName,
+    //                 price: price
+    //             };
+    //         });
+            
+    //         guestProductsInput.value = JSON.stringify(completeProducts);
 
-    // 폼에 hidden 필드 추가하는 헬퍼 함수
-    function addHiddenField(form, name, value) {
-        let field = document.getElementById(name);
-        if (!field) {
-            field = document.createElement("input");
-            field.type = "hidden";
-            field.id = name;
-            field.name = name;
-            form.appendChild(field);
+    //         // 가격 정보 폼에 추가
+    //         addHiddenField(guestOrderForm, "totalProductPrice", totalProductPrice);
+    //         addHiddenField(guestOrderForm, "totalDiscount", totalDiscount);
+    //         addHiddenField(guestOrderForm, "deliveryFee", deliveryFee);         
+    //         addHiddenField(guestOrderForm, "totalPayPrice", totalPayPrice);
+            
+    //         guestOrderForm.submit();
+    //     }
+    // }
+
+    // 체크박스 초기 상태 설정 - 모든 상품 체크 (페이지 로드 시)
+    function initializeCheckboxes() {
+        const allCheckbox = document.querySelector("thead input[type=checkbox]");
+        if (!allCheckbox) return;
+            allCheckbox.checked = true;
+            document.querySelectorAll("tbody input[type=checkbox]").forEach(cb => cb.checked = true);
+            calculateSelectedTotal();
         }
-        field.value = value;
-    }
 
     // 비회원 로그인 후 장바구니 이관을 위한 코드
     // 로그인 후 리다이렉트 된 페이지가 장바구니 페이지라면 이관 시도
@@ -660,14 +689,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (guestCart.length === 0) return;
         
         try {
-            const response = await fetch(`${contextPath}/ajax`, {
+            const response = await fetch(`${contextPath}/ajax?key=cartRest&methodName=migrateGuestCart`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: new URLSearchParams({
-                    key: "cartRest",
-                    methodName: "migrateGuestCart",
                     userId: userId,
                     guestCart: JSON.stringify(guestCart)
                 })
@@ -681,6 +708,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (result.success) {
                 // 이관 성공 시 로컬 장바구니 비우기
                 localStorage.removeItem('guestCart');
+                alert("장바구니 이관이 완료되었습니다!");
                 // 페이지 새로고침하여 회원 장바구니 표시
                 window.location.reload();
             } else {

@@ -171,8 +171,13 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public boolean migrateGuestCart(List<CartDTO> cartItems) throws SQLException, AddException {
-		// TODO Auto-generated method stub
-		return false;
+		
+		for (CartDTO item : cartItems) {
+			int result = cartDao.insertCart(item);
+	        if (result <= 0) 
+	            throw new AddException("장바구니 이관 실패: productId=" + item.getProductId());
+		}
+		return true;
 	}
 
 }

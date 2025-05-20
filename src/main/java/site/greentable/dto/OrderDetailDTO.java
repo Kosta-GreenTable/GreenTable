@@ -4,13 +4,25 @@ public class OrderDetailDTO {
 	private int orderDetailId;
 	private int orderId;
 	private int productId;
-	private String productName;
 	private int quantity;
 	private int price;
+	
+	private String productName;
 	private int totalPrice; // price * quantity
 	
 	
 	public OrderDetailDTO() {}
+	
+	// 마이페이지 주문 조회용
+	public OrderDetailDTO(int orderDetailId, int productId, String productName, int quantity, int price) {
+		super();
+		this.orderDetailId = orderDetailId;
+		this.productId = productId;
+		this.productName = productName;
+		this.quantity = quantity;
+		this.price = price;
+	}
+
 
 
 	public int getOrderDetailId() {

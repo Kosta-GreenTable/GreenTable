@@ -5,14 +5,11 @@ prefix="c"%> <%@ page session="true"%> <%site.greentable.dto.UserDTO loginUser =
 null; if (loginUser != null) { email = loginUser.getEmail(); } %>
 
 <title>그린테이블</title>
-<link
-  rel="stylesheet"
-  href="${pageContext.request.contextPath}/css/common/header.css"
-/>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-/>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/common/header.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
 <header>
   <div class="header-container">
     <!-- 상단 메뉴 바 -->
@@ -42,32 +39,16 @@ null; if (loginUser != null) { email = loginUser.getEmail(); } %>
 
         <!-- 아래 메뉴는 로그인 여부와 상관없이 항상 보임 -->
 
-        <li>
-          <a href="${pageContext.request.contextPath}/order/cart.jsp"
-            >장바구니</a
-          >
-        </li>
-        <li>
-          <a
-            href="${pageContext.request.contextPath}/front?key=mypage&methodName=mypage"
-            >마이페이지</a
-          >
-        </li>
-        <li>
-          <a
-            href="${pageContext.request.contextPath}/front?key=cs&methodName=main"
-            >고객센터</a
-          >
-        </li>
-        <li>
-          <a
-            href="${pageContext.request.contextPath}/admin/index.jsp"
-            class="admin-link"
-            >관리자</a
-          >
-        </li>
-      </ul>
-    </div>
+				<li><a href="${pageContext.request.contextPath}/front?key=cart&methodName=selectCartByUserId">장바구니</a></li>
+				<li><a
+					href="${pageContext.request.contextPath}/front?key=mypage&methodName=mypage">마이페이지</a></li>
+				<li><a
+					href="${pageContext.request.contextPath}/front?key=cs&methodName=main">고객센터</a></li>
+				<li><a
+					href="${pageContext.request.contextPath}/admin/index.jsp"
+					class="admin-link">관리자</a></li>
+			</ul>
+		</div>
 
     <!-- 헤더 로고 -->
     <div class="logo-container">

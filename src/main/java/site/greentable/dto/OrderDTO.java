@@ -1,6 +1,8 @@
 package site.greentable.dto;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class OrderDTO {
 	private int orderId;
@@ -18,13 +20,47 @@ public class OrderDTO {
 	private int totalAmount;
 	private int usedPoint;
 	private String orderStatus;
-	private LocalDateTime orderAt;
+	private Date orderAt;
+	
+	private String mainImageName;
+	
+	private List<OrderDetailDTO> orderDetails;
 	
 	public OrderDTO() {}
+	
+	// 주문 목록 조회용 생성자
+    public OrderDTO(int orderId, int userId, String merchantUid, int totalAmount, String orderStatus,
+                    Date orderAt, String mainImageName, List<OrderDetailDTO> orderDetails) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.merchantUid = merchantUid;
+        this.totalAmount = totalAmount;
+        this.orderStatus = orderStatus;
+        this.orderAt = orderAt;
+        this.mainImageName = mainImageName;
+        this.orderDetails = orderDetails;
+    }
 
 	
+	public String getMainImageName() {
+		return mainImageName;
+	}
+
+	public void setMainImageName(String mainImageName) {
+		this.mainImageName = mainImageName;
+	}
+
+
 	public int getOrderId() {
 		return orderId;
+	}
+
+	public List<OrderDetailDTO> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(List<OrderDetailDTO> orderDetails) {
+		this.orderDetails = orderDetails;
 	}
 
 	public void setOrderId(int orderId) {
@@ -143,13 +179,15 @@ public class OrderDTO {
 		this.orderStatus = orderStatus;
 	}
 
-	public LocalDateTime getOrderAt() {
+	public Date getOrderAt() {
 		return orderAt;
 	}
 
-	public void setOrderAt(LocalDateTime orderAt) {
+	public void setOrderAt(Date orderAt) {
 		this.orderAt = orderAt;
 	}
+
+
 
 	
 }
