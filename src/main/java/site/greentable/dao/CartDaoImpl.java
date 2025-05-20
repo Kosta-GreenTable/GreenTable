@@ -42,7 +42,7 @@ public class CartDaoImpl implements CartDAO {
 			rs = ps.executeQuery();
 			
 			while(rs.next()) {
-				CartDTO cart = new CartDTO(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getString(5));
+				CartDTO cart = new CartDTO(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getString(6));
 				
 				cartList.add(cart);
 			}

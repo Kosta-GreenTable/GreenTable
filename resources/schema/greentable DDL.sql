@@ -356,3 +356,12 @@ CREATE TABLE events (
 	read_count	INT 	 	NOT NULL	DEFAULT 0,
 	created_at	DATETIME 	NOT NULL	DEFAULT now()
 );
+
+
+  
+
+
+
+  
+
+

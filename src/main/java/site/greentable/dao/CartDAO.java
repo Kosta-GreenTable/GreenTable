@@ -32,4 +32,6 @@ public interface CartDAO {
 	 * 상품 삭제
 	 * */
 	int deleteCart(int userId, int productId) throws SQLException;
+	
+	
 }

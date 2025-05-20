@@ -7,12 +7,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import site.greentable.dto.CartDTO;
 import site.greentable.dto.OrderDTO;
+import site.greentable.dto.OrderDetailDTO;
 import site.greentable.dto.PaymentDTO;
 import site.greentable.util.DbUtil;
 
@@ -53,14 +55,14 @@ public class OrderDAOImpl implements OrderDAO {
 	
 
 	@Override
-	public void insertOrder(Connection con, Map<String, Object> orderData) throws SQLException {
+	public void insertOrder(Connection con, int orderId, Map<String, Object> orderData) throws SQLException {
 		PreparedStatement ps = null;
 		String sql = proFile.getProperty("query.insertOrder");
 		try {
 			ps = con.prepareStatement(sql);
 
 			// 주문 데이터 매핑
-            ps.setInt(1, (Integer) orderData.get("orderId"));
+            ps.setInt(1, orderId);
             
             // userId가 null일 경우(비회원)
             Integer userId = (Integer) orderData.get("userId");
@@ -197,7 +199,7 @@ public class OrderDAOImpl implements OrderDAO {
                 order.setTotalAmount(rs.getInt("total_amount"));
                 order.setUsedPoint(rs.getInt("used_point"));
                 order.setOrderStatus(rs.getString("order_status"));
-                order.setOrderAt(rs.getTimestamp("order_at").toLocalDateTime()); // 주문시간 매핑
+                order.setOrderAt(rs.getDate("order_at")); // 주문시간 매핑
 			}
 		} finally {
 			DbUtil.dbClose(con, ps, rs);
@@ -207,10 +209,57 @@ public class OrderDAOImpl implements OrderDAO {
 
 	@Override
 	public List<OrderDTO> selectOrdersByUser(int userId) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<OrderDTO> orderList = new ArrayList<>();
+		
+		String sql = proFile.getProperty("query.selectOrderInfo");
+		try {
+	        con = DbUtil.getConnection();
+	        ps = con.prepareStatement(sql);
+	        ps.setInt(1, userId);
+	        rs = ps.executeQuery();
+
+	        // 주문 ID별로 OrderDTO를 관리하기 위한 Map
+	        Map<Integer, OrderDTO> orderMap = new HashMap<>();
+
+	        while (rs.next()) {
+	            int orderId = rs.getInt("order_id");
+
+	            // 주문 ID로 OrderDTO를 찾거나 새로 생성
+	            OrderDTO order = orderMap.get(orderId);
+	            if (order == null) {
+	                order = new OrderDTO();
+	                order.setOrderId(orderId);
+	                order.setOrderAt(rs.getDate("order_at"));
+	                order.setTotalAmount(rs.getInt("total_amount"));
+	                order.setOrderStatus(rs.getString("order_status"));
+	                order.setMerchantUid(rs.getString("merchant_uid"));
+	                order.setMainImageName(rs.getString("image_name"));
+	                order.setOrderDetails(new ArrayList<>()); // 주문 상세 리스트 초기화
+
+	                orderMap.put(orderId, order);
+	            }
+
+	            // 주문 상세 정보 생성 및 추가
+	            OrderDetailDTO orderDetail = new OrderDetailDTO(
+	                rs.getInt("order_detail_id"),
+	                rs.getInt("product_id"),
+	                rs.getString("name"),
+	                rs.getInt("quantity"),
+	                rs.getInt("price")
+	            );
+	            order.getOrderDetails().add(orderDetail);
+	        }
+
+	        // Map의 값을 List로 변환
+	        orderList.addAll(orderMap.values());
+	    } finally {
+	        DbUtil.dbClose(con, ps, rs);
+	    }
+	    return orderList;
 	}
 	
-
 	
 }

@@ -308,9 +308,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       
+      // 디버깅 코드 추가
       console.log(`장바구니 담기: 상품 ID ${productId}, 수량 ${quantity}개`);
+      console.log(`userId 값: [${userId}], 타입: ${typeof userId}`);
       
-	  if (!userId || userId === "0") {
+	  if (!userId || userId === "0" || parseInt(userId) === 0) {
 	        // 비회원일 경우 로컬스토리지에 저장
 	        addCartToLocalStorage(productId, quantity);
 
@@ -339,14 +341,18 @@ document.addEventListener("DOMContentLoaded", () => {
     //회원 장바구니 추가
     const addCartToServer = async (userId, productId, quantity) => {
       try {
+      
         const response = await fetch("/front?key=cart&methodName=insertCart", {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"
           },
-          body: new URLSearchParams({ userId, productId, quantity }),
-        });
-    
+          body: new URLSearchParams({           
+          
+            productId: productId,
+            quantity: quantity     
+           }),
+          });
         if (!response.ok) throw new Error("서버 오류");
     
         const result = await response.json(); // 필요 시 JSON으로 바꿀 수도 있음

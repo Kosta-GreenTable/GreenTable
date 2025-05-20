@@ -8,12 +8,17 @@ import java.util.UUID;
 
 import site.greentable.dao.OrderDAO;
 import site.greentable.dao.OrderDAOImpl;
+import site.greentable.dao.ProductDAO;
+import site.greentable.dao.ProductDAOImpl;
 import site.greentable.dto.CartDTO;
+import site.greentable.dto.OrderDTO;
 import site.greentable.dto.PaymentDTO;
+import site.greentable.dto.Product;
 import site.greentable.util.DbUtil;
 
 public class OrderServiceImpl implements OrderService {
 	OrderDAO orderDao = new OrderDAOImpl();
+	ProductDAO productDao = new ProductDAOImpl();
 
 	@Override
 	public boolean processOrder(List<CartDTO> orderItems, Map<String, Object> orderData)
@@ -26,11 +31,13 @@ public class OrderServiceImpl implements OrderService {
             con = DbUtil.getConnection();
             con.setAutoCommit(false);
             
+            System.out.println("orderService - orderData : " + orderData);
+            
             // 2. 주문 시퀀스 생성
             int orderId = orderDao.createOrderSeq(con);
             
             // 3. 주문 정보 저장
-            orderDao.insertOrder(con, orderData);
+            orderDao.insertOrder(con, orderId,orderData);
             
             // 4. 주문 상세 정보 저장
             for (CartDTO item : orderItems) {
@@ -78,11 +85,25 @@ public class OrderServiceImpl implements OrderService {
         }       
         return result;
 	}
+
 	
-    // merchantUid 생성 메소드
-//    private String generateMerchantUid() {
-//        return "ord_" + System.currentTimeMillis() + "_" + UUID.randomUUID().toString().substring(0, 8);
-//    }
+	@Override
+	public CartDTO getProductDetail(int productId) throws SQLException {
+		Product product = productDao.selectProductDetail(productId);
+		if (product != null) {
+			CartDTO cart = new CartDTO(product.getName(), productId, product.getPrice(), 
+										product.getDiscountRate(), product.getMainImageName());
+			return cart;
+		} else {
+			return null;
+		}
+	}
+
+
+	@Override
+	public List<OrderDTO> getOrdersByUserId(int userId) throws SQLException {
+		return orderDao.selectOrdersByUser(userId);
+	}
 	
 
 }
