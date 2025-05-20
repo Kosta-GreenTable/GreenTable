@@ -1,3 +1,89 @@
+// 진행 중인 이벤트 데이터를 전역 변수로 노출
+window.ongoingEvents = [
+  {
+    id: 1,
+    title: "식단 정기배송 15% 할인 이벤트",
+    image: "https://picsum.photos/seed/event1/530/190",
+    description: "5월 한 달간 정기배송 신청 시 15% 할인 혜택을 드립니다.",
+    startDate: "2025-05-01",
+    endDate: "2025-05-31",
+  },
+  {
+    id: 2,
+    title: "친구 초대 포인트 더블 적립",
+    image: "https://picsum.photos/seed/event11/530/190",
+    description:
+      "친구 초대 시 기존 5,000포인트에서 10,000포인트로 더블 적립!",
+    startDate: "2025-05-05",
+    endDate: "2025-05-20",
+  },
+  {
+    id: 3,
+    title: "신규 회원 첫 주문 무료배송",
+    image: "https://picsum.photos/seed/event3/530/190",
+    description: "신규 회원 가입 후 첫 주문 시 배송비 무료 혜택을 드립니다.",
+    startDate: "2025-05-01",
+    endDate: "2025-06-30",
+  },
+  {
+    id: 4,
+    title: "특가 샐러드 기획전",
+    image: "https://picsum.photos/seed/event4/530/190",
+    description: "인기 샐러드 5종 한정 수량 특가 판매!",
+    startDate: "2025-05-10",
+    endDate: "2025-05-25",
+  },
+  {
+    id: 5,
+    title: "도시락 2+1 프로모션",
+    image: "https://picsum.photos/seed/event5/530/190",
+    description: "인기 도시락 2개 구매 시 1개 무료 증정!",
+    startDate: "2025-05-15",
+    endDate: "2025-05-22",
+  },
+  {
+    id: 6,
+    title: "인스타그램 인증 이벤트",
+    image: "https://picsum.photos/seed/event6/530/190",
+    description:
+      "그린테이블 제품과 함께 인스타그램 인증 시 5,000포인트 적립!",
+    startDate: "2025-05-01",
+    endDate: "2025-05-31",
+  },
+  {
+    id: 7,
+    title: "제철 과일 증정 이벤트",
+    image: "https://picsum.photos/seed/event7/530/190",
+    description: "3만원 이상 구매 시 제철 과일 세트를 드립니다.",
+    startDate: "2025-05-12",
+    endDate: "2025-05-26",
+  },
+  {
+    id: 8,
+    title: "결제 수단별 추가 할인",
+    image: "https://picsum.photos/seed/event8/530/190",
+    description: "카드사별 추가 할인 혜택을 확인하세요!",
+    startDate: "2025-05-01",
+    endDate: "2025-05-31",
+  },
+  {
+    id: 9,
+    title: "리뷰 작성 더블 포인트",
+    image: "https://picsum.photos/seed/event9/530/190",
+    description: "포토 리뷰 작성 시 포인트 2배 적립!",
+    startDate: "2025-05-05",
+    endDate: "2025-05-25",
+  },
+  {
+    id: 10,
+    title: "프리미엄 식단 체험단 모집",
+    image: "https://picsum.photos/seed/event10/530/190",
+    description: "새롭게 출시된 프리미엄 식단 체험단을 모집합니다.",
+    startDate: "2025-05-10",
+    endDate: "2025-05-20",
+  },
+];
+
 document.addEventListener("DOMContentLoaded", () => {
   // 로컬 스토리지에서 선택된 이벤트 ID와 탭 가져오기
   const selectedEventId = parseInt(localStorage.getItem("selectedEventId"));
@@ -26,90 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const todayStr = today.toISOString().split("T")[0]; // YYYY-MM-DD 형식
 
   // 진행 중인 이벤트 데이터 (실제 이벤트 데이터)
-  const ongoingEvents = [
-    {
-      id: 1,
-      title: "식단 정기배송 15% 할인 이벤트",
-      image: "https://picsum.photos/seed/event1/530/190",
-      description: "5월 한 달간 정기배송 신청 시 15% 할인 혜택을 드립니다.",
-      startDate: "2025-05-01",
-      endDate: "2025-05-31",
-    },
-    {
-      id: 2,
-      title: "친구 초대 포인트 더블 적립",
-      image: "https://picsum.photos/seed/event2/530/190",
-      description:
-        "친구 초대 시 기존 5,000포인트에서 10,000포인트로 더블 적립!",
-      startDate: "2025-05-05",
-      endDate: "2025-05-20",
-    },
-    {
-      id: 3,
-      title: "신규 회원 첫 주문 무료배송",
-      image: "https://picsum.photos/seed/event3/530/190",
-      description: "신규 회원 가입 후 첫 주문 시 배송비 무료 혜택을 드립니다.",
-      startDate: "2025-05-01",
-      endDate: "2025-06-30",
-    },
-    {
-      id: 4,
-      title: "특가 샐러드 기획전",
-      image: "https://picsum.photos/seed/event4/530/190",
-      description: "인기 샐러드 5종 한정 수량 특가 판매!",
-      startDate: "2025-05-10",
-      endDate: "2025-05-25",
-    },
-    {
-      id: 5,
-      title: "도시락 2+1 프로모션",
-      image: "https://picsum.photos/seed/event5/530/190",
-      description: "인기 도시락 2개 구매 시 1개 무료 증정!",
-      startDate: "2025-05-15",
-      endDate: "2025-05-22",
-    },
-    {
-      id: 6,
-      title: "인스타그램 인증 이벤트",
-      image: "https://picsum.photos/seed/event6/530/190",
-      description:
-        "그린테이블 제품과 함께 인스타그램 인증 시 5,000포인트 적립!",
-      startDate: "2025-05-01",
-      endDate: "2025-05-31",
-    },
-    {
-      id: 7,
-      title: "제철 과일 증정 이벤트",
-      image: "https://picsum.photos/seed/event7/530/190",
-      description: "3만원 이상 구매 시 제철 과일 세트를 드립니다.",
-      startDate: "2025-05-12",
-      endDate: "2025-05-26",
-    },
-    {
-      id: 8,
-      title: "결제 수단별 추가 할인",
-      image: "https://picsum.photos/seed/event8/530/190",
-      description: "카드사별 추가 할인 혜택을 확인하세요!",
-      startDate: "2025-05-01",
-      endDate: "2025-05-31",
-    },
-    {
-      id: 9,
-      title: "리뷰 작성 더블 포인트",
-      image: "https://picsum.photos/seed/event9/530/190",
-      description: "포토 리뷰 작성 시 포인트 2배 적립!",
-      startDate: "2025-05-05",
-      endDate: "2025-05-25",
-    },
-    {
-      id: 10,
-      title: "프리미엄 식단 체험단 모집",
-      image: "https://picsum.photos/seed/event10/530/190",
-      description: "새롭게 출시된 프리미엄 식단 체험단을 모집합니다.",
-      startDate: "2025-05-10",
-      endDate: "2025-05-20",
-    },
-  ];
+  const ongoingEvents = window.ongoingEvents; // 전역 변수 참조
 
   // 종료된 이벤트 데이터
   const endedEvents = [
@@ -209,6 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
   modalContainer.className = "event-modal-container";
   modalContainer.style.display = "none";
   document.body.appendChild(modalContainer);
+
   function renderEvents() {
     // 정렬된 이벤트 목록 가져오기
     let events = currentTab === "ongoing" ? ongoingEvents : endedEvents;
@@ -226,7 +230,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const start = (currentPage - 1) * eventsPerPage;
     const end = start + eventsPerPage;
-    const visibleEvents = events.slice(start, end); // 날짜 포맷 함수
+    const visibleEvents = events.slice(start, end);
+
+    // 날짜 포맷 함수
     function formatDate(dateString) {
       const date = new Date(dateString);
       const month = date.getMonth() + 1;
@@ -309,6 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
       tabs.forEach((t) => t.classList.remove("active"));

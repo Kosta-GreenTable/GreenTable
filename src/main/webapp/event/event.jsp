@@ -1,12 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%> <%@ taglib prefix="c"
+uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Green Table - 이벤트</title>
-    <link rel="stylesheet" href="<c:url value='/css/styles.css'/>" />
+    <link rel="stylesheet" href="<c:url value='/css/common/styles.css'/>" />
     <link rel="stylesheet" href="<c:url value='/css/menu-fix.css'/>" />
     <link rel="stylesheet" href="<c:url value='/event/event.css'/>" />
     <link
@@ -17,7 +18,7 @@
   <body>
     <!-- 헤더 포함 -->
     <jsp:include page="../common/header.jsp" />
-    
+
     <!-- 이벤트 페이지 컨테이너 -->
     <div class="event-container">
       <div class="breadcrumb">
@@ -58,7 +59,7 @@
 
     <!-- 푸터 포함 -->
     <jsp:include page="../common/footer.jsp" />
-    
+
     <!-- 자바스크립트 -->
     <script src="<c:url value='/event/event.js'/>"></script>
   </body>

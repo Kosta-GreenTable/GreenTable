@@ -47,10 +47,10 @@ header {
     padding: 2px 8px;
     border-radius: 4px;
 }
-  
- .admin-link:hover {
-   background-color: #0056b3;
- }
+
+.admin-link:hover {
+    background-color: #0056b3;
+}
 
 /* 로고 영역 */
 .logo-container {
@@ -116,7 +116,6 @@ header {
 .search-box {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #999;
     padding: 3px 5px;
     overflow: hidden;
 }
@@ -148,4 +147,3 @@ header {
     height: 18px; */
     font-size: 16px;
 }
-
