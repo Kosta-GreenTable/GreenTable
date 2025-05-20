@@ -128,14 +128,6 @@ public class UserControllerImpl implements UserController {
         return new ModelAndView("/user/mypage.jsp");
 	
 	}
-
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-
 	
 
 }

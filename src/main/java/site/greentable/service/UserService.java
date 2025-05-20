@@ -4,6 +4,7 @@ import site.greentable.dto.UserDTO;
 import site.greentable.dto.UserInfoDTO;
 import site.greentable.exception.AddException;
 import site.greentable.exception.EmailVerifyException;
+import site.greentable.exception.ModifyException;
 import site.greentable.exception.NotFoundException;
 import site.greentable.exception.ServerException;
 
@@ -26,6 +27,10 @@ public interface UserService {
 
 	void googleJoin(UserDTO userDto) throws AddException;
 	
-	 UserInfoDTO getUserInfoByUserId(int userId);
+	UserInfoDTO getUserInfoByUserId(int userId);
+	
+	int updateUser(UserDTO userDto) throws ModifyException;
+	 
+	 
 	
 }

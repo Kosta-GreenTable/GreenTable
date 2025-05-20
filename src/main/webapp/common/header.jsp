@@ -24,8 +24,7 @@
 				<li><a
 					href="${pageContext.request.contextPath}/front?key=user&methodName=logout">로그아웃</a></li>
 				<% } else { %>
-				<li><a
-					href="${pageContext.request.contextPath}/front?key=user&methodName=register">회원가입</a></li>
+				<li><a href="${pageContext.request.contextPath}/user/register.jsp">회원가입</a></li>
 				<li><a
 					href="${pageContext.request.contextPath}/front?key=user&methodName=login">로그인</a></li>
 				<% } %>

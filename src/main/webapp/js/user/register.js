@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("요청 URL:", url);
         
         const response = await fetch(url, {
-          method: "POST",
+          method: "GET",
         });
 
         // 응답이 JSON이 아닐 수 있으므로 안전하게 처리
@@ -275,74 +275,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 회원가입 폼 제출 이벤트
   if (registerForm) {
-    registerForm.addEventListener("submit", function (e) {
-      e.preventDefault();
+  registerForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-      if (validateForm()) {
-        console.log("AJAX 호출 시작");
-        const url = `${contextPath}/ajax?key=user&methodName=register`;
-        console.log("요청 URL:", url);
+    if (validateForm()) {
+      console.log("AJAX 호출 시작");
+      const url = `${contextPath}/ajax?key=user&methodName=register`;
+      console.log("요청 URL:", url);
 
-        // 폼 데이터 객체로 만들기 (필요한 필드만)
-        const data = {
-          email: document.getElementById("email").value.trim(),
-          password: document.getElementById("password").value,
-          userName: document.getElementById("name").value.trim(),
-          phone: document.getElementById("phone").value,
-          zipCode: document.getElementById("zipCode")?.value.trim() || "",
-          address: document.getElementById("address1")?.value.trim() || "",
-          detailAddress: document.getElementById("address2")?.value.trim() || ""
-        };
+      const data = {
+        email: document.getElementById("email").value.trim(),
+        password: document.getElementById("password").value,
+        userName: document.getElementById("name").value.trim(),
+        phone: document.getElementById("phone").value,
+        zipCode: document.getElementById("zipCode")?.value.trim() || "",
+        address: document.getElementById("address1")?.value.trim() || "",
+        detailAddress: document.getElementById("address2")?.value.trim() || ""
+      };
 
-        fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data)
-        })
-          .then((res) => {
-            // 응답 상태 확인
-            if (!res.ok) {
-              throw new Error(`서버 오류: ${res.status}`);
-            }
-            return res.text();
-          })
-          .then((text) => {
-            console.log("서버 응답 텍스트:", text);
-            // 빈 응답이나 null 처리
-            if (!text || text.trim() === '' || text.trim() === 'null') {
-              throw new Error("서버에서 빈 응답이 반환되었습니다.");
-            }
-            
-            // JSON 파싱 시도
-            try {
-              // null 문자열 제거 후 파싱
-              const cleanedText = text.replace(/null$/, '').trim();
-              const data = JSON.parse(cleanedText);
-              
-              if (data.success) {
-                openModal(registerSuccessModal);
-              } else {
-                alert("회원가입 실패: " + (data.message || "알 수 없는 오류"));
-              }
-            } catch (e) {
-              console.error("JSON 파싱 오류:", e);
-              // HTML이 반환된 경우 (<!doctype으로 시작하는지 확인)
-              if (text.toLowerCase().includes('<!doctype')) {
-                alert("서버에서 오류 페이지가 반환되었습니다. 관리자에게 문의하세요.");
-              } else {
-                alert("응답 처리 중 오류가 발생했습니다: " + e.message);
-              }
-            }
-          })
-          .catch((err) => {
-            console.error("오류 발생:", err);
-            alert(`회원가입 중 오류: ${err.message}`);
-          });
-      }
-    });
-  }
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`서버 오류: ${res.status}`);
+        }
+        return res.json();  // JSON 바로 파싱
+      })
+      .then(data => {
+        console.log("서버 응답 JSON:", data);
+        if (data.success) {
+          openModal(registerSuccessModal);
+        } else {
+          alert("회원가입 실패: " + (data.message || "알 수 없는 오류"));
+        }
+      })
+      .catch(err => {
+        console.error("오류 발생:", err);
+        alert(`회원가입 중 오류: ${err.message}`);
+      });
+    }
+  });
+}
+
 
   // 취소 버튼 클릭 이벤트
   if (cancelBtn) {
@@ -350,7 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (
         confirm("회원가입을 취소하시겠습니까? 입력한 정보는 저장되지 않습니다.")
       ) {
-        window.location.href = "index.html";
+        window.location.href = contextPath + "/index.jsp";
       }
     });
   }
@@ -358,14 +337,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // 로그인하기 버튼 클릭 이벤트
   if (goLoginBtn) {
     goLoginBtn.addEventListener("click", function () {
-      window.location.href = "login.html";
+      window.location.href = "login.jsp";
     });
   }
 
   // 메인으로 가기 버튼 클릭 이벤트
   if (goMainBtn) {
     goMainBtn.addEventListener("click", function () {
-      window.location.href = "index.html";
+      window.location.href = contextPath + "/index.jsp";
     });
   }
 

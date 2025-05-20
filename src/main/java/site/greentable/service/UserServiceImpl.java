@@ -20,6 +20,7 @@ import site.greentable.dto.UserDTO;
 import site.greentable.dto.UserInfoDTO;
 import site.greentable.exception.AddException;
 import site.greentable.exception.EmailVerifyException;
+import site.greentable.exception.ModifyException;
 import site.greentable.exception.NotFoundException;
 import site.greentable.exception.ServerException;
 import site.greentable.util.DbUtil;
@@ -170,6 +171,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserInfoDTO getUserInfoByUserId(int userId) {
 		return userDao.findUserInfoByUserId(userId);
+	}
+
+	@Override
+	public int updateUser(UserDTO userDto) throws ModifyException {
+		return userDao.updateUser(userDto);
 	}
 
 }
