@@ -92,6 +92,11 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    fetch("/GreenTable/front?key=user&methodName=updateUserInfo", {
+  method: "POST",
+  body: formData
+});
+
     // TODO: 서버에 회원정보 수정 요청 로직
     alert("회원정보가 성공적으로 수정되었습니다.");
 
@@ -194,13 +199,46 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // 주소 검색 버튼 클릭
-  if (btnAddressSearch) {
-    btnAddressSearch.addEventListener("click", function () {
-      // TODO: 주소 검색 API 연동 로직
-      alert("주소 검색 기능은 준비 중입니다.");
-    });
-  }
+  // 주소찾기 버튼 클릭 이벤트
+    if (findAddressBtn) {
+      findAddressBtn.addEventListener("click", function () {
+        execDaumPostcode();
+      });
+    }
+	
+	// 다음 우편번호 서비스 연동 함수
+	  function execDaumPostcode() {
+	    if (typeof daum !== 'undefined' && daum.Postcode) {
+	      new daum.Postcode({
+	        oncomplete: function (data) {
+	          // 도로명 주소가 있으면 그걸, 아니면 지번주소 사용
+	          const addr = data.roadAddress || data.jibunAddress;
+
+	          // 주소를 입력창에 채워 넣기
+	          const zipCodeElement = document.getElementById("zipCode");
+	          const address1Element = document.getElementById("address1");
+	          
+	          if (zipCodeElement) zipCodeElement.value = data.zonecode;
+	          if (address1Element) address1Element.value = addr;
+
+	          // 상세주소 입력창으로 포커스 이동
+	          const address2Element = document.getElementById("address2");
+	          if (address2Element) address2Element.focus();
+	        }
+	      }).open();
+	    } else {
+	      console.error("Daum Postcode 라이브러리를 찾을 수 없습니다.");
+	      alert("주소 검색 서비스를 불러올 수 없습니다. 페이지를 새로고침하거나 나중에 다시 시도해주세요.");
+	    }
+	  }
+	  
+	  // 주소 검색 모달 닫기 버튼
+	   if (closeAddressBtn) {
+	     closeAddressBtn.addEventListener("click", function () {
+	       closeModal(addressModal);
+	     });
+	   }
+  
 
   // 이메일 중복확인 버튼 클릭
   if (btnVerifyEmail) {

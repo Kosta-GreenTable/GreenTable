@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -24,22 +26,44 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 
 	@Override
 	public Object verifyEmail(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String email = request.getParameter("email");
-		String verifyCode = userService.verifyEmail(email);
-		request.getSession().setAttribute("verifyCode", verifyCode);
-		return 1;
+		 response.setContentType("application/json; charset=UTF-8");
+		    Map<String, Object> result = new HashMap<>();
+
+		    try {
+		        String email = request.getParameter("email");
+		        String verifyCode = userService.verifyEmail(email);
+		        request.getSession().setAttribute("verifyCode", verifyCode);
+		        result.put("result", true);
+		    } catch (EmailVerifyException e) {
+		        result.put("result", false);
+		        result.put("message", e.getMessage());
+		    }
+
+		    PrintWriter out = response.getWriter();
+		    String jsonStr = new Gson().toJson(result);
+		    
+		    out.write(jsonStr);
+		    out.flush();
+		    out.close();
+		    return null;
 	}
 
 	@Override
 	public Object verifyEmailOk(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		HttpSession session = request.getSession();
+	    Map<String, Object> result = new HashMap<>();
+	    HttpSession session = request.getSession();
+	    String inputCode = request.getParameter("code");
+	    String sessionCode = (String) session.getAttribute("verifyCode");
 
-		if (!(session.getAttribute("verifyCode") != null
-				&& request.getParameter("code").equals(session.getAttribute("verifyCode")))) {
-			throw new EmailVerifyException("인증번호가 잘못되었습니다");
-		}
-		return 1;
+	    if (sessionCode == null || !inputCode.equals(sessionCode)) {
+	        result.put("result", false);
+	        result.put("message", "인증번호가 잘못되었습니다");
+	    } else {
+	        result.put("result", true);
+	    }
+	    return result;  // 직접 출력하지 말고 반환만 한다.
 	}
+
 	
 	@Override
 	public Object register(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -90,19 +114,57 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 	        result.addProperty("success", false);
 	        result.addProperty("message", "회원가입 실패: " + e.getMessage());
 	        out.write(result.toString());   // 여기서도 out 사용
-	    }
-	    out.flush(); // flush 해주기
+	    } finally {
+		    out.flush(); 
+		    out.close();	    }
 	    return null;
 	}
 
 	@Override
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Object updateUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		 response.setContentType("application/json; charset=UTF-8");
+		    Map<String, Object> result = new HashMap<>();
+		    PrintWriter out = response.getWriter();
+
+		    try {
+		        BufferedReader reader = request.getReader();
+		        StringBuilder jsonBuilder = new StringBuilder();
+		        String line;
+		        while ((line = reader.readLine()) != null) {
+		            jsonBuilder.append(line);
+		        }
+
+		        Gson gson = new Gson();
+		        JsonObject json = gson.fromJson(jsonBuilder.toString(), JsonObject.class);
+
+		        int userId = json.has("userId") ? json.get("userId").getAsInt() : 0;
+		        String status = json.has("status") ? json.get("status").getAsString() : null;
+		        String userType = json.has("userType") ? json.get("userType").getAsString() : null;
+		        String provider = json.has("provider") ? json.get("provider").getAsString() : null;
+		        String oauthId = json.has("oauthId") ? json.get("oauthId").getAsString() : null;
+
+		        UserDTO userDto = new UserDTO();
+		        userDto.setUserId(userId);
+		        userDto.setStatus(status);
+		        userDto.setUserType(userType);
+		        userDto.setProvider(provider);
+		        userDto.setOauthId(oauthId);
+
+		        int updateCount = userService.updateUser(userDto);
+
+		        result.put("success", true);
+		        result.put("message", "회원 정보가 수정되었습니다.");
+		        result.put("updated", updateCount);
+		    } catch (Exception e) {
+		        result.put("success", false);
+		        result.put("message", "회원 정보 수정 실패: " + e.getMessage());
+		    }
+
+		    out.write(new Gson().toJson(result));
+		    out.flush();
+		    out.close();
+		    return null;
 	}
 
-
-
-
-
+	
 }
