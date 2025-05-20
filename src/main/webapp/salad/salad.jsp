@@ -11,7 +11,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <title>샐러드 상품 | Green Table</title>
     <link
       rel="stylesheet"
-      href="${pageContext.request.contextPath}/css/styles.css"
+      href="${pageContext.request.contextPath}/css/common/styles.css"
     />
     <link
       rel="stylesheet"
@@ -23,12 +23,28 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     />
     <link
       rel="stylesheet"
+      href="${pageContext.request.contextPath}/css/event-banner.css"
+    />
+    <link
+      rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
     <script>
       // 컨텍스트 경로를 JavaScript 변수로 설정
       var contextPath = "${pageContext.request.contextPath}";
     </script>
+    <style>
+      /* 카테고리 페이지에서만 적용되는 이벤트 배너 스타일 */
+      .main-banner .banner-container {
+        height: 250px !important; /* 400px에서 250px로 변경 */
+      }
+
+      /* 화살표 버튼 크기 조정 */
+      .main-banner .arrow {
+        width: 32px;
+        height: 32px;
+      }
+    </style>
   </head>
   <body>
     <!-- 헤더 인클루드 -->
@@ -36,12 +52,29 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 
     <!-- 메인 콘텐츠 -->
     <main class="product-page">
-      <!-- 1. 카테고리 배너 -->
-      <div class="category-banner">
-        <img
-          src="${pageContext.request.contextPath}/products/images/salad-banner.jpg"
-          alt="샐러드 상품"
-        />
+      <!-- 1. 카테고리 배너를 이벤트 배너로 변경 -->
+      <div class="main-banner">
+        <div class="banner-container">
+          <button class="arrow arrow-left">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div class="banner-content">
+            <h2 class="visually-hidden">이벤트 배너</h2>
+            <!-- 배너 내용 (direct-event-loader.js에서 동적으로 채워집니다) -->
+            <div class="banner-slider">
+              <!-- 이벤트 배너는 direct-event-loader.js에 의해 동적으로 생성됩니다 -->
+            </div>
+          </div>
+          <button class="arrow arrow-right">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        <div class="banner-pagination">
+          <div class="page-numbers">
+            <span class="current-page">1</span> /
+            <span class="total-pages">4</span>
+          </div>
+        </div>
       </div>
 
       <!-- 2. 상품 목록 헤더 -->
@@ -189,5 +222,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <!-- 자바스크립트 -->
     <script src="${pageContext.request.contextPath}/js/product-common.js"></script>
     <script src="${pageContext.request.contextPath}/js/salad.js"></script>
+    <!-- 이벤트 배너 관련 스크립트 추가 -->
+    <script src="${pageContext.request.contextPath}/event/event.js"></script>
+    <script src="${pageContext.request.contextPath}/js/direct-event-loader.js"></script>
   </body>
 </html>
