@@ -101,7 +101,7 @@
                   <td>2025.05.21</td>
                   <td class="detail">회원 가입 적립</td>
                   <td class="amount plus">+2000원</td>
-                  <td>2025.05.21</td>
+                  <td>2026.05.21</td>
                 </tr>
  <!--                 <tr>
                   <td>2025.05.01</td>

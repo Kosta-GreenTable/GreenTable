@@ -1,4 +1,8 @@
 /* 상품 리뷰 페이지 스타일 */
+.mypage-container {
+	width: 1100px;
+	margin: 0 auto;
+}
 
 /* 리뷰 요약 섹션 */
 .review-summary {

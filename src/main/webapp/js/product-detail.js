@@ -312,18 +312,18 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(`장바구니 담기: 상품 ID ${productId}, 수량 ${quantity}개`);
       console.log(`userId 값: [${userId}], 타입: ${typeof userId}`);
       
-	  if (!userId || userId === "0" || parseInt(userId) === 0) {
-	        // 비회원일 경우 로컬스토리지에 저장
-	        addCartToLocalStorage(productId, quantity);
+    if (!userId || userId === "0" || parseInt(userId) === 0) {
+          // 비회원일 경우 로컬스토리지에 저장
+          addCartToLocalStorage(productId, quantity);
 
-	      } else {
-	        // 회원이면 서버로 전송
-	        addCartToServer(userId, productId, quantity);
-	      }
-		  
+        } else {
+          // 회원이면 서버로 전송
+          addCartToServer(userId, productId, quantity);
+        }
+  	  
     });
   }
-  
+
   //비회원 장바구니 추가
      const addCartToLocalStorage = (productId, quantity) => {
       const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
@@ -342,13 +342,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const addCartToServer = async (userId, productId, quantity) => {
       try {
       
-        const response = await fetch("/front?key=cart&methodName=insertCart", {
+        const response = await fetch(`${contextPath}/front?key=cart&methodName=insertCart`, {
           method: "POST",
+		  credentials: "same-origin", 
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"
           },
           body: new URLSearchParams({           
-          
+			
             productId: productId,
             quantity: quantity     
            }),
