@@ -4,11 +4,14 @@ prefix="c"%> <%@ page session="true"%> <%site.greentable.dto.UserDTO loginUser =
 (site.greentable.dto.UserDTO) session.getAttribute("loginUser"); String email =
 null; if (loginUser != null) { email = loginUser.getEmail(); } %>
 
+<c:set var="path" value="${pageContext.request.contextPath}" />
+
 <title>그린테이블</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/common/header.css" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <header>
   <div class="header-container">
@@ -53,9 +56,9 @@ null; if (loginUser != null) { email = loginUser.getEmail(); } %>
     <!-- 헤더 로고 -->
     <div class="logo-container">
       <a href="${pageContext.request.contextPath}/index.jsp">
-        <img src="https://picsum.photos/100/40" alt="Green Table 로고" />
+        <img id="logo" src="${pageContext.request.contextPath}/image/logo_3.png" alt="Green Table 로고" />
       </a>
-      <h1>Green Table</h1>
+      <!-- <h1>Green Table</h1> -->
     </div>
 
     <!-- 카테고리 메뉴 바 -->
@@ -118,3 +121,26 @@ null; if (loginUser != null) { email = loginUser.getEmail(); } %>
     </section>
   </div>
 </header>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const cat = document.querySelector('.category-section');
+    const origOffset = cat.getBoundingClientRect().top + window.pageYOffset;
+    // placeholder로 레이아웃 밀림 방지
+    const placeholder = document.createElement('div');
+    placeholder.style.height = cat.offsetHeight + 'px';
+
+    window.addEventListener('scroll', function() {
+      if (window.pageYOffset > origOffset) {
+        if (!cat.classList.contains('sticky')) {
+          cat.classList.add('sticky');
+          cat.parentNode.insertBefore(placeholder, cat.nextSibling);
+        }
+      } else {
+        if (cat.classList.contains('sticky')) {
+          cat.classList.remove('sticky');
+          placeholder.remove();
+        }
+      }
+    });
+  });
+</script>

@@ -1,0 +1,88 @@
+body {
+  font-family: 'Malgun Gothic', sans-serif;
+  background: #fff;
+  padding: 40px;
+}
+
+.review-carousel {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.review-card {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-width: 22%;
+  box-sizing: border-box;
+}
+
+.review-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.review-card p {
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.review-card span {
+  font-size: 12px;
+  color: #666;
+}
+
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+button {
+  font-size: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dots div {
+  width: 10px;
+  height: 10px;
+  background: #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dots .active {
+  background: #333;
+}

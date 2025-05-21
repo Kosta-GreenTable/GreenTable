@@ -7,12 +7,12 @@ import java.util.List;
 public class OrderDTO {
 	private int orderId;
 	private int userId;
-	private String merchantUid;
+	private String merchantUid; 	//고유 주문번호
 	private String customerName;
 	private String customerPhone;
 	private String customerEmail;
-	private String recipient;
-	private String recipientPhone;
+	private String recipient;		//수령자
+	private String recipientPhone;  //수령자 번호
 	private String zipCode;
 	private String address;
 	private String addressDetail;
@@ -40,6 +40,29 @@ public class OrderDTO {
         this.mainImageName = mainImageName;
         this.orderDetails = orderDetails;
     }
+    
+    // 상세 주문 조회용
+	public OrderDTO(int userId, String merchantUid, String customerName, String customerPhone, String customerEmail,
+			String recipient, String recipientPhone, String zipCode, String address, String addressDetail,
+			int totalAmount, int usedPoint, String orderStatus, Date orderAt, String mainImageName,
+			List<OrderDetailDTO> orderDetails) {
+		this.userId = userId;
+		this.merchantUid = merchantUid;
+		this.customerName = customerName;
+		this.customerPhone = customerPhone;
+		this.customerEmail = customerEmail;
+		this.recipient = recipient;
+		this.recipientPhone = recipientPhone;
+		this.zipCode = zipCode;
+		this.address = address;
+		this.addressDetail = addressDetail;
+		this.totalAmount = totalAmount;
+		this.usedPoint = usedPoint;
+		this.orderStatus = orderStatus;
+		this.orderAt = orderAt;
+		this.mainImageName = mainImageName;
+		this.orderDetails = orderDetails;
+	}
 
 	
 	public String getMainImageName() {

@@ -22,13 +22,19 @@ public class OrderDetailDTO {
 		this.quantity = quantity;
 		this.price = price;
 	}
+	
+	//상세 주문 조회용
+	public OrderDetailDTO(int quantity, int price, String productName) {
+		this.quantity = quantity;
+		this.price = price;
+		this.productName = productName;
+	}
 
 
 
 	public int getOrderDetailId() {
 		return orderDetailId;
 	}
-
 
 	public void setOrderDetailId(int orderDetailId) {
 		this.orderDetailId = orderDetailId;

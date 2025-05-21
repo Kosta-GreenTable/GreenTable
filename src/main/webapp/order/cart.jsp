@@ -12,6 +12,7 @@
 <title>그린테이블</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/reset.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/order/cart.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </head>
 <body data-contextpath="${pageContext.request.contextPath}" data-userid="${sessionScope.loginUser.userId}">
   <div class="cart-container hd__inner1100">

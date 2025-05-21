@@ -62,15 +62,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (password) {
       if (!isValidPassword(password)) {
-        alert(
-          "비밀번호는 8~20자의 영문 대소문자, 숫자, 특수문자를 조합하여 입력해주세요."
-        );
+        Swal.fire({
+          position: 'center',
+          icon: 'warning',
+          title: '비밀번호 오류',
+          text: '8~20자의 영문 대소문자, 숫자, 특수문자를 조합해 입력해주세요.',
+          confirmButtonText: '확인'
+        });
         passwordInput.focus();
         return;
       }
 
       if (password !== passwordConfirm) {
-        alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: '비밀번호 확인 오류',
+          text: '비밀번호가 일치하지 않습니다.',
+          confirmButtonText: '확인'
+        });
         passwordConfirmInput.focus();
         return;
       }
@@ -79,7 +89,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // 이메일 검증
     const email = document.getElementById("userEmail").value;
     if (!isValidEmail(email)) {
-      alert("유효한 이메일 주소를 입력해주세요.");
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '이메일 오류',
+        text: '유효한 이메일 주소를 입력해주세요.',
+        confirmButtonText: '확인'
+      });
       document.getElementById("userEmail").focus();
       return;
     }
@@ -87,7 +103,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // 전화번호 검증
     const phone = document.getElementById("userPhone").value;
     if (!isValidPhone(phone)) {
-      alert("유효한 전화번호를 입력해주세요.");
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '전화번호 오류',
+        text: '유효한 전화번호를 입력해주세요.',
+        confirmButtonText: '확인'
+      });
       document.getElementById("userPhone").focus();
       return;
     }
@@ -98,7 +120,13 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
     // TODO: 서버에 회원정보 수정 요청 로직
-    alert("회원정보가 성공적으로 수정되었습니다.");
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: '수정 완료',
+      text: '회원정보가 성공적으로 수정되었습니다.',
+      confirmButtonText: '확인'
+    });
 
     // 수정 성공 시 마이페이지로 이동
     // window.location.href = 'mypage.html';
@@ -128,13 +156,25 @@ document.addEventListener("DOMContentLoaded", function () {
   function handleWithdraw() {
     // 동의 체크 여부 확인
     if (!withdrawAgree.checked) {
-      alert("회원 탈퇴 동의에 체크해주세요.");
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '동의 오류',
+        text: '회원 탈퇴 동의에 체크해주세요.',
+        confirmButtonText: '확인'
+      });
       return;
     }
 
     // 비밀번호 입력 여부 확인
     if (!withdrawPassword.value.trim()) {
-      alert("비밀번호를 입력해주세요.");
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '비밀번호 오류',
+        text: '비밀번호를 입력해주세요.',
+        confirmButtonText: '확인'
+      });
       withdrawPassword.focus();
       return;
     }
@@ -142,7 +182,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // 탈퇴 사유 선택 여부 확인
     const withdrawReason = document.getElementById("withdrawReason");
     if (withdrawReason.value === "") {
-      alert("탈퇴 사유를 선택해주세요.");
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '사유 오류',
+        text: '탈퇴 사유를 선택해주세요.',
+        confirmButtonText: '확인'
+      });
       withdrawReason.focus();
       return;
     }
@@ -150,12 +196,15 @@ document.addEventListener("DOMContentLoaded", function () {
     // TODO: 서버에 회원 탈퇴 요청 로직
 
     // 탈퇴 성공 시
-    alert(
-      "회원 탈퇴가 완료되었습니다. 그동안 그린테이블을 이용해주셔서 감사합니다."
-    );
-
-    // 로그인 페이지로 이동
-    window.location.href = "index.html";
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: '탈퇴 완료',
+      text: '회원 탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.',
+      confirmButtonText: '확인'
+    }).then(() => {
+      window.location.href = "index.html";
+    });
   }
 
   // 이벤트 리스너 등록
@@ -228,7 +277,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	      }).open();
 	    } else {
 	      console.error("Daum Postcode 라이브러리를 찾을 수 없습니다.");
-	      alert("주소 검색 서비스를 불러올 수 없습니다. 페이지를 새로고침하거나 나중에 다시 시도해주세요.");
+	      Swal.fire({
+	        position: 'center',
+	        icon: 'error',
+	        title: '주소 검색 오류',
+	        text: '주소 검색 서비스를 불러올 수 없습니다. 나중에 다시 시도해주세요.',
+	        confirmButtonText: '확인'
+	      });
 	    }
 	  }
 	  
@@ -246,13 +301,25 @@ document.addEventListener("DOMContentLoaded", function () {
       const email = document.getElementById("userEmail").value;
 
       if (!isValidEmail(email)) {
-        alert("유효한 이메일 주소를 입력해주세요.");
+        Swal.fire({
+          position: 'center',
+          icon: 'warning',
+          title: '이메일 오류',
+          text: '유효한 이메일 주소를 입력해주세요.',
+          confirmButtonText: '확인'
+        });
         document.getElementById("userEmail").focus();
         return;
       }
 
       // TODO: 이메일 중복확인 로직
-      alert("사용 가능한 이메일입니다.");
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: '이메일 확인',
+        text: '사용 가능한 이메일입니다.',
+        confirmButtonText: '확인'
+      });
     });
   }
 
@@ -263,13 +330,25 @@ document.addEventListener("DOMContentLoaded", function () {
       const phone = document.getElementById("userPhone").value;
 
       if (!isValidPhone(phone)) {
-        alert("유효한 전화번호를 입력해주세요.");
+        Swal.fire({
+          position: 'center',
+          icon: 'warning',
+          title: '전화번호 오류',
+          text: '유효한 전화번호를 입력해주세요.',
+          confirmButtonText: '확인'
+        });
         document.getElementById("userPhone").focus();
         return;
       }
 
       // TODO: 휴대폰 인증 로직
-      alert("인증번호가 발송되었습니다.");
+      Swal.fire({
+        position: 'center',
+        icon: 'info',
+        title: '인증번호 발송',
+        text: '인증번호가 발송되었습니다.',
+        confirmButtonText: '확인'
+      });
     });
   }
 });
