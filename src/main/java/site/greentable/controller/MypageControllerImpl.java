@@ -5,8 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import site.greentable.dto.UserDTO;
 import site.greentable.exception.UnAuthorizedException;
 
-
-
 public class MypageControllerImpl implements Controller {
 	
 	 public ModelAndView mypage(HttpServletRequest request, HttpServletResponse response) throws Exception {
