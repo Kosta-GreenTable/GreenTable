@@ -82,8 +82,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public boolean isReviewable(int userId, int productId, int orderDetailId) throws Exception {
-        // 해당 상품을 구매했는지, 이미 리뷰를 작성했는지 확인하는 로직
-        return reviewDAO.isReviewable(userId, productId, orderDetailId);
+        
+    	return true;
+    	// 해당 상품을 구매했는지, 이미 리뷰를 작성했는지 확인하는 로직
+        // return reviewDAO.isReviewable(userId, productId, orderDetailId);
     }
 
     @Override

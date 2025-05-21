@@ -68,6 +68,7 @@ public class ReviewControllerImpl implements ReviewController {
             }
         }
 
+        /**
         // 리뷰 작성 가능 여부 확인
         if (!reviewService.isReviewable(user.getUserId(), Integer.parseInt(productId),
                 Integer.parseInt(orderDetailId))) {
@@ -79,6 +80,7 @@ public class ReviewControllerImpl implements ReviewController {
             mv.setViewName(request.getContextPath() + "/front?key=product&methodName=detail&productId=" + productId);
             return mv;
         }
+        **/
 
         request.setAttribute("productId", productId);
         request.setAttribute("orderDetailId", orderDetailId);
