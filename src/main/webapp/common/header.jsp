@@ -18,6 +18,7 @@
 	href="${pageContext.request.contextPath}/css/common/header.css" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
 <header>
 	<div class="header-container">
 		<!-- 상단 메뉴 바 -->
@@ -35,7 +36,8 @@
 
 				<!-- 아래 메뉴는 로그인 여부와 상관없이 항상 보임 -->
 
-				<li><a href="${pageContext.request.contextPath}/order/cart.jsp">장바구니</a></li>
+
+				<li><a href="${pageContext.request.contextPath}/front?key=cart&methodName=selectCartByUserId">장바구니</a></li>
 				<li><a
 					href="${pageContext.request.contextPath}/front?key=mypage&methodName=mypage">마이페이지</a></li>
 				<li><a

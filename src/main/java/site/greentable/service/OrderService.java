@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import site.greentable.dto.CartDTO;
+import site.greentable.dto.OrderDTO;
 
 public interface OrderService {
 	
@@ -16,5 +17,9 @@ public interface OrderService {
 	 * 6. 포인트 사용시 사용자정보 테이블에 point 사용한만큼 감소
 	 * */
     boolean processOrder(List<CartDTO> orderItems, Map<String, Object> orderData) throws SQLException;
+    
+    CartDTO getProductDetail(int productId) throws SQLException;
+    
+    List<OrderDTO> getOrdersByUserId(int userId) throws SQLException;
     
 }

@@ -17,7 +17,8 @@ public class CartDTO {
 	public CartDTO() {}
 	
 	//장바구니 조회
-	public CartDTO(int quantity, String productName, int price, int discountRate, String imageName) {
+	public CartDTO(int productId, int quantity, String productName, int price, int discountRate, String imageName) {
+		this.productId = productId;
 		this.quantity = quantity;
 		this.productName = productName;
 		this.price = price;
@@ -31,6 +32,15 @@ public class CartDTO {
 		this.productId = productId;
 		this.userId = userId;
 		//this.discountRate = discountRate;
+	}
+	
+	//주문 정보 저장용
+	public CartDTO(String productName, int productId, int price, int discountRate, String imageName) {
+		this.productName = productName;
+		this.productId = productId;
+		this.price = price;
+		this.discountRate = discountRate;
+		this.imageName = imageName;
 	}
 	
 	

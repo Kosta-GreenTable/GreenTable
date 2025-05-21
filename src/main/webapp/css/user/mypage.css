@@ -592,4 +592,188 @@
   .product-card {
     flex: 0 0 100%;
   }
+  
+/* 주문 목록 */
+/* 기본 설정 */
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  color: #111;
 }
+
+.order-list-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 15px;
+}
+
+.order-table thead th {
+  border-bottom: 2px solid #000;
+  padding: 12px;
+  text-align: left;
+}
+
+.order-table tbody td {
+  padding: 20px 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 주문일 */
+.order-date {
+  width: 100px;
+  white-space: nowrap;
+}
+
+/* 상품정보 */
+.product-info {
+  width: 450px;
+}
+
+.product-box {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.product-box img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.product-name {
+  font-weight: 500;
+  color: #111;
+}
+
+.product-qty {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 결제금액 */
+.order-price {
+  width: 100px;
+  white-space: nowrap;
+  font-weight: bold;
+  color: #111;
+}
+
+/* 배송상태 */
+.order-status {
+  width: 120px;
+  white-space: nowrap;
+  color: #0070f3;
+  font-weight: 500;
+}
+}
+
+/* 주문 목록 테이블 */
+.order-list-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 15px;
+}
+
+.order-table thead th {
+  border-bottom: 2px solid #000;
+  padding: 12px;
+  text-align: left;
+}
+
+.order-table tbody td {
+  padding: 20px 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 주문일 */
+.order-date {
+  width: 100px;
+  white-space: nowrap;
+}
+
+/* 상품정보 */
+.product-info {
+  width: 450px;
+}
+
+.product-box {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.product-box img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.product-name {
+  font-weight: 500;
+  color: #111;
+}
+
+.product-qty {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 결제금액 */
+.order-price {
+  width: 100px;
+  white-space: nowrap;
+  font-weight: bold;
+  color: #111;
+}
+
+/* 배송상태 */
+.order-status {
+  width: 120px;
+  white-space: nowrap;
+  color: #0070f3;
+  font-weight: 500;
+}
+
+/* 주문번호 */
+.order-id {
+  width: 200px;
+  word-break: break-all;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
