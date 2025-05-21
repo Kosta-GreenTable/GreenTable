@@ -14,8 +14,13 @@ document.addEventListener("DOMContentLoaded", function () {
       // 모든 탭 컨텐츠 숨기기
       tabContents.forEach((content) => content.classList.remove("active"));
       // 클릭한 탭에 해당하는 컨텐츠 표시
-      const tabId = this.getAttribute("data-tab");
-      document.getElementById(`${tabId}-tab`).classList.add("active");
+      // const tabId = this.getAttribute("data-tab");
+      // document.getElementById(`${tabId}-tab`).classList.add("active");
+      const tabId = this.getAttribute("data-tab") + "-tab";
+      const targetContent = document.getElementById(tabId);
+      if (targetContent) {
+        targetContent.classList.add("active");
+      }
     });
   });
 
@@ -58,12 +63,28 @@ document.addEventListener("DOMContentLoaded", function () {
   nonMemberForm.addEventListener("submit", function (e) {
     e.preventDefault(); // 실제 제출은 방지 (백엔드 구현 전이므로)
 
+    // 입력값 가져오기
+    const merchantUid = document.getElementById("merchantUid").value.trim();
+    const guestPassword = document.getElementById("guestPassword").value.trim();
+
+    // 클라이언트 유효성 검사
+    if (!merchantUid || merchantUid.length < 5) {
+        alert("주문번호는 최소 5자리 이상이어야 합니다.");
+        return;
+    }
+
+    if (!guestPassword || guestPassword.length < 4) {
+        alert("비밀번호는 최소 4자리 이상이어야 합니다.");
+        return;
+    }
+    this.submit();
     // 주문조회 성공 가정하고 메시지 표시
-    showMessage("주문 정보를 확인했습니다. 주문 상세 페이지로 이동합니다.");
-    setTimeout(() => {
-      // 실제로는 주문 상세 페이지로 이동할 것
-      window.location.href = "index.html";
-    }, 1500);
+    // showMessage("주문 정보를 확인했습니다. 주문 상세 페이지로 이동합니다.");
+    // setTimeout(() => {
+    //   // 실제로는 주문 상세 페이지로 이동할 것
+    //   this.submit();
+    //   //window.location.href = "/GreenTable/order/guestOrderDetail.jsp";
+    // }, 1500);
   });
 
   // 아이디/비밀번호 찾기 모달
@@ -268,4 +289,63 @@ document.addEventListener("DOMContentLoaded", function () {
       element.textContent = `남은시간 ${formattedMinutes}:${formattedSeconds}`;
     }, 1000);
   }
+
+  ///////////////////////////////////////////////////////////////
+  /* 비회원 주문 조회 검증 */
+//   document.getElementById("non-member-login-form").addEventListener("submit", async function (event) {
+//     event.preventDefault(); // 기본 폼 제출 방지
+
+//     //const orderName = document.getElementById("orderName").value.trim();
+//     const merchantUid = document.getElementById("merchantUid").value.trim();
+//     const guestPassword = document.getElementById("guestPassword").value.trim();
+
+//     // 클라이언트 유효성 검사
+//     // if (!orderName) {
+//     //     swal("입력 오류", "주문자명을 입력해주세요.", "warning");
+//     //     return;
+//     // }
+
+//     if (!merchantUid || merchantUid.length < 5) {
+//         swal("입력 오류", "주문번호는 최소 5자리 이상이어야 합니다.", "warning");
+//         return;
+//     }
+    
+//     if (!guestPassword || guestPassword.length < 4) {
+//         swal("입력 오류", "비밀번호는 최소 4자리 이상이어야 합니다.", "warning");
+//         return;
+//     }
+
+//     // 서버로 데이터 전송
+//     const formData = new URLSearchParams();
+//     formData.append("orderName", orderName);
+//     formData.append("merchantUid", merchantUid);
+//     formData.append("guestPassword", guestPassword);
+
+//     try {
+//         const response = await fetch("/front?key=order&methodName=getGuestOrder", {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/x-www-form-urlencoded",
+//             },
+//             body: formData.toString(),
+//         });
+
+//         const result = await response.json();
+
+//         if (result.success) {
+//             // 주문 상세 페이지로 이동
+//             swal("조회 성공", "주문 상세 페이지로 이동합니다.", "success").then(() => {
+//                 window.location.href = "/order/guestOrderDetail.jsp";
+//             });
+//         } else {
+//             // 서버에서 반환된 에러 메시지 표시
+//             swal("조회 실패", result.message, "error");
+//         }
+//     } catch (error) {
+//         console.error("Error:", error);
+//         swal("서버 오류", "서버 요청 중 오류가 발생했습니다.", "error");
+//     }
+// });
+
+
 });

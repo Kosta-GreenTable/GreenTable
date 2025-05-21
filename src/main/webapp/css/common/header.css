@@ -17,6 +17,7 @@ header {
     padding: 15px 0;
 } */
 
+
 /* 상단 메뉴바 */
 .top-menu-container {
     display: flex;
@@ -35,6 +36,7 @@ header {
 .user-menu li a {
     color: #333;
     text-decoration: none;
+    font-size: 15px;
 }
 
 .user-menu li a:hover {
@@ -58,10 +60,17 @@ header {
     align-items: center;
     padding: 15px 20px;
     gap: 20px;
+    margin-left: 10px;
+}
+
+#logo {
+    width: 350px;
+    height: 100px;
+    object-fit: cover;
 }
 
 .logo-container img {
-    width: 200x;
+    width: 350px;
     height: 100px;
     object-fit: cover;
 }
@@ -74,8 +83,17 @@ header {
 
 /* 카테고리 메뉴 바 */
 .category-section {
-    border-bottom: 1px solid #ddd;
+    position: relative;
+    width: 100%;
     background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+/* ② 스크롤 내려서 고정될 때 */
+.category-section.sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .category-container {
@@ -98,7 +116,7 @@ header {
 
 .cate a {
     text-decoration: none;
-    font-size: 16px;
+    font-size: 18px;
     color: #111;
     font-weight: 500;
     padding: 5px 10px;

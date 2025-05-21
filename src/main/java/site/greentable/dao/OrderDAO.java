@@ -34,5 +34,8 @@ public interface OrderDAO {
 	
 	/** 특정 유저의 주문 내역 조회 */
 	List<OrderDTO> selectOrdersByUser(int userId) throws SQLException;
+	
+	/** 비회원 주문 조회 */
+	OrderDTO selectGuestOrder(String merchantUid, String guestPassword) throws SQLException;
 	 
 }
