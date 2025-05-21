@@ -56,7 +56,7 @@ public class CartController implements Controller {
 			HttpSession session = request.getSession();
 		    Integer userId = (Integer) session.getAttribute("userId");
 		    if (userId == null) throw new UnAuthorizedException("로그인이 필요합니다.");
-			
+			System.out.println("inserCart;" + request.getParameter("userId"));
 			int productId = Integer.parseInt(request.getParameter("productId"));
 			int quantity = Integer.parseInt(request.getParameter("quantity"));
 			
@@ -72,6 +72,13 @@ public class CartController implements Controller {
 			cart.setImageName(product.getMainImageName());
 			
 			cartService.insertCart(cart);
+			
+			// AJAX 요청이라면 JSON 으로 성공 여부 내보내기
+			  if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+			    response.setContentType("application/json;charset=UTF-8");
+			    response.getWriter().write("{\"success\":true}");
+			    return null;  
+			  }
 				
 			return new ModelAndView(request.getContextPath() + "/front?key=cart&methodName=selectCartByUserId&userId=" + userId, true);
 		}
