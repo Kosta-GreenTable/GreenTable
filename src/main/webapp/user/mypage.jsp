@@ -36,7 +36,7 @@
 
 
 
-						<button class="profile-edit-btn">회원정보수정</button>
+						<!--  <button class="profile-edit-btn">회원정보수정</button> -->
 					</div>
 				</div>
 
@@ -45,8 +45,8 @@
 					<ul>
 						<li class="active"><a href="mypage.jsp">주문/배송 조회</a></li>
 						<li><a href="mycancel.jsp">취소/환불 내역</a></li>
-						<li><a href="mypoint.jsp">적립금 내역</a></li>
-						<li><a href="mycoupon.jsp">쿠폰 내역</a></li>
+						<li><a href="${path}/user/mypoint.jsp">적립금 내역</a></li>
+						<li><a href="${path}/user/mycoupon.jsp">쿠폰 내역</a></li>
 						<li><a href="myreview.jsp">상품 리뷰</a></li>
 						<li><a href="myqna.jsp">상품 문의</a></li>
 					</ul>
@@ -141,8 +141,8 @@
 	</main>
 
 	<jsp:include page="/common/footer.jsp" />
-	<script src="../js/include.js"></script>
-	<script src="../js/script.js"></script>
-	<script src="../js/mypage.js"></script>
+	<script src="${path}/js/user/include.js"></script>
+	<script src="${path}/js/user/script.js"></script>
+	<script src="${path}/js/user/mypage.js"></script>
 </body>
 </html>

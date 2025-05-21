@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import site.greentable.dto.UserDTO;
 import site.greentable.dto.UserInfoDTO;
 import site.greentable.exception.MethodNotAllowedException;
+import site.greentable.exception.NotFoundException;
 import site.greentable.service.UserService;
 import site.greentable.service.UserServiceImpl;
 
@@ -98,25 +99,25 @@ public class UserControllerImpl implements UserController {
 	@Override
 	public ModelAndView loginKakao(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		throw new NotFoundException("아직 구현되지 않은 기능입니다: loginKakao");
 	}
 
 	@Override
 	public ModelAndView loginGoogle(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		throw new NotFoundException("아직 구현되지 않은 기능입니다: loginGoogle");
 	}
 
 	@Override
 	public ModelAndView loginKakaoCallback(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		throw new NotFoundException("아직 구현되지 않은 기능입니다: loginKakaoCallback");
 	}
 
 	@Override
 	public ModelAndView loginGoogleCallback(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		throw new NotFoundException("아직 구현되지 않은 기능입니다: loginGoogleCallback");
 	}
 
 	@Override
