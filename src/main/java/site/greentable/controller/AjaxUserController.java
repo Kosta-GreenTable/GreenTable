@@ -15,5 +15,7 @@ public interface AjaxUserController extends RestController {
 	Object register(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
 	Object updateUser(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	
+	void withdrawUser(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 }

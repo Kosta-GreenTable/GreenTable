@@ -337,7 +337,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // 로그인하기 버튼 클릭 이벤트
   if (goLoginBtn) {
     goLoginBtn.addEventListener("click", function () {
-      window.location.href = "login.jsp";
+      window.location.href = contextPath + "/user/login.jsp";
     });
   }
 

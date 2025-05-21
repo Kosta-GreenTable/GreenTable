@@ -1,10 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
-prefix="c"%> <%@ page session="true"%> <%site.greentable.dto.UserDTO loginUser =
-(site.greentable.dto.UserDTO) session.getAttribute("loginUser"); String email =
-null; if (loginUser != null) { email = loginUser.getEmail(); } %>
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="true"%>
 
-<c:set var="path" value="${pageContext.request.contextPath}" />
+<%site.greentable.dto.UserDTO loginUser = (site.greentable.dto.UserDTO) session.getAttribute("loginUser");
+            String email = null;
+            if (loginUser != null) {
+                email = loginUser.getEmail();
+            } %>
+            
+            <script>
+  window.contextPath = "<%= request.getContextPath() %>";
+</script>
+            
 
 <title>그린테이블</title>
 <link rel="stylesheet"
@@ -14,33 +22,22 @@ null; if (loginUser != null) { email = loginUser.getEmail(); } %>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <header>
-  <div class="header-container">
-    <!-- 상단 메뉴 바 -->
-    <div class="top-menu-container">
-      <ul class="user-menu">
-        <% if (email != null) { %>
-        <li><span><%= email %>님 환영합니다!</span></li>
-        <li>
-          <a
-            href="${pageContext.request.contextPath}/front?key=user&methodName=logout"
-            >로그아웃</a
-          >
-        </li>
-        <% } else { %>
-        <li>
-          <a href="${pageContext.request.contextPath}/user/register.jsp"
-            >회원가입</a
-          >
-        </li>
-        <li>
-          <a
-            href="${pageContext.request.contextPath}/front?key=user&methodName=login"
-            >로그인</a
-          >
-        </li>
-        <% } %>
+	<div class="header-container">
+		<!-- 상단 메뉴 바 -->
+		<div class="top-menu-container">
+			<ul class="user-menu">
+				<% if (email != null) { %>
+				<li><span><%= email %>님 환영합니다!</span></li>
+				<li><a
+					href="${pageContext.request.contextPath}/front?key=user&methodName=logout">로그아웃</a></li>
+				<% } else { %>
+				<li><a href="${pageContext.request.contextPath}/user/terms.jsp">회원가입</a></li>
+				<li><a
+					href="${pageContext.request.contextPath}/front?key=user&methodName=login">로그인</a></li>
+				<% } %>
 
-        <!-- 아래 메뉴는 로그인 여부와 상관없이 항상 보임 -->
+				<!-- 아래 메뉴는 로그인 여부와 상관없이 항상 보임 -->
+
 
 				<li><a href="${pageContext.request.contextPath}/front?key=cart&methodName=selectCartByUserId">장바구니</a></li>
 				<li><a
@@ -144,3 +141,4 @@ null; if (loginUser != null) { email = loginUser.getEmail(); } %>
     });
   });
 </script>
+
