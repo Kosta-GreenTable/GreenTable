@@ -36,7 +36,7 @@ public class DispatcherServlet extends HttpServlet {
 		System.out.println("DispatcherServlet init....");
 		ServletContext application = super.getServletContext();
 		map = (Map<String, Controller>) application.getAttribute("map");
-		
+
 		System.out.println("======= DispatcherServlet init(), map: " + map);
 
 	}
@@ -47,12 +47,15 @@ public class DispatcherServlet extends HttpServlet {
 		String key = request.getParameter("key");
 		String methodName = request.getParameter("methodName");
 		Controller controller = map.get(key);
+
 	
 		
+
+
+
 		System.out.println("==================DispatcherServlet.service() called  ================");
 		System.out.println("key=" + key + ", methodName=" + methodName);
 		System.out.println("Controller instance: " + controller);
-
 
 		try {
 

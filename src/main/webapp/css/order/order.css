@@ -154,6 +154,7 @@
 .order-right {
     width: 350px;
     flex-shrink: 0;
+
 }
 .sticky-box {
     position: sticky;

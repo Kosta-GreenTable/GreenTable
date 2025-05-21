@@ -1,0 +1,265 @@
+/* 리뷰 작성 폼 스타일 */
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.review-form-section {
+  margin-bottom: 50px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.product-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-right: 20px;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-details {
+  flex: 1;
+}
+
+.product-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.product-option {
+  font-size: 14px;
+  color: #666;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.star-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.star-rating i {
+  font-size: 24px;
+  color: #ddd;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.star-rating i.fas {
+  color: #ff9800;
+}
+
+.star-rating i.hover {
+  color: #ffac33;
+}
+
+.rating-value {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.text-length {
+  text-align: right;
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+
+.photo-upload-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.photo-upload-btn {
+  width: 80px;
+  height: 80px;
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.photo-upload-btn i {
+  font-size: 24px;
+  color: #ccc;
+}
+
+.photo-upload-btn input[type="file"] {
+  display: none;
+}
+
+.photo-upload-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.photo-preview-item {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.photo-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.remove-photo {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  font-size: 12px;
+  color: #777;
+  cursor: pointer;
+}
+
+.photo-upload-info {
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+
+.review-benefits {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.review-benefits h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.review-benefits ul {
+  padding-left: 0;
+  list-style-type: none;
+}
+
+.review-benefits li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #666;
+  display: flex;
+  align-items: flex-start;
+}
+
+.review-benefits li i {
+  color: #00c471;
+  margin-right: 8px;
+  margin-top: 2px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 12px 30px;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: #f1f1f1;
+  color: #666;
+}
+
+.submit-btn {
+  background-color: #00c471;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #e5e5e5;
+}
+
+.submit-btn:hover {
+  background-color: #00a65a;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 576px) {
+  .product-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-image {
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+  }
+}
