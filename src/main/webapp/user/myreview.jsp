@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -23,10 +24,11 @@
       <h1 class="page-title">상품 리뷰</h1>
 
       <div class="mypage-content">
-
-
+        <!-- 마이페이지 사이드바 - 경로 수정 -->
+        <!-- 사이드바 없이 진행 (파일이 없으므로) -->
+        
         <!-- 상품 리뷰 메인 내용 -->
-        <div class="mypage-main">
+        <div class="mypage-main" style="width:100%;">
           <!-- 상품 리뷰 현황 섹션 -->
           <section class="review-summary">
             <div class="summary-box">
@@ -86,7 +88,6 @@
                           <div class="product-info">
                             <p class="order-date">주문일자: ${review.orderDate}</p>
                             <h4 class="product-name">${review.productName}</h4>
-                            <p class="product-option">${review.productOption}</p>
                             <div class="review-deadline">
                               <span class="deadline-text"
                                 >리뷰 작성 기한: <b>${review.deadline}</b>까지</span
@@ -125,15 +126,18 @@
                       <div class="review-item written">
                         <div class="review-product">
                           <div class="product-image">
-                            <img
-                              src="${review.productImage}"
-                              alt="${review.productName}"
-                            />
+                            <c:choose>
+                              <c:when test="${not empty review.productImage}">
+                                <img src="${review.productImage}" alt="${review.productName}" />
+                              </c:when>
+                              <c:otherwise>
+                                <img src="${pageContext.request.contextPath}/img/product-placeholder.jpg" alt="${review.productName}" />
+                              </c:otherwise>
+                            </c:choose>
                           </div>
                           <div class="product-info">
-                            <p class="review-date">작성일자: ${review.createdAt}</p>
+                            <p class="review-date">작성일자: <fmt:formatDate value="${review.createdAt}" pattern="yyyy-MM-dd" /></p>
                             <h4 class="product-name">${review.productName}</h4>
-                            <p class="product-option">${review.productOption}</p>
                             <div class="rating">
                               <span class="rating-text">평점:</span>
                               <span class="stars">
@@ -164,7 +168,7 @@
                               <c:forEach var="image" items="${review.images}">
                                 <div class="photo-item">
                                   <img
-                                    src="${pageContext.request.contextPath}/upload/review/${image.realName}"
+                                    src="${pageContext.request.contextPath}/uploads/reviews/${image.realName}"
                                     alt="리뷰사진"
                                   />
                                 </div>
@@ -184,8 +188,26 @@
             </div>
 
             <!-- 페이지네이션 -->
-            <div class="pagination">
-              <span class="page-info">${page}-${size} / ${total}</span>
+            <c:if test="${not empty pagination}">
+              <div class="pagination">
+                <c:if test="${pagination.hasPrev}">
+                  <a href="${pageContext.request.contextPath}/front?key=review&methodName=myReviews&page=${pagination.prevPage}" class="page-nav">&lt;</a>
+                </c:if>
+                
+                <c:forEach begin="${pagination.startPage}" end="${pagination.endPage}" var="pageNum">
+                  <a href="${pageContext.request.contextPath}/front?key=review&methodName=myReviews&page=${pageNum}" 
+                     class="page-num ${pageNum == pagination.currentPage ? 'active' : ''}">${pageNum}</a>
+                </c:forEach>
+                
+                <c:if test="${pagination.hasNext}">
+                  <a href="${pageContext.request.contextPath}/front?key=review&methodName=myReviews&page=${pagination.nextPage}" class="page-nav">&gt;</a>
+                </c:if>
+              </div>
+            </c:if>
+            <div class="page-info">
+              <c:if test="${not empty totalCount}">
+                <span>총 ${totalCount}개의 리뷰</span>
+              </c:if>
             </div>
           </section>
 
@@ -219,87 +241,27 @@
       </div>
     </main>
 
-    <!-- 리뷰 작성 모달 -->
-    <div class="modal-background" id="reviewModal" style="display: none">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>리뷰 작성</h3>
-          <button class="close-modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div class="review-product-info">
-            <div class="product-image">
-              <img
-                src=""
-                alt="상품 이미지"
-                id="modal-product-image"
-              />
-            </div>
-            <div class="product-details">
-              <h4 class="product-name" id="modal-product-name"></h4>
-              <p class="product-option" id="modal-product-option"></p>
-            </div>
-          </div>
-          <form id="reviewForm" method="post" action="${pageContext.request.contextPath}/front?key=review&methodName=writeReview" enctype="multipart/form-data">
-            <input type="hidden" id="productId" name="productId" value="">
-            <input type="hidden" id="orderDetailId" name="orderDetailId" value="">
-            <div class="form-group">
-              <label>평점</label>
-              <div class="star-rating">
-                <i class="far fa-star" data-rating="1"></i>
-                <i class="far fa-star" data-rating="2"></i>
-                <i class="far fa-star" data-rating="3"></i>
-                <i class="far fa-star" data-rating="4"></i>
-                <i class="far fa-star" data-rating="5"></i>
-                <span class="rating-value">0점</span>
-              </div>
-              <input type="hidden" id="rating" name="rating" value="0">
-            </div>
-            <div class="form-group">
-              <label for="reviewText">리뷰 내용</label>
-              <textarea
-                id="reviewText"
-                name="content"
-                placeholder="상품에 대한 솔직한 리뷰를 작성해주세요."
-                rows="5"
-                required
-              ></textarea>
-              <p class="text-length">0/1000자</p>
-            </div>
-            <div class="form-group">
-              <label>포토 리뷰 (선택)</label>
-              <div class="photo-upload-area">
-                <div class="photo-upload-btn">
-                  <i class="fas fa-plus"></i>
-                  <input
-                    type="file"
-                    id="photoUpload"
-                    name="reviewImages"
-                    accept="image/*"
-                    multiple
-                  />
-                </div>
-                <div class="photo-upload-preview">
-                  <!-- 업로드된 이미지 미리보기가 여기에 표시됩니다 -->
-                </div>
-              </div>
-              <p class="photo-upload-info">
-                * 최대 5장까지 업로드 가능합니다. (JPG, PNG 파일, 각 5MB 이하)
-              </p>
-            </div>
-            <div class="form-group form-actions">
-              <button type="button" class="cancel-btn">취소</button>
-              <button type="submit" class="submit-btn">등록하기</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
     <!-- 푸터 인클루드 -->
     <jsp:include page="../common/footer.jsp" />
     
-    <script src="${pageContext.request.contextPath}/js/script.js"></script>
-    <script src="${pageContext.request.contextPath}/js/user/myreview.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // 탭 전환 기능
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach((btn, index) => {
+          btn.addEventListener('click', function() {
+            // 모든 탭 버튼과 내용에서 active 클래스 제거
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            
+            // 클릭된 탭 버튼과 해당 내용에 active 클래스 추가
+            this.classList.add('active');
+            tabContents[index].classList.add('active');
+          });
+        });
+      });
+    </script>
   </body>
 </html>
