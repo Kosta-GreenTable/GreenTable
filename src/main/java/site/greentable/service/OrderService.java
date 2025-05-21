@@ -6,6 +6,7 @@ import java.util.Map;
 
 import site.greentable.dto.CartDTO;
 import site.greentable.dto.OrderDTO;
+import site.greentable.exception.NotFoundException;
 
 public interface OrderService {
 	
@@ -18,8 +19,14 @@ public interface OrderService {
 	 * */
     boolean processOrder(List<CartDTO> orderItems, Map<String, Object> orderData) throws SQLException;
     
+    /** 조작 위험있는 상품 가격, 할인율 정보 DB로 꺼내기 */
     CartDTO getProductDetail(int productId) throws SQLException;
     
+    /** 회원 주문 내역 조회 */
     List<OrderDTO> getOrdersByUserId(int userId) throws SQLException;
+    
+    /** 비회원 주문 조회 */
+    OrderDTO getGuestOrder(String merchantUid, String guestPassword) throws SQLException, NotFoundException;
+    
     
 }

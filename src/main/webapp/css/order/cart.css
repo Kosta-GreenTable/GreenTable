@@ -2,6 +2,8 @@
     padding: 40px 0;
     font-family: 'Noto Sans KR', sans-serif;
     color: #333;
+    width: 1100px;
+    margin: 20px auto 150px auto;
   }
 
 .cart-title {
@@ -12,7 +14,7 @@
   
 .cart-title h1 {
     text-align: center;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: bold;
   }
   
@@ -185,7 +187,7 @@
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 30px;
+    margin-top: 50px;
 }
   
 .cart-buttons button {

@@ -16,7 +16,10 @@
 
     List<CartDTO> orderItems = (List<CartDTO>) session.getAttribute("orderItems");
 %>
-
+<c:if test="${not empty sessionScope.loginUser.userInfoDto.phone}">
+  <c:set var="phoneParts" value="${fn:split(sessionScope.loginUser.userInfoDto.phone,'-')}" />
+  <c:set var="emailParts" value="${fn:split(sessionScope.loginUser.email,'@')}" />
+</c:if>
    <jsp:include page="/common/header.jsp"/>
 <!DOCTYPE html>
 <html>
@@ -28,9 +31,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!--  <script src="https://cdn.portone.io/v2/browser-sdk.js"></script> -->
 <script src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+<script
+	src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body data-context-path="${pageContext.request.contextPath}">
-<div class="order-container hd__inner1100">
+<div class="order-container">
     <h2 class="order-title">주문결제</h2>
     
         <form id="orderForm" method="post" action="${pageContext.request.contextPath}/front?key=order&methodName=completeOrder">
@@ -50,8 +58,8 @@
                     <div class="form-group">
                         <label for="email">이메일 *</label>
                         <div class="sub-group email-group">
-                            <input type="text" name="email1" id="email1" value="${fn:split(sessionScope.loginUser.email, '@')[0]}" required><span>@</span>
-                            <input type="text" name="email2" id="email2" value="${fn:split(sessionScope.loginUser.email, '@')[1]}" required>
+                            <input type="text" name="email1" id="email1" value="<c:out value='${emailParts[0]}' default=''/>" required><span>@</span>
+                            <input type="text" name="email2" id="email2" value="<c:out value='${emailParts[1]}' default=''/>" required>
                             <select id="emailSelect">
                                 <option value="">직접입력</option>
                                 <option value="gmail.com">gmail.com</option>
@@ -66,14 +74,14 @@
                         <div class="sub-group phone-group">
                             <select name="phonePrefix" required>
                                 <option value="">선택</option>
-                                <option value="010" <c:if test="${userPhone.startsWith('010')}">selected</c:if>>010</option>
-                                <option value="011" <c:if test="${userPhone.startsWith('011')}">selected</c:if>>011</option>
-                                <option value="016" <c:if test="${userPhone.startsWith('016')}">selected</c:if>>016</option>
-                                <option value="017" <c:if test="${userPhone.startsWith('017')}">selected</c:if>>017</option>
-                                <option value="018" <c:if test="${userPhone.startsWith('018')}">selected</c:if>>018</option>
+                                <option value="010" <c:if test="${phoneParts[0]=='010'}">selected</c:if>>010</option>
+                                <option value="011" <c:if test="${phoneParts[0]=='011'}">selected</c:if>>011</option>
+                                <option value="016" <c:if test="${phoneParts[0]=='016'}">selected</c:if>>016</option>
+                                <option value="017" <c:if test="${phoneParts[0]=='017'}">selected</c:if>>017</option>
+                                <option value="018" <c:if test="${phoneParts[0]=='018'}">selected</c:if>>018</option>
                             </select><span>-</span>
-                            <input type="text" id="phone1" name="phone1" maxlength="4" value="${userPhone != null ? userPhone.substring(3, 7) : ''}" required><span>-</span>
-                            <input type="text" id="phone2" name="phone2" maxlength="4" value="${userPhone != null ? userPhone.substring(7) : ''}" required>
+                            <input type="text" id="phone1" name="phone1" maxlength="4" value="${phoneParts[1]}" required><span>-</span>
+                            <input type="text" id="phone2" name="phone2" maxlength="4" value="${phoneParts[2]}" required>
                         </div>                   
                     </div>
 
@@ -81,13 +89,13 @@
                         <div class="form-group">
                             <label for="password">주문 비밀번호 *</label>
                             <div class="sub-group">
-                                <input type="password" id="password" name="password" placeholder="비밀번호" required>
+                                <input type="password" id="password" name="password" placeholder="4글자이상 입력해주세요." minlength="4" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="passwordConfirm">주문 비밀번호 확인 *</label>
                             <div class="sub-group">
-                                <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="비밀번호 확인" required>
+                                <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="비밀번호 확인" minlength="4" required>
                             </div>
                         </div>
                     </c:if>
@@ -109,7 +117,7 @@
                         <label for="zipCode">주소 *</label>
                         <div class="sub-group address-group">
                             <input type="text" name="zipCode" id="zipCode" placeholder="우편번호" required>
-                            <button type="button">주소검색</button>
+                            <button type="button" id="findAddress" class="find-address-btn">주소 검색</button>
                             <input type="text" id="address" name="address" placeholder="주소" required>
                             <input type="text" id="addressDetail" name="addressDetail" placeholder="상세주소" required>
                         </div>
@@ -256,7 +264,7 @@
             <input type="hidden" id="paymentMethod"   name="paymentMethod"  value="CREDIT_CARD"/>
             <input type="hidden" id="totalAmount"     name="totalAmount"    />
             <input type="hidden" id="paymentStatus"   name="paymentStatus"  />       
-            
+
         </form>
 
     </div>

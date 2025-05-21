@@ -25,36 +25,31 @@ public class OrderRestController implements RestController {
 	    Map<String, Object> resultMap = new HashMap<>();
 	    HttpSession session = request.getSession();
 	    Integer userId = (Integer) session.getAttribute("userId");
-	    
+
 	    try {
-	    	// 가격 정보를 세션에 저장
-	    	int totalProductPrice = Integer.parseInt(request.getParameter("totalProductPrice"));
-	        int totalDiscount = Integer.parseInt(request.getParameter("totalDiscount"));
-	        int deliveryFee = Integer.parseInt(request.getParameter("deliveryFee"));
-	        int totalPayPrice = Integer.parseInt(request.getParameter("totalPayPrice"));
-	        
+	        // 파라미터 값 검증 및 기본값 설정
+	        int totalProductPrice = parseOrDefault(request.getParameter("totalProductPrice"), 0);
+	        int totalDiscount = parseOrDefault(request.getParameter("totalDiscount"), 0);
+	        int deliveryFee = parseOrDefault(request.getParameter("deliveryFee"), 0);
+	        int totalPayPrice = parseOrDefault(request.getParameter("totalPayPrice"), 0);
+
 	        session.setAttribute("totalProductPrice", totalProductPrice);
 	        session.setAttribute("totalDiscount", totalDiscount);
 	        session.setAttribute("deliveryFee", deliveryFee);
 	        session.setAttribute("totalPayPrice", totalPayPrice);
-	    	 
+
 	        if (userId == null || userId == 0) {
-	            // 비회원 주문 데이터 세션에 저장
 	            saveGuestOrder(request, session);
 	        } else {
-	            // 회원 주문 데이터 세션에 저장
 	            saveMemberOrder(request, session, userId);
 	        }
 
-	        // merchantUid 생성 및 세션에 저장
 	        String merchantUid = generateMerchantUid();
 	        session.setAttribute("merchantUid", merchantUid);
 
-	        // 클라이언트에 전달 (order.jsp에서 사용 가능하도록)
 	        resultMap.put("merchantUid", merchantUid);
-	        
 	        resultMap.put("success", true);
-	        resultMap.put("redirectUrl",request.getContextPath() + "/order/order.jsp");
+	        resultMap.put("redirectUrl", request.getContextPath() + "/order/order.jsp");
 	        resultMap.put("message", "주문 페이지로 이동합니다.");
 	    } catch (Exception e) {
 	        resultMap.put("success", false);
@@ -62,6 +57,15 @@ public class OrderRestController implements RestController {
 	        e.printStackTrace();
 	    }
 	    return resultMap;
+	}
+
+	// 파라미터 값 검증 및 기본값 설정 메서드
+	private int parseOrDefault(String value, int defaultValue) {
+	    try {
+	        return value != null ? Integer.parseInt(value) : defaultValue;
+	    } catch (NumberFormatException e) {
+	        return defaultValue;
+	    }
 	}
 
 	

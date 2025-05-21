@@ -14,6 +14,7 @@ import site.greentable.dto.CartDTO;
 import site.greentable.dto.OrderDTO;
 import site.greentable.dto.PaymentDTO;
 import site.greentable.dto.Product;
+import site.greentable.exception.NotFoundException;
 import site.greentable.util.DbUtil;
 
 public class OrderServiceImpl implements OrderService {
@@ -103,6 +104,14 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<OrderDTO> getOrdersByUserId(int userId) throws SQLException {
 		return orderDao.selectOrdersByUser(userId);
+	}
+
+
+	@Override
+	public OrderDTO getGuestOrder(String merchantUid, String guestPassword) throws SQLException, NotFoundException {
+		OrderDTO order = orderDao.selectGuestOrder(merchantUid, guestPassword);
+		if(order == null) throw new NotFoundException("주문번호 또는 비밀번호가 일치하지 않습니다.");
+		return order;
 	}
 	
 
