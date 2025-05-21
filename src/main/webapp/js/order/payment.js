@@ -28,7 +28,13 @@ async function initPayment() {
   
     } catch (error) {
         console.error('결제 초기화 오류:', error);
-        alert('결제 초기화 중 오류가 발생했습니다');
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '결제 초기화 오류',
+            text: '결제 초기화 중 오류가 발생했습니다',
+            confirmButtonText: '확인'
+        });
     }
 }
 
@@ -38,7 +44,13 @@ function validateForm() {
     const requiredFields = document.querySelectorAll('[required]');
     for (const field of requiredFields) {
         if (!field.value.trim()) {
-            alert('필수 항목을 모두 입력해 주세요.');
+            Swal.fire({
+                position: 'center',
+                icon: 'warning',
+                title: '입력 오류',
+                text: '필수 항목을 모두 입력해 주세요.',
+                confirmButtonText: '확인'
+            });
             field.focus();
             return false;
         }
@@ -48,24 +60,44 @@ function validateForm() {
     const termsChecks = document.querySelectorAll('.agree-checkbox');
     for (const check of termsChecks) {
         if (!check.checked) {
-            alert('필수 약관에 동의해 주세요.');
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: '약관 동의 오류',
+                text: '필수 약관에 동의해 주세요.',
+                confirmButtonText: '확인'
+            });
             check.focus();
             return false;
         }
     }
     
-    // 비회원일 경우 비밀번호 확인
-    const passwordField = document.getElementById("password");
-    const passwordConfirmField = document.getElementById("passwordConfirm");
-    
-    if (passwordField && passwordConfirmField) {
-        if (passwordField.value !== passwordConfirmField.value) {
-            alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-            passwordConfirmField.focus();
+    // 비회원일 경우 비밀번호 유효성 검사
+    const password = document.getElementById("password")?.value.trim() ?? '';
+    const passwordConfirm = document.getElementById("passwordConfirm")?.value.trim() ?? '';
+    if (password || passwordConfirm) {
+        if (password !== passwordConfirm) {
+            Swal.fire({
+                title: '비밀번호 오류',
+                text: '비밀번호와 확인이 일치하지 않습니다.',
+                icon: 'error',
+                confirmButtonText: '확인'
+            });
+            document.getElementById("passwordConfirm").focus();
+            return false;
+        }
+        if (password.length < 4) {
+            Swal.fire({
+                title: '비밀번호 오류',
+                text: '비밀번호는 최소 4자리 이상이어야 합니다.',
+                icon: 'error',
+                confirmButtonText: '확인'
+            });
+            document.getElementById("password").focus();
             return false;
         }
     }
-    
+ 
     return true;
 } //폼 유효성검사 끝
 
@@ -115,7 +147,15 @@ function requestPayment(merchantUid) {
             // 서버에 결제 검증 요청
             verifyPayment(rsp);
         } else {
-            alert('결제에 실패했습니다: ' + rsp.error_msg);
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: '결제 실패',
+                text: '결제에 실패했습니다: ' + rsp.error_msg,
+                confirmButtonText: '확인'
+            });
+            const payBtn = document.getElementById("payBtn");
+            payBtn.disabled = false;
         }
     });
 }
@@ -143,7 +183,14 @@ async function verifyPayment(rsp) {
             document.getElementById('paymentStatus').value = '결제 성공';
             document.getElementById('orderForm').submit();
         } else {
-            alert('결제 검증에 실패했습니다: ' + data.message);
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: '결제 검증 실패',
+                text: '결제 검증에 실패했습니다: ' + data.message,
+                confirmButtonText: '확인'
+            });
+            const payBtn = document.getElementById("payBtn");
             payBtn.disabled = false;
             document.getElementById('impUid').value = '';
             document.getElementById('paymentMethod').value = '';
@@ -151,7 +198,15 @@ async function verifyPayment(rsp) {
         }
     } catch (error) {
         console.error('결제 검증 오류:', error);
-        alert('결제 검증 중 오류가 발생했습니다');
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '검증 오류',
+            text: '결제 검증 중 오류가 발생했습니다',
+            confirmButtonText: '확인'
+        });
+        const payBtn = document.getElementById("payBtn");
+        payBtn.disabled = false;
     }
 }
 

@@ -70,6 +70,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     deliveryFee: result.deliveryFee,
                     totalPayPrice: result.totalPayPrice
                 });
+
+                // 서버로 가격 정보 전송
+                document.getElementById("guestProducts").value = JSON.stringify({
+                    totalProductPrice: result.totalProductPrice,
+                    totalDiscount: result.totalDiscount,
+                    deliveryFee: result.deliveryFee,
+                    totalPayPrice: result.totalPayPrice
+                });
             } else {
                 console.error("장바구니 데이터를 가져오는 데 실패했습니다:", result.message);
             }
@@ -145,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const orderForm = document.createElement('form');
             orderForm.id = 'guestOrderForm';
             orderForm.method = 'POST';
-            orderForm.action = `${contextPath}/ajax?key=orderRest&methodName=processOrder`;
+            orderForm.action = `${contextPath}/front?key=order&methodName=goOrderPage`;
             
             // 히든 필드 추가 (상품id, quantity 보낼지체크)
             const productsInput = document.createElement('input');
@@ -208,10 +216,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         
         // 이벤트 리스너 다시 설정
-        setupQuantityButtons();
-        setupDeleteButtons();
-        setupCheckboxEvents();
-        setupOrderButtons();
+        // setupQuantityButtons();
+        // setupDeleteButtons();
+        // setupCheckboxEvents();
+        // setupOrderButtons();
     }// 렌더링끝
     
     ////////////////////////////////////////////////////////////////
@@ -219,32 +227,32 @@ document.addEventListener("DOMContentLoaded", () => {
      * 수량 변경 버튼 이벤트 설정
      */
     function setupQuantityButtons() {
-        document.querySelectorAll(".quantity-btn").forEach(btn => {
-            btn.addEventListener("click", function() {
-                const isPlus = this.classList.contains("plus");
-                const row = this.closest("tr");
-                const productId = parseInt(row.dataset.productId);
-                console.log("상품 ID:", productId);
-                
-                const quantityInput = row.querySelector(".quantity-input");
-                let quantity = parseInt(quantityInput.value);
-                
-                if (!isPlus && quantity <= 1) return; // 최소 수량 1
-                
-                // + 버튼이면 수량 증가, - 버튼이면 수량 감소
-                quantity = isPlus ? quantity + 1 : quantity - 1;
-                quantityInput.value = quantity;
-                
-                if (isLoggedIn) {
-                    // 회원 - 서버에 수량 변경 요청
-                    updateCartQuantity(userId, productId, quantity, row);
-                } else {
-                    // 비회원 - 로컬스토리지에 수량 변경 저장
-                    updateGuestCartQuantity(productId, quantity, row);
-                }
-                // 체크된 항목들의 합계 업데이트
-                calculateSelectedTotal();
-            });
+        const container = document.querySelector(".cart-container");
+        if (!container) return;
+
+        container.addEventListener("click", (event) => {
+            const target = event.target;
+            if (!target.classList.contains("quantity-btn")) return;
+
+            const isPlus = target.classList.contains("plus");
+            const row = target.closest("tr");
+            const productId = parseInt(row.dataset.productId);
+            const quantityInput = row.querySelector(".quantity-input");
+            let quantity = parseInt(quantityInput.value);
+
+            if (!isPlus && quantity <= 1) return; // 최소 수량 1
+
+            // + 버튼이면 수량 증가, - 버튼이면 수량 감소
+            quantity = isPlus ? quantity + 1 : quantity - 1;
+            quantityInput.value = quantity;
+
+            if (isLoggedIn) {
+                updateCartQuantity(userId, productId, quantity, row);
+            } else {
+                updateGuestCartQuantity(productId, quantity, row);
+            }
+
+            calculateSelectedTotal();
         });
     }
     
@@ -312,21 +320,25 @@ document.addEventListener("DOMContentLoaded", () => {
      * 삭제 버튼 이벤트 설정
      */
     function setupDeleteButtons() {
-        document.querySelectorAll(".delete-btn").forEach(btn => {
-            btn.addEventListener("click", function() {
-                if(confirm("상품을 장바구니에서 삭제하시겠습니까?")) {
-                    const row = this.closest("tr");
-                    const productId = parseInt(row.dataset.productId);
-                    
-                    if (isLoggedIn) {
-                        // 회원 - DB에서 삭제
-                        deleteCartItem(userId, productId, row);
-                    } else {
-                        // 비회원 - 로컬스토리지에서 삭제
-                        deleteGuestCartItem(productId, row);
-                    }
+        const container = document.querySelector(".cart-container");
+        if (!container) return;
+
+        container.addEventListener("click", (event) => {
+            const target = event.target;
+            if (!target.classList.contains("delete-btn")) return;
+
+            if (confirm("상품을 장바구니에서 삭제하시겠습니까?")) {
+                const row = target.closest("tr");
+                const productId = parseInt(row.dataset.productId);
+
+                if (isLoggedIn) {
+                    // 회원 - DB에서 삭제
+                    deleteCartItem(userId, productId, row);
+                } else {
+                    // 비회원 - 로컬스토리지에서 삭제
+                    deleteGuestCartItem(productId, row);
                 }
-            });
+            }
         });
     }
     
@@ -543,128 +555,64 @@ document.addEventListener("DOMContentLoaded", () => {
      * 주문 버튼 이벤트 설정
      */
     function setupOrderButtons() {
-        const form     = document.getElementById("cartForm");
-        const pidField = document.getElementById("productIds");
-        const qtyField = document.getElementById("quantities");
-        const selField = document.getElementById("selected");
+        const container = document.querySelector(".cart-container");
+        if (!container) return;
 
-        // form 또는 필드가 없으면 이벤트 중단
-        if (!form || !pidField || !qtyField || !selField) return;
-        
-        // 선택 상품 주문 버튼          
-        document.querySelector(".order-selected-btn").addEventListener("click", () => {
+        container.addEventListener("click", (event) => {
+            const target = event.target;
+
+            // 선택 상품 주문 버튼
+        if (target.classList.contains("order-selected-btn")) {
             const rows = [...document.querySelectorAll("tbody input[type=checkbox]:checked")]
                         .map(cb => cb.closest("tr"));
-                const ids  = rows.map(r => r.dataset.productId);
-                const qtys = rows.map(r => r.querySelector(".quantity-input").value);
+            const selectedItems = rows.map(row => ({
+                productId: parseInt(row.dataset.productId),
+                quantity: parseInt(row.querySelector(".quantity-input").value)
+            }));
 
-                console.log("선택된 상품 ID:", ids);
-                console.log("선택된 상품 수량:", qtys);
-                if (ids.length === 0) {
+            if (selectedItems.length === 0) {
                 alert("한 개 이상 선택해주세요.");
                 return;
-                }
-                pidField.value  = ids.join(",");
-                qtyField.value  = qtys.join(",");
-                selField.value  = "true";
-                form.submit();
-            });
+            }
 
+            if (isLoggedIn) {
+                const form = document.getElementById("cartForm");
+                if (!form) return;
+
+                document.getElementById("productIds").value = selectedItems.map(item => item.productId).join(",");
+                document.getElementById("quantities").value = selectedItems.map(item => item.quantity).join(",");
+                document.getElementById("selected").value = "true";
+                form.submit();
+            } else {
+                const guestProductsInput = document.getElementById("guestProducts");
+                guestProductsInput.value = JSON.stringify(selectedItems);
+                document.getElementById("guestOrderForm").submit();
+            }
+        }
 
         // 전체 상품 주문 버튼
-        document.querySelector(".order-all-btn").addEventListener("click", function () {
-                // (전부 주문 시 productIds, quantities를 컨트롤러 무시)
-                selField.value = "false";  
+        if (target.classList.contains("order-all-btn")) {
+            if (isLoggedIn) {
+                const form = document.getElementById("cartForm");
+                if (!form) return;
+
+                document.getElementById("selected").value = "false";
                 form.submit();
-            });
+            } else {
+                const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+
+                if (guestCart.length === 0) {
+                    alert("장바구니가 비어 있습니다.");
+                    return;
+                }
+
+                const guestProductsInput = document.getElementById("guestProducts");
+                guestProductsInput.value = JSON.stringify(guestCart);
+                document.getElementById("guestOrderForm").submit();
+            }
+            }
+        });
     }
-
-    /**
-     * 선택된 상품 가져오기
-     */
-    // function getSelectedProducts() {
-    //     const selectedRows = [...document.querySelectorAll("tbody input[type=checkbox]:checked")].map(checkbox =>
-    //         checkbox.closest("tr")
-    //     );
-    //     return selectedRows.map(row => ({
-    //         productId: parseInt(row.dataset.productId),
-    //         quantity: parseInt(row.querySelector(".quantity-input").value)
-    //     }));
-    // }
-
-    /**
-     * 모든 상품 가져오기
-     */
-    // function getAllProducts() {
-    //     const rows = [...document.querySelectorAll("tbody tr")];
-    //     return rows.map(row => ({
-    //         productId: parseInt(row.dataset.productId),
-    //         quantity: parseInt(row.querySelector(".quantity-input").value)
-    //     }));
-    // }
-
-    /**
-     * 주문 데이터 전송
-     */
-    // function submitOrder(products) {
-    //     // 가격 정보 추출
-    //     const priceElements = document.querySelectorAll(".price-cell");
-    //     const totalProductPrice = priceElements[0].textContent.replace(/[^0-9]/g, '');
-    //     const totalDiscount = priceElements[1].textContent.replace(/[^0-9]/g, '');
-    //     const deliveryFee = priceElements[2].textContent.replace(/[^0-9]/g, '');
-    //     const totalPayPrice = priceElements[3].textContent.replace(/[^0-9]/g, '');
-
-    //     if (isLoggedIn) {
-    //         // 회원 - 서버로 폼 데이터 전송
-    //         const orderForm = document.getElementById("orderForm");
-    //         // 액션 URL 명시적으로 설정 - 수정 필요
-    //         orderForm.action = `${contextPath}/ajax?key=orderRest&methodName=processOrder`;
-
-    //         document.getElementById("productIds").value = JSON.stringify(products.map(p => p.productId));
-    //         document.getElementById("quantity").value = JSON.stringify(products.map(p => p.quantity));
-            
-    //         // 가격 정보 폼에 추가
-    //         addHiddenField(orderForm, "totalProductPrice", totalProductPrice);
-    //         addHiddenField(orderForm, "totalDiscount", totalDiscount);
-    //         addHiddenField(orderForm, "deliveryFee", deliveryFee);  
-    //         addHiddenField(orderForm, "totalPayPrice", totalPayPrice);       
-                
-    //         orderForm.submit();
-    //     } else {
-    //         // 비회원 - 동적으로 생성된 폼을 통해 데이터 전송
-    //         const guestOrderForm = document.getElementById("guestOrderForm");
-    //         guestOrderForm.action = `${contextPath}/ajax?key=orderRest&methodName=processOrder`;
-
-    //         const guestProductsInput = document.getElementById("guestProducts");
-            
-    //         // 각 상품의 모든 정보(이미지, 가격, 이름 등)를 포함하도록 확장
-    //         const completeProducts = products.map(product => {
-    //             // 해당 제품의 행에서 필요한 정보 추출
-    //             const row = document.querySelector(`tr[data-product-id="${product.productId}"]`);
-    //             const imageName = row.querySelector(".product-info img").src;
-    //             const productName = row.querySelector(".product-info p").textContent;
-    //             const price = parseInt(row.querySelector(".product-price").textContent.replace(/[^0-9]/g, '')) / product.quantity;
-                
-    //             return {
-    //                 productId: product.productId,
-    //                 quantity: product.quantity,
-    //                 productName: productName,
-    //                 imageName: imageName,
-    //                 price: price
-    //             };
-    //         });
-            
-    //         guestProductsInput.value = JSON.stringify(completeProducts);
-
-    //         // 가격 정보 폼에 추가
-    //         addHiddenField(guestOrderForm, "totalProductPrice", totalProductPrice);
-    //         addHiddenField(guestOrderForm, "totalDiscount", totalDiscount);
-    //         addHiddenField(guestOrderForm, "deliveryFee", deliveryFee);         
-    //         addHiddenField(guestOrderForm, "totalPayPrice", totalPayPrice);
-            
-    //         guestOrderForm.submit();
-    //     }
-    // }
 
     // 체크박스 초기 상태 설정 - 모든 상품 체크 (페이지 로드 시)
     function initializeCheckboxes() {
@@ -708,9 +656,21 @@ document.addEventListener("DOMContentLoaded", () => {
             if (result.success) {
                 // 이관 성공 시 로컬 장바구니 비우기
                 localStorage.removeItem('guestCart');
-                alert("장바구니 이관이 완료되었습니다!");
+                
+                // 스윗알러트 Toast 설정 및 호출
+                await Swal.fire({
+                    toast: true,
+                    position: 'center-center',
+                    icon: 'success',
+                    title: '장바구니가 동기화되었습니다!',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+
+                //alert("장바구니 이관이 완료되었습니다!");
                 // 페이지 새로고침하여 회원 장바구니 표시
-                window.location.reload();
+                await window.location.reload();
             } else {
                 alert(result.message || "장바구니 이관에 실패했습니다.");
             }

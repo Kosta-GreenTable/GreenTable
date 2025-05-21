@@ -266,3 +266,12 @@ table {
 a {
     color: inherit;
 }
+
+/* SweetAlert2 확인 버튼 색상 전역 override */
+.swal2-confirm {
+    background-color: rgb(0, 196, 113) !important;
+    color: #fff !important;
+}
+.swal2-confirm:focus {
+    box-shadow: 0 0 0 2px rgba(0,196,113,0.4) !important;
+}

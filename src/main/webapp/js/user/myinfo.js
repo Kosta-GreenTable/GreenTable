@@ -96,6 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
     zipCode,
     address: address1,
     detailAddress: address2
+
   }
     };
 
@@ -153,10 +154,12 @@ document.addEventListener("DOMContentLoaded", function () {
    * 회원 탈퇴 처리
    */
   function handleWithdraw() {
+
   // 동의 체크 여부 확인
   if (!withdrawAgree.checked) {
     alert("회원 탈퇴 동의에 체크해주세요.");
     return;
+
   }
 
   // 비밀번호 입력 여부 확인
@@ -264,7 +267,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	      }).open();
 	    } else {
 	      console.error("Daum Postcode 라이브러리를 찾을 수 없습니다.");
-	      alert("주소 검색 서비스를 불러올 수 없습니다. 페이지를 새로고침하거나 나중에 다시 시도해주세요.");
+	      Swal.fire({
+	        position: 'center',
+	        icon: 'error',
+	        title: '주소 검색 오류',
+	        text: '주소 검색 서비스를 불러올 수 없습니다. 나중에 다시 시도해주세요.',
+	        confirmButtonText: '확인'
+	      });
 	    }
 	  }
 	  
@@ -282,13 +291,25 @@ document.addEventListener("DOMContentLoaded", function () {
       const email = document.getElementById("userEmail").value;
 
       if (!isValidEmail(email)) {
-        alert("유효한 이메일 주소를 입력해주세요.");
+        Swal.fire({
+          position: 'center',
+          icon: 'warning',
+          title: '이메일 오류',
+          text: '유효한 이메일 주소를 입력해주세요.',
+          confirmButtonText: '확인'
+        });
         document.getElementById("userEmail").focus();
         return;
       }
 
       // TODO: 이메일 중복확인 로직
-      alert("사용 가능한 이메일입니다.");
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: '이메일 확인',
+        text: '사용 가능한 이메일입니다.',
+        confirmButtonText: '확인'
+      });
     });
   }
 
@@ -299,13 +320,25 @@ document.addEventListener("DOMContentLoaded", function () {
       const phone = document.getElementById("userPhone").value;
 
       if (!isValidPhone(phone)) {
-        alert("유효한 전화번호를 입력해주세요.");
+        Swal.fire({
+          position: 'center',
+          icon: 'warning',
+          title: '전화번호 오류',
+          text: '유효한 전화번호를 입력해주세요.',
+          confirmButtonText: '확인'
+        });
         document.getElementById("userPhone").focus();
         return;
       }
 
       // TODO: 휴대폰 인증 로직
-      alert("인증번호가 발송되었습니다.");
+      Swal.fire({
+        position: 'center',
+        icon: 'info',
+        title: '인증번호 발송',
+        text: '인증번호가 발송되었습니다.',
+        confirmButtonText: '확인'
+      });
     });
   }
 });

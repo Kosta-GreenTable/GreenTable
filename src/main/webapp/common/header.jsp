@@ -13,11 +13,13 @@
   window.contextPath = "<%= request.getContextPath() %>";
 </script>
             
+
 <title>그린테이블</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/common/header.css" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <header>
 	<div class="header-container">
@@ -48,50 +50,95 @@
 			</ul>
 		</div>
 
+    <!-- 헤더 로고 -->
+    <div class="logo-container">
+      <a href="${pageContext.request.contextPath}/index.jsp">
+        <img id="logo" src="${pageContext.request.contextPath}/image/logo_3.png" alt="Green Table 로고" />
+      </a>
+      <!-- <h1>Green Table</h1> -->
+    </div>
 
-		<!-- 헤더 로고 -->
-		<div class="logo-container">
-			<a href="${pageContext.request.contextPath}/index.jsp"> <img
-				src="https://picsum.photos/100/40" alt="Green Table 로고" />
-			</a>
-			<h1>Green Table</h1>
-		</div>
-
-		<!-- 카테고리 메뉴 바 -->
-		<section class="category-section">
-			<div class="category-container">
-				<nav class="category-nav">
-					<ul>
-						<li class="cate"><a
-							href="${pageContext.request.contextPath}/front?key=product&methodName=category&category=best">베스트</a>
-						</li>
-						<li class="cate"><a
-							href="${pageContext.request.contextPath}/front?key=product&methodName=category&category=regular">정기배송</a>
-						</li>
-						<li class="cate"><a
-							href="${pageContext.request.contextPath}/front?key=product&methodName=category&category=lunchbox">도시락</a>
-						</li>
-						<li class="cate"><a
-							href="${pageContext.request.contextPath}/front?key=product&methodName=category&category=salad">샐러드</a>
-						</li>
-						<li class="cate"><a
-							href="${pageContext.request.contextPath}/front?key=event&methodName=list">이벤트</a>
-						</li>
-						<li class="cate"><a
-							href="${pageContext.request.contextPath}">농가소개</a>
-						</li>
-					</ul>
-				</nav>
-				<!-- 헤더 검색 영역 -->
-				<div class="search-container">
-					<div class="search-box">
-						<input type="text" id="search-input" placeholder="검색어를 입력하세요" />
-						<button class="search-btn" id="search-button">
-							<i class="fas fa-search"></i>
-						</button>
-					</div>
-				</div>
-			</div>
-		</section>
-	</div>
+    <!-- 카테고리 메뉴 바 -->
+    <section class="category-section">
+      <div class="category-container">
+        <nav class="category-nav">
+          <ul>
+            <li class="cate">
+              <a
+                href="${pageContext.request.contextPath}/front?key=product&methodName=category&category=best"
+                >베스트</a
+              >
+            </li>
+            <li class="cate">
+              <a
+                href="${pageContext.request.contextPath}/front?key=product&methodName=category&category=regular"
+                >정기배송</a
+              >
+            </li>
+            <li class="cate">
+              <a
+                href="${pageContext.request.contextPath}/front?key=product&methodName=category&category=lunchbox"
+                >도시락</a
+              >
+            </li>
+            <li class="cate">
+              <a
+                href="${pageContext.request.contextPath}/front?key=product&methodName=category&category=salad"
+                >샐러드</a
+              >
+            </li>
+            <li class="cate">
+              <a
+                href="${pageContext.request.contextPath}/front?key=event&methodName=list"
+                >이벤트</a
+              >
+            </li>
+            <li class="cate">
+              <a
+                href="${pageContext.request.contextPath}/front?key=farm&methodName=list"
+                >농가 소개</a
+              >
+            </li>
+          </ul>
+        </nav>
+        <!-- 헤더 검색 영역 -->
+        <div class="search-container">
+          <div class="search-box">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="검색어를 입력하세요"
+            />
+            <button class="search-btn" id="search-button">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </header>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const cat = document.querySelector('.category-section');
+    const origOffset = cat.getBoundingClientRect().top + window.pageYOffset;
+    // placeholder로 레이아웃 밀림 방지
+    const placeholder = document.createElement('div');
+    placeholder.style.height = cat.offsetHeight + 'px';
+
+    window.addEventListener('scroll', function() {
+      if (window.pageYOffset > origOffset) {
+        if (!cat.classList.contains('sticky')) {
+          cat.classList.add('sticky');
+          cat.parentNode.insertBefore(placeholder, cat.nextSibling);
+        }
+      } else {
+        if (cat.classList.contains('sticky')) {
+          cat.classList.remove('sticky');
+          placeholder.remove();
+        }
+      }
+    });
+  });
+</script>
+

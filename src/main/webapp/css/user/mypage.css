@@ -777,3 +777,28 @@ body {
   font-size: 14px;
 }
 
+/* 주문 목록 테이블 간격 및 이미지 크기 조정 */
+.order-list-container .order-table {
+    border-collapse: separate;
+    border-spacing: 20px 15px; /* 가로 20px, 세로 15px 여백 */
+}
+
+
+.order-list-container .product-box img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* 선택된 행 강조를 위한 배경색 및 그림자 */
+.order-list-container .order-table tbody tr {
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s;
+}
+
+.order-list-container .order-table tbody tr:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
