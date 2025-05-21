@@ -1,5 +1,7 @@
 package site.greentable.service;
 
+import java.sql.SQLException;
+
 import site.greentable.dto.UserDTO;
 import site.greentable.dto.UserInfoDTO;
 import site.greentable.exception.AddException;
@@ -30,6 +32,8 @@ public interface UserService {
 	UserInfoDTO getUserInfoByUserId(int userId);
 	
 	int updateUser(UserDTO userDto) throws ModifyException;
+	
+	boolean withdrawUser(String userId) throws SQLException;
 	 
 	 
 	

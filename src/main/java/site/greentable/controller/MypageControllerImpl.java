@@ -11,8 +11,6 @@ import site.greentable.exception.UnAuthorizedException;
 import site.greentable.service.OrderService;
 import site.greentable.service.OrderServiceImpl;
 
-
-
 public class MypageControllerImpl implements Controller {
 	private OrderService orderService = new OrderServiceImpl();
 	

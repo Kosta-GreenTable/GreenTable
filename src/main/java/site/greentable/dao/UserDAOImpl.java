@@ -65,12 +65,14 @@ public class UserDAOImpl implements UserDAO {
 			ps = con.prepareStatement(sql);
 			ps.setString(1, email);
 			ps.setString(2, password);
+			
 
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				userDto = new UserDTO();
 				userDto.setUserId(rs.getInt("user_id"));
 				userDto.setEmail(rs.getString("email"));
+				userDto.setPassword(rs.getString("password"));
 			}
 
 		} catch (SQLException e) {
@@ -144,7 +146,7 @@ public class UserDAOImpl implements UserDAO {
 			ps.setInt(7, userInfoDto.getOrderCount() > 0 ? userInfoDto.getOrderCount() : 0);
 			ps.setInt(8, userInfoDto.getTotalAmount() > 0 ? userInfoDto.getTotalAmount() : 0);
 			ps.setString(9, userInfoDto.getUserGrade() != null ? userInfoDto.getUserGrade() : "브론즈");
-			ps.setInt(10, userInfoDto.getPoint() > 0 ? userInfoDto.getPoint() : 0);
+			ps.setInt(10, userInfoDto.getPoint() > 0 ? userInfoDto.getPoint() : 2000);
 
 			int result = ps.executeUpdate();
 			if (result == 0)
@@ -331,6 +333,30 @@ public class UserDAOImpl implements UserDAO {
 		}
 
 		return dto;
+	}
+
+	@Override
+	public boolean withdrawUser(String userId) throws SQLException {
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		String sql = proFile.getProperty("query.withdrawUser");
+		try {
+			con = DbUtil.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, userId);
+			
+			int result = ps.executeUpdate();
+			return result > 0;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
+		
+		return false;
 	}
 
 }
