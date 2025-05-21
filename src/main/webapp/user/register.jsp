@@ -140,8 +140,7 @@ pageContext.setAttribute("path", path);
 					<div class="btn-area">
 						<button type="button" class="cancel-btn">취소</button>
 						<button type="submit" class="submit-btn">회원가입</button>
-						<button type="submit" class="submit-btn"
-							onclick="alert('버튼 클릭됨');">회원가입</button>
+
 
 						<form id="register-form" method="post"
 							action="${pageContext.request.contextPath}/front"

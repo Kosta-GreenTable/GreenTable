@@ -2,8 +2,12 @@
  * 회원정보 수정 페이지 자바스크립트
  */
 document.addEventListener("DOMContentLoaded", function () {
+
+  console.log("myinfo.js loaded");
+
   // DOM 요소
   const memberInfoForm = document.getElementById("memberInfoForm");
+  console.log("memberInfoForm:", memberInfoForm); // 제대로 form이 로드되었는지 확인
   const btnWithdraw = document.querySelector(".btn-withdraw");
   const withdrawModal = document.getElementById("withdrawModal");
   const closeModal = document.querySelector(".close-modal");
@@ -15,6 +19,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const passwordConfirmInput = document.getElementById("userPasswordConfirm");
   const btnAddressSearch = document.querySelector(".btn-address-search");
   const btnVerifyEmail = document.querySelector(".btn-verify");
+  const btnSave = document.querySelector(".btn-save");
+  console.log("btnSave:", btnSave);
+
+  // contextPath가 제대로 정의되었는지 확인
+ const contextPath = document.body.getAttribute("data-context-path");
+
+ 
+ console.log("contextPath:", contextPath); // contextPath 확인
+
+  
 
   /**
    * 비밀번호 유효성 검사
@@ -49,60 +63,73 @@ document.addEventListener("DOMContentLoaded", function () {
     return phoneRegex.test(phone);
   }
 
-  /**
-   * 회원정보 수정 폼 제출 처리
-   * @param {Event} e - 폼 제출 이벤트
-   */
-  function handleMemberInfoSubmit(e) {
-    e.preventDefault();
+  
+  // 회원정보 수정 폼 제출 처리
+ function handleMemberInfoSubmit(e) {
+    console.log("✅ handleMemberInfoSubmit 실행됨");
+    if (e) e.preventDefault();
 
-    // 비밀번호 검증
-    const password = passwordInput.value;
-    const passwordConfirm = passwordConfirmInput.value;
-
-    if (password) {
-      if (!isValidPassword(password)) {
-        alert(
-          "비밀번호는 8~20자의 영문 대소문자, 숫자, 특수문자를 조합하여 입력해주세요."
-        );
-        passwordInput.focus();
-        return;
-      }
-
-      if (password !== passwordConfirm) {
-        alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-        passwordConfirmInput.focus();
-        return;
-      }
-    }
-
-    // 이메일 검증
+    const userId = parseInt(document.getElementById("userId").value);
     const email = document.getElementById("userEmail").value;
-    if (!isValidEmail(email)) {
-      alert("유효한 이메일 주소를 입력해주세요.");
-      document.getElementById("userEmail").focus();
+    const userName = document.getElementById("userName").value;
+    const password = document.getElementById("userPassword").value;
+    const passwordConfirm = document.getElementById("userPasswordConfirm").value;
+    const phone = `${document.getElementById("mobile-first").value}-${document.getElementById("mobile-middle").value}-${document.getElementById("mobile-last").value}`;
+
+    const zipCode = parseInt(document.getElementById("zipCode").value, 10) || 0;
+    const address1 = document.getElementById("address1").value;
+    const address2 = document.getElementById("address2").value;
+
+    // 비밀번호 확인
+    if (password && password !== passwordConfirm) {
+      alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
       return;
     }
 
-    // 전화번호 검증
-    const phone = document.getElementById("userPhone").value;
-    if (!isValidPhone(phone)) {
-      alert("유효한 전화번호를 입력해주세요.");
-      document.getElementById("userPhone").focus();
-      return;
-    }
-
-    fetch("/GreenTable/front?key=user&methodName=updateUserInfo", {
-  method: "POST",
-  body: formData
-});
-
-    // TODO: 서버에 회원정보 수정 요청 로직
-    alert("회원정보가 성공적으로 수정되었습니다.");
-
-    // 수정 성공 시 마이페이지로 이동
-    // window.location.href = 'mypage.html';
+    const jsonData = {
+      email,
+     password,
+     userId,
+  userInfoDto: {
+    userName,
+    phone,
+    zipCode,
+    address: address1,
+    detailAddress: address2
   }
+    };
+
+    // fetch로 서버에 요청
+    fetch("/GreenTable/front?key=ajaxUser&methodName=updateUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(jsonData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert(data.message || "처리 완료");
+        if (data.success) {
+          window.location.href = "mypage.jsp";
+        }
+      })
+      .catch((err) => {
+        console.error("에러:", err);
+        alert("회원정보 수정 실패");
+      });
+  }
+
+  // btnSave 클릭 시 handleMemberInfoSubmit 실행
+  if (btnSave) {
+    btnSave.addEventListener("click", function (e) {
+      console.log("저장 버튼 클릭됨");
+      handleMemberInfoSubmit(e); // 폼 제출 대신 직접 함수 호출
+    });
+  } else {
+    console.error("btnSave is null. 저장 버튼을 찾을 수 없습니다.");
+  }
+
 
   /**
    * 회원 탈퇴 모달 열기
@@ -126,44 +153,60 @@ document.addEventListener("DOMContentLoaded", function () {
    * 회원 탈퇴 처리
    */
   function handleWithdraw() {
-    // 동의 체크 여부 확인
-    if (!withdrawAgree.checked) {
-      alert("회원 탈퇴 동의에 체크해주세요.");
-      return;
-    }
-
-    // 비밀번호 입력 여부 확인
-    if (!withdrawPassword.value.trim()) {
-      alert("비밀번호를 입력해주세요.");
-      withdrawPassword.focus();
-      return;
-    }
-
-    // 탈퇴 사유 선택 여부 확인
-    const withdrawReason = document.getElementById("withdrawReason");
-    if (withdrawReason.value === "") {
-      alert("탈퇴 사유를 선택해주세요.");
-      withdrawReason.focus();
-      return;
-    }
-
-    // TODO: 서버에 회원 탈퇴 요청 로직
-
-    // 탈퇴 성공 시
-    alert(
-      "회원 탈퇴가 완료되었습니다. 그동안 그린테이블을 이용해주셔서 감사합니다."
-    );
-
-    // 로그인 페이지로 이동
-    window.location.href = "index.html";
+  // 동의 체크 여부 확인
+  if (!withdrawAgree.checked) {
+    alert("회원 탈퇴 동의에 체크해주세요.");
+    return;
   }
+
+  // 비밀번호 입력 여부 확인
+  if (!withdrawPassword.value.trim()) {
+    alert("비밀번호를 입력해주세요.");
+    withdrawPassword.focus();
+    return;
+  }
+
+  const withdrawReason = document.getElementById("withdrawReason");
+  const withdrawReasonDetail = document.getElementById("withdrawReasonDetail").value;
+
+  if (withdrawReason.value === "") {
+    alert("탈퇴 사유를 선택해주세요.");
+    withdrawReason.focus();
+    return;
+  }
+
+ fetch(contextPath + "/front?key=ajaxUser&methodName=withdrawUser", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+        password: withdrawPassword.value,
+        reason: withdrawReason.value,
+        reasonDetail: document.getElementById("withdrawReasonDetail").value
+    }),
+})
+.then((res) => res.json())
+.then((data) => {
+    console.log("서버 응답:", data);
+
+    if (data.status === "success") {
+        alert(data.message || "회원 탈퇴가 완료되었습니다. 그동안 그린테이블을 이용해주셔서 감사합니다.");
+        window.location.href = contextPath + "/register.jsp";
+    } else if (data.status === "wrong_password") {
+        alert("비밀번호가 틀렸습니다.");
+    } else {
+        alert(data.message || "탈퇴 처리 중 오류가 발생했습니다.");
+        window.location.href = contextPath + "/index.jsp";
+    }
+})
+.catch((err) => {
+    console.error("탈퇴 요청 중 에러:", err);
+    alert("서버와의 통신 중 문제가 발생했습니다.");
+});
+}
 
   // 이벤트 리스너 등록
-
-  // 회원정보 수정 폼 제출
-  if (memberInfoForm) {
-    memberInfoForm.addEventListener("submit", handleMemberInfoSubmit);
-  }
 
   // 회원 탈퇴 버튼 클릭
   if (btnWithdraw) {
@@ -198,13 +241,6 @@ document.addEventListener("DOMContentLoaded", function () {
       closeWithdrawModal();
     }
   });
-
-  // 주소찾기 버튼 클릭 이벤트
-    if (findAddressBtn) {
-      findAddressBtn.addEventListener("click", function () {
-        execDaumPostcode();
-      });
-    }
 	
 	// 다음 우편번호 서비스 연동 함수
 	  function execDaumPostcode() {

@@ -178,4 +178,10 @@ public class UserServiceImpl implements UserService {
 		return userDao.updateUser(userDto);
 	}
 
+	@Override
+	public boolean withdrawUser(String userId) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
