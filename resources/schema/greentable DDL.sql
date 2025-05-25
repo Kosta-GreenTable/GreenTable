@@ -310,6 +310,16 @@ CREATE TABLE farms (
 	category VARCHAR(50) DEFAULT '일반'
 );
 
+-- 기존 farms 테이블의 category 필드 값 업데이트
+ALTER TABLE farms MODIFY category VARCHAR(50) DEFAULT 'others';
+
+-- 기존 데이터 업데이트 (필요시)
+UPDATE farms SET category = 'vege' WHERE category = '채소';
+UPDATE farms SET category = 'fruit' WHERE category = '과일';
+UPDATE farms SET category = 'dairy' WHERE category = '축산/유제품';
+UPDATE farms SET category = 'others' WHERE category = '일반' OR category = '기타';
+
+
 CREATE TABLE product_farms (
 	product_farm_id	INT	PRIMARY KEY AUTO_INCREMENT,
 	farm_id	INT	NOT NULL,

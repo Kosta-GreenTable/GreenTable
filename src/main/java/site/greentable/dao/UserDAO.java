@@ -1,6 +1,7 @@
 package site.greentable.dao;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import site.greentable.dto.UserDTO;
 import site.greentable.dto.UserInfoDTO;
@@ -35,5 +36,7 @@ public interface UserDAO {
 	int deleteUser(int userId) throws DeleteException;
 	
 	UserInfoDTO findUserInfoByUserId(int userId);
+	
+	boolean withdrawUser(String userId) throws SQLException;
 
 }

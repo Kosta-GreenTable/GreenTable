@@ -11,7 +11,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <title>농가소개 - Green Table</title>
     <link
       rel="stylesheet"
-      href="${pageContext.request.contextPath}/css/styles.css"
+      href="${pageContext.request.contextPath}/css/common/styles.css"
     />
     <link
       rel="stylesheet"

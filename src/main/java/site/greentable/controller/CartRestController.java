@@ -2,6 +2,7 @@ package site.greentable.controller;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ import site.greentable.service.CartService;
 import site.greentable.service.CartServiceImpl;
 
 public class CartRestController implements RestController {
-	CartService cartService = new CartServiceImpl();
+	private CartService cartService = new CartServiceImpl();
 	
 	 /**
      * 상품 수량 수정
@@ -32,6 +33,9 @@ public class CartRestController implements RestController {
 		    Integer userId = (Integer) session.getAttribute("userId");
 		    if (userId == null) throw new UnAuthorizedException("로그인이 필요합니다.");
             
+		    System.out.println("cartrest컨트롤러 productID =" + request.getParameter("productId"));
+            System.out.println("cartrest컨트롤러 quantity =" + request.getParameter("quantity"));
+		    
             int productId = Integer.parseInt(request.getParameter("productId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
             
@@ -79,10 +83,11 @@ public class CartRestController implements RestController {
 		    Integer userId = (Integer) session.getAttribute("userId");
 		    if (userId == null) throw new UnAuthorizedException("로그인이 필요합니다.");
             
-            String productIdsJson = request.getParameter("productIds");
+            String productIdsJson = request.getParameter("selectedItems");
             
             Gson gson = new Gson();
             List<Integer> productIds = gson.fromJson(productIdsJson, new TypeToken<List<Integer>>(){}.getType());
+            if (productIds == null) productIds = Collections.emptyList();
             
             resultMap = cartService.calculateSelectedProducts(userId, productIds);
             resultMap.put("success", true);
@@ -97,7 +102,7 @@ public class CartRestController implements RestController {
     }
     
     /**
-     * 비회원 장바구니 가격 계산
+     * 비회원 장바구니 웹스토리지 조회 후 가격 계산
      * */
     public Map<String, Object> calculateGuestCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
@@ -161,15 +166,20 @@ public class CartRestController implements RestController {
             
             Gson gson = new Gson();
             List<Map<String, Object>> guestCartItems = gson.fromJson(guestCartJson, 
-                    new TypeToken<List<Map<String, Object>>>(){}.getType());
+            		new TypeToken<List<Map<String,Object>>>(){}.getType());
             
             List<CartDTO> cartItems = new ArrayList<>();
             for (Map<String, Object> item : guestCartItems) {
-                int productId = ((Double)item.get("productId")).intValue();
-                int quantity = ((Double)item.get("quantity")).intValue();
+            	Object pid = item.get("productId");
+                int productId = (pid instanceof Number)
+                    ? ((Number)pid).intValue()
+                    : Integer.parseInt(pid.toString());
+                Object qty = item.get("quantity");
+                int quantity = (qty instanceof Number)
+                    ? ((Number)qty).intValue()
+                    : Integer.parseInt(qty.toString());
                 
-                CartDTO cartDTO = new CartDTO(quantity, productId, userId);
-                cartItems.add(cartDTO);
+                cartItems.add(new CartDTO(quantity, productId, userId));
             }
             
             boolean success = cartService.migrateGuestCart(cartItems);

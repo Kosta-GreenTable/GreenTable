@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,22 +27,44 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 
 	@Override
 	public Object verifyEmail(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String email = request.getParameter("email");
-		String verifyCode = userService.verifyEmail(email);
-		request.getSession().setAttribute("verifyCode", verifyCode);
-		return 1;
+		 response.setContentType("application/json; charset=UTF-8");
+		    Map<String, Object> result = new HashMap<>();
+
+		    try {
+		        String email = request.getParameter("email");
+		        String verifyCode = userService.verifyEmail(email);
+		        request.getSession().setAttribute("verifyCode", verifyCode);
+		        result.put("result", true);
+		    } catch (EmailVerifyException e) {
+		        result.put("result", false);
+		        result.put("message", e.getMessage());
+		    }
+
+		    PrintWriter out = response.getWriter();
+		    String jsonStr = new Gson().toJson(result);
+		    
+		    out.write(jsonStr);
+		    out.flush();
+		    out.close();
+		    return null;
 	}
 
 	@Override
 	public Object verifyEmailOk(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		HttpSession session = request.getSession();
+	    Map<String, Object> result = new HashMap<>();
+	    HttpSession session = request.getSession();
+	    String inputCode = request.getParameter("code");
+	    String sessionCode = (String) session.getAttribute("verifyCode");
 
-		if (!(session.getAttribute("verifyCode") != null
-				&& request.getParameter("code").equals(session.getAttribute("verifyCode")))) {
-			throw new EmailVerifyException("인증번호가 잘못되었습니다");
-		}
-		return 1;
+	    if (sessionCode == null || !inputCode.equals(sessionCode)) {
+	        result.put("result", false);
+	        result.put("message", "인증번호가 잘못되었습니다");
+	    } else {
+	        result.put("result", true);
+	    }
+	    return result;  // 직접 출력하지 말고 반환만 한다.
 	}
+
 	
 	@Override
 	public Object register(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -90,12 +115,131 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 	        result.addProperty("success", false);
 	        result.addProperty("message", "회원가입 실패: " + e.getMessage());
 	        out.write(result.toString());   // 여기서도 out 사용
-	    }
-	    out.flush(); // flush 해주기
+	    } finally {
+		    out.flush(); 
+		    out.close();	    }
 	    return null;
+	}
+
+
+	@Override
+	public Object updateUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    response.setContentType("application/json; charset=UTF-8");
+	    Map<String, Object> result = new HashMap<>();
+	    PrintWriter out = response.getWriter();
+
+	    try {
+	        System.out.println("요청이 들어왔습니다. request.getContentType(): " + request.getContentType());
+
+	        BufferedReader reader = request.getReader();
+	        StringBuilder jsonBuilder = new StringBuilder();
+	        String line;
+	        while ((line = reader.readLine()) != null) {
+	            jsonBuilder.append(line);
+	        }
+
+	        System.out.println("받은 JSON 데이터: " + jsonBuilder.toString());
+
+	        JsonObject json = JsonParser.parseString(jsonBuilder.toString()).getAsJsonObject();
+
+	        String email = json.has("email") ? json.get("email").getAsString() : null;
+	        String password = json.has("password") ? json.get("password").getAsString() : null;
+
+	        // ✅ userInfoDto 내부 JSON 객체 가져오기
+	        JsonObject userInfoJson = json.getAsJsonObject("userInfoDto");
+	        
+	        
+
+	        String userName = userInfoJson.has("userName") ? userInfoJson.get("userName").getAsString() : null;
+	        String phone = userInfoJson.has("phone") ? userInfoJson.get("phone").getAsString() : null;
+	        int zipCode = userInfoJson.has("zipCode") ? userInfoJson.get("zipCode").getAsInt() : 0;
+	        String address1 = userInfoJson.has("address") ? userInfoJson.get("address").getAsString() : null;
+	        String address2 = userInfoJson.has("detailAddress") ? userInfoJson.get("detailAddress").getAsString() : null;
+
+	        // DTO 구성
+	        UserDTO userDto = new UserDTO();
+	        int userId = json.has("userId") ? json.get("userId").getAsInt() : 0;
+	        userDto.setUserId(userId);
+	        userDto.setEmail(email);
+	        if (password != null && !password.isBlank()) {
+	            userDto.setPassword(password);
+	        }
+
+	        UserInfoDTO info = new UserInfoDTO();
+	        info.setUserName(userName);
+	        info.setPhone(phone);
+	        info.setZipCode(zipCode);
+	        info.setAddress(address1);
+	        info.setDetailAddress(address2);
+	        userDto.setUserInfoDto(info);
+
+	        int updateCount = userService.updateUser(userDto);
+
+	        result.put("success", true);
+	        result.put("message", "회원 정보가 수정되었습니다.");
+	        result.put("updated", updateCount);
+	    } catch (Exception e) {
+	        result.put("success", false);
+	        result.put("message", "회원 정보 수정 실패: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+
+	    out.write(new Gson().toJson(result));
+	    out.flush();
+	    out.close();
+	    return null;
+	}
+
+
+	@Override
+	public void withdrawUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json; charset=UTF-8");
+		
+		System.out.println("withdrawUser() 호출됨");
+
+		    PrintWriter out = response.getWriter();
+		    JsonObject json = new JsonObject();  // Gson의 JsonObject 사용
+
+		    try {
+		        // 세션에서 로그인된 사용자 ID 가져오기
+		        HttpSession session = request.getSession(false);
+		        System.out.println("Session = " + session);
+		        if (session == null || session.getAttribute("loginUser") == null) {
+		            json.addProperty("status", "fail");
+		            json.addProperty("message", "로그인이 필요합니다.");
+		            out.print(new Gson().toJson(json));  // Gson으로 JSON 출력
+		            return;
+		        }
+		        UserDTO user = (UserDTO) session.getAttribute("loginUser");
+		        String userId = (String) session.getAttribute("user_id");
+
+		        System.out.println("Login User = " + user);
+		        
+		        // 회원 탈퇴 처리 (DB에서 상태 변경)
+		        boolean result = userService.withdrawUser(userId);  // true: 성공, false: 실패
+
+		        if (result) {
+		            session.invalidate();
+		            json.addProperty("status", "success");
+		            json.addProperty("message", "회원 탈퇴가 완료되었습니다.");
+		        } else {
+		            json.addProperty("status", "fail");
+		            json.addProperty("message", "회원 탈퇴에 실패했습니다.");
+		        }
+
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        json.addProperty("status", "error");
+		        json.addProperty("message", "서버 오류가 발생했습니다.");
+		    }
+
+		    out.print(new Gson().toJson(json));
+		
 	}
 
 
 
 
 }
+

@@ -7,16 +7,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>그린테이블 - ${product.name}</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/product-detail.css" />
-    
+	  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/product-detail.css" />    
     <script>
       // 컨텍스트 경로를 JavaScript 변수로 설정
       var contextPath = "${pageContext.request.contextPath}";
       
       var userId = "${sessionScope.userId != null ? sessionScope.userId : '0'}";
-      
+      console.log("JSP에서 설정된 userId:", userId);
+
       // 가격 정보를 JavaScript 변수로 설정
       var originalPrice = <c:out value="${product.price}"/>; // 원래 가격
       var discountRate = <c:out value="${product.discountRate > 0 ? product.discountRate : 0}"/>; // 할인율
@@ -29,6 +29,14 @@
   <body>
     <!-- 헤더 인클루드 -->
     <jsp:include page="../common/header.jsp" />
+    
+    <!-- 경고 메시지 표시 -->
+    <c:if test="${not empty sessionScope.alertMessage}">
+      <script>
+        alert('${sessionScope.alertMessage}');
+      </script>
+      <c:remove var="alertMessage" scope="session" />
+    </c:if>
 
     <!-- 상품 이미지 및 정보 섹션 -->
     <section class="product-info-container">
@@ -235,49 +243,68 @@
           
           <c:if test="${empty reviews}">
             <p class="no-reviews">아직 등록된 리뷰가 없습니다.</p>
-          </c:if>
-          <div class="write-review">
-            <button onclick="location.href='${pageContext.request.contextPath}/front?key=review&methodName=writeForm&productId=${product.productId}'">리뷰 작성하기</button>
+          </c:if>          <div class="write-review">
+            <c:choose>
+              <c:when test="${not empty sessionScope.loginUser}">
+                <button onclick="location.href='${pageContext.request.contextPath}/front?key=review&methodName=writeForm&productId=${product.productId}'">리뷰 작성하기</button>
+              </c:when>
+              <c:otherwise>
+                <button onclick="location.href='${pageContext.request.contextPath}/user/login.jsp'">리뷰 작성하기</button>
+              </c:otherwise>
+            </c:choose>
           </div>
         </div>
       </div>
       
       <div class="tab-content" style="display: none">
         <div class="qna-list">
-          <c:forEach var="qna" items="${qnaList}">
-            <div class="qna-item">
-              <div class="question">
-                <span class="question-label">Q</span>
-                <div class="question-content">
-                  <div class="question-header">
-                    <span class="questioner-name">${qna.userName}</span>
-                    <span class="question-date">${qna.questionDate}</span>
-                  </div>
-                  <p>${qna.question}</p>
-                </div>
-              </div>
-              <c:if test="${not empty qna.answer}">
-                <div class="answer">
-                  <span class="answer-label">A</span>
-                  <div class="answer-content">
-                    <div class="answer-header">
-                      <span class="answerer-name">그린테이블</span>
-                      <span class="answer-date">${qna.answerDate}</span>
+            <c:forEach var="qna" items="${qnaList}">
+              <div class="qna-item">
+                <div class="question">
+                  <span class="question-label">Q</span>
+                  <div class="question-content">
+                    <div class="question-header">
+                      <span class="questioner-name">${qna.userName}</span>
+                      <span class="question-date">
+                        <fmt:formatDate value="${qna.createdAt}" pattern="yyyy.MM.dd" />
+                      </span>
                     </div>
-                    <p>${qna.answer}</p>
+                    <p class="qna-title">${qna.title}</p>
+                    <p class="qna-content">${qna.content}</p>
                   </div>
                 </div>
-              </c:if>
+                <c:if test="${qna.isAnswered eq 'Y'}">
+                  <div class="answer">
+                    <span class="answer-label">A</span>
+                    <div class="answer-content">
+                      <div class="answer-header">
+                        <span class="answerer-name">그린테이블</span>
+                        <span class="answer-date">
+                          <fmt:formatDate value="${qna.answeredAt}" pattern="yyyy.MM.dd" />
+                        </span>
+                      </div>
+                      <p>${qna.answer}</p>
+                    </div>
+                  </div>
+                </c:if>
+              </div>
+            </c:forEach>
+            
+            <c:if test="${empty qnaList}">
+              <p class="no-qna">아직 등록된 문의가 없습니다.</p>
+            </c:if>
+            
+            <div class="write-question">
+              <c:choose>
+                <c:when test="${not empty sessionScope.loginUser}">
+                  <button onclick="location.href='${pageContext.request.contextPath}/front?key=qna&methodName=writeForm&productId=${product.productId}'">문의하기</button>
+                </c:when>
+                <c:otherwise>
+                  <button onclick="location.href='${pageContext.request.contextPath}/user/login.jsp'">문의하기</button>
+                </c:otherwise>
+              </c:choose>
             </div>
-          </c:forEach>
-          
-          <c:if test="${empty qnaList}">
-            <p class="no-qna">아직 등록된 문의가 없습니다.</p>
-          </c:if>
-          <div class="write-question">
-            <button onclick="location.href='${pageContext.request.contextPath}/front?key=qna&methodName=writeForm&productId=${product.productId}'">문의하기</button>
           </div>
-        </div>
       </div>
       
       <div class="tab-content" style="display: none">

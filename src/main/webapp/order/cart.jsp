@@ -12,8 +12,9 @@
 <title>그린테이블</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common/reset.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/order/cart.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </head>
-<body data-contextpath="${pageContext.request.contextPath}" data-userid="${sessionScope.userId}">
+<body data-contextpath="${pageContext.request.contextPath}" data-userid="${sessionScope.loginUser.userId}">
   <div class="cart-container hd__inner1100">
     <div class="cart-title">
     	<h1>장바구니</h1>
@@ -33,7 +34,7 @@
       <table class="cart-table">
       <thead>
         <tr>
-          <th><input type="checkbox"></th>
+          <th><input type="checkbox" id="selectAllCheckbox" checked></th>
           <th>상품정보</th>
           <th>수량</th>
           <th>구매 금액</th>
@@ -42,8 +43,8 @@
       </thead>
       <tbody>
       	<c:forEach var="cart" items="${cartList}">
-      		<tr data-userid="${cart.userId}" data-product-id="${cart.productId}" >
-		  		<td><input type="checkbox"></td>
+      		<tr data-product-id="${cart.productId}" >
+		  		<td><input type="checkbox" class="cart-checkbox" checked></td>
 		  		<td class="product-info">
 					<img src="${cart.imageName}" alt="상품 이미지">
 					<div>
@@ -87,9 +88,11 @@
           <p class="price-cell"><fmt:formatNumber value="${totalPayPrice}" />원</p>
         </div>
       </div>
-      <form id="orderForm" method="post" action="${pageContext.request.contextPath}/ajax?key=orderRest&methodName=processOrder" >
-	      <input type="hidden" name="productIds" id="productIds" >
-		    <input type="hidden" name="quantity" id="quantity">
+      <form method="post" id="cartForm" action="${pageContext.request.contextPath}/front?key=order&methodName=goOrderPage" >
+	        <input type="hidden" name="productIds" id="productIds">
+          <!--<input type="hidden" name="quantity" id="quantity">-->
+          <input type="hidden" name="quantities" id="quantities">
+          <input type="hidden" name="selected" id="selected">
 			      
 	      <div class="cart-buttons">
 	        <button type="button" class="continue-btn">쇼핑 계속하기</button>
