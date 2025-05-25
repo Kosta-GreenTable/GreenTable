@@ -170,7 +170,7 @@ public class OrderDAOImpl implements OrderDAO {
 		ResultSet rs = null;
 		OrderDTO order = null;
 
-		String sql = proFile.getProperty("query.");
+		String sql = proFile.getProperty("query.getOrderDetail");
 		try {
 			con = DbUtil.getConnection();
 			ps = con.prepareStatement(sql);
@@ -208,7 +208,7 @@ public class OrderDAOImpl implements OrderDAO {
 		ResultSet rs = null;
 		List<OrderDTO> orderList = new ArrayList<>();
 
-		String sql = proFile.getProperty("query.selectOrderInfo");
+		String sql = proFile.getProperty("query.getOrderInfo");
 		try {
 			con = DbUtil.getConnection();
 			ps = con.prepareStatement(sql);
@@ -257,7 +257,7 @@ public class OrderDAOImpl implements OrderDAO {
 		ResultSet rs = null;
 		OrderDTO order = null;
 
-		String sql = proFile.getProperty("query.selectGuestOrder");
+		String sql = proFile.getProperty("query.getGuestOrder");
 		try {
 			con = DbUtil.getConnection();
 			ps = con.prepareStatement(sql);
