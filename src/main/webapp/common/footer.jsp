@@ -21,7 +21,7 @@
     </div>
     <div class="footer-bottom">
         <div class="footer-logo">
-            <a><img src="https://saladpanda.co.kr/web/upload/_awesome_skin/layout/logo_w.png" alt="로고"></a>
+            <a><img src="${pageContext.request.contextPath}/image/logo_2.png" alt="로고"></a>
         </div>
         <div class="company-info">
             <div class="company-info-detail">

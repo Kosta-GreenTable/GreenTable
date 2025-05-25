@@ -15,7 +15,7 @@ public interface OrderDAO {
 	int createOrderSeq(Connection con) throws SQLException;
 	
 	/** 주문 정보 등록 */
-	void insertOrder(Connection con, Map<String, Object> orderData) throws SQLException;
+	void insertOrder(Connection con, int orderId, Map<String, Object> orderData) throws SQLException;
 	
 	/** 주문 상세 정보 등록 */
     void insertOrderDetail(Connection con, int orderId, CartDTO item) throws SQLException;
@@ -34,5 +34,8 @@ public interface OrderDAO {
 	
 	/** 특정 유저의 주문 내역 조회 */
 	List<OrderDTO> selectOrdersByUser(int userId) throws SQLException;
+	
+	/** 비회원 주문 조회 */
+	OrderDTO selectGuestOrder(String merchantUid, String guestPassword) throws SQLException;
 	 
 }

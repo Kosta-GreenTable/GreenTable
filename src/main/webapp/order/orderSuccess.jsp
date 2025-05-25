@@ -11,17 +11,17 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/order/orderSuccess.css">
 </head>
 <body>
-<div class="complete-container hd__inner1100">
+<div class="complete-container">
     <div class="complete-container-inner">
         <div class="complete-message">
             <h1>주문이 완료되었습니다!</h1>
             <p>고객님의 주문이 성공적으로 접수되었습니다.</p>
-            <p>주문 번호: <strong>#202505120001</strong></p>
+            <p>주문 번호: <strong>${merchantUid}</strong></p>
             <p>주문 내역은 마이페이지에서 확인하실 수 있습니다.</p>
         </div>
         <div class="button-container">
             <a href="${pageContext.request.contextPath}/index.jsp" class="btn">홈으로</a>
-            <a href="#" class="btn">주문 내역 확인</a>
+            <a href="${pageContext.request.contextPath}/front?key=mypage&methodName=mypage" class="btn">주문 내역 확인</a>
         </div>
     </div>
 </div>

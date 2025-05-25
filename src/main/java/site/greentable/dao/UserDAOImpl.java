@@ -65,12 +65,14 @@ public class UserDAOImpl implements UserDAO {
 			ps = con.prepareStatement(sql);
 			ps.setString(1, email);
 			ps.setString(2, password);
+			
 
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				userDto = new UserDTO();
 				userDto.setUserId(rs.getInt("user_id"));
 				userDto.setEmail(rs.getString("email"));
+				userDto.setPassword(rs.getString("password"));
 			}
 
 		} catch (SQLException e) {
@@ -144,7 +146,7 @@ public class UserDAOImpl implements UserDAO {
 			ps.setInt(7, userInfoDto.getOrderCount() > 0 ? userInfoDto.getOrderCount() : 0);
 			ps.setInt(8, userInfoDto.getTotalAmount() > 0 ? userInfoDto.getTotalAmount() : 0);
 			ps.setString(9, userInfoDto.getUserGrade() != null ? userInfoDto.getUserGrade() : "브론즈");
-			ps.setInt(10, userInfoDto.getPoint() > 0 ? userInfoDto.getPoint() : 0);
+			ps.setInt(10, userInfoDto.getPoint() > 0 ? userInfoDto.getPoint() : 2000);
 
 			int result = ps.executeUpdate();
 			if (result == 0)
@@ -220,31 +222,56 @@ public class UserDAOImpl implements UserDAO {
 
 	@Override
 	public int updateUser(UserDTO userDto) throws ModifyException {
-		Connection con = null;
-		PreparedStatement ps = null;
+	    Connection con = null;
+	    PreparedStatement ps1 = null;
+	    PreparedStatement ps2 = null;
 
-		String sql = proFile.getProperty("query.updateUser");
-		try {
-			con = DbUtil.getConnection();
-			ps = con.prepareStatement(sql);
-			ps.setString(1, userDto.getStatus());
-			ps.setString(2, userDto.getUserType());
-			ps.setString(3, userDto.getProvider());
-			ps.setString(4, userDto.getOauthId());
-			ps.setInt(5, userDto.getUserId());
+	    String sql1 = proFile.getProperty("query.updateUserPassword"); // UPDATE user_login SET password=? WHERE user_id=?
+	    String sql2 = proFile.getProperty("query.updateUserInfo"); // UPDATE user_info SET user_name=?, phone=?, zip_code=?, address=?, detail_address=? WHERE user_id=?
 
-			int result = ps.executeUpdate();
-			if (result == 0)
-				throw new ModifyException("회원 정보 수정 실패");
-			return result;
+	    try {
+	        con = DbUtil.getConnection();
+	        con.setAutoCommit(false); // 트랜잭션 시작
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new ModifyException("회원 정보 수정 중 오류 발생");
-		} finally {
-			DbUtil.dbClose(con, ps);
-		}
+	        // 1. user_login 테이블의 password 업데이트
+	        ps1 = con.prepareStatement(sql1);
+	        ps1.setString(1, userDto.getPassword());
+	        ps1.setInt(2, userDto.getUserId());
+	        int result1 = ps1.executeUpdate();
+
+	        // 2. user_info 테이블의 상세 정보 업데이트
+	        UserInfoDTO info = userDto.getUserInfoDto();
+	        ps2 = con.prepareStatement(sql2);
+	        ps2.setString(1, info.getUserName());
+	        ps2.setString(2, info.getPhone());
+	        ps2.setInt(3, info.getZipCode());
+	        ps2.setString(4, info.getAddress());
+	        ps2.setString(5, info.getDetailAddress());
+	        ps2.setInt(6, userDto.getUserId());
+	        int result2 = ps2.executeUpdate();
+
+	        if (result1 == 0 && result2 == 0) {
+	            con.rollback();
+	            throw new ModifyException("회원 정보 수정 실패");
+	        }
+
+	        con.commit();
+	        return result1 + result2;
+
+	    } catch (SQLException e) {
+	        try {
+	            if (con != null) con.rollback();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	        e.printStackTrace();
+	        throw new ModifyException("회원 정보 수정 중 오류 발생");
+	    } finally {
+	        DbUtil.dbClose(null, ps2);
+	        DbUtil.dbClose(con, ps1);
+	    }
 	}
+
 
 	@Override
 	public int deleteUser(int userId) throws DeleteException {
@@ -306,6 +333,30 @@ public class UserDAOImpl implements UserDAO {
 		}
 
 		return dto;
+	}
+
+	@Override
+	public boolean withdrawUser(String userId) throws SQLException {
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		String sql = proFile.getProperty("query.withdrawUser");
+		try {
+			con = DbUtil.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, userId);
+			
+			int result = ps.executeUpdate();
+			return result > 0;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
+		
+		return false;
 	}
 
 }

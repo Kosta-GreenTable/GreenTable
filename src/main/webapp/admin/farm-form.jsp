@@ -68,12 +68,10 @@ pageEncoding="UTF-8"%>
           <div class="form-group">
             <label for="category">카테고리</label>
             <select id="category" name="category" class="form-control">
-              <option value="일반">일반</option>
-              <option value="채소">채소</option>
-              <option value="과일">과일</option>
-              <option value="곡물">곡물</option>
-              <option value="축산물">축산물</option>
-              <option value="유기농">유기농</option>
+              <option value="vege">채소</option>
+              <option value="fruit">과일</option>
+              <option value="dairy">축산/유제품</option>
+              <option value="others">기타</option>
             </select>
           </div>
 

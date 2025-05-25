@@ -15,6 +15,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
         <!-- 헤더 컨테이너: header.html이 로드됩니다 -->
@@ -77,12 +78,12 @@
                         </div>
                         <button type="submit" class="login-btn">로그인</button>
                     </form>
-
+                </div>
 
                 <!-- 비회원 주문조회 폼 -->
                 <div class="tab-content" id="non-member-tab">
-                    <form class="login-form" id="non-member-login-form">
-                        <div class="input-group">
+                    <form class="login-form" id="non-member-login-form" action="${path}/front?key=order&methodName=getGuestOrder" method="POST">
+                        <!-- <div class="input-group">
                             <label for="order-name">주문자명</label>
                             <input
                                 type="text"
@@ -91,23 +92,23 @@
                                 placeholder="주문자명을 입력해주세요"
                                 required
                             />
-                        </div>
+                        </div> -->
                         <div class="input-group">
-                            <label for="order-number">주문번호</label>
+                            <label for="merchantUid">주문번호</label>
                             <input
                                 type="text"
-                                id="order-number"
-                                name="orderNumber"
+                                id="merchantUid"
+                                name="merchantUid"
                                 placeholder="주문번호를 입력해주세요"
                                 required
                             />
                         </div>
                         <div class="input-group">
-                            <label for="order-password">비밀번호</label>
+                            <label for="guestPassword">비밀번호</label>
                             <input
                                 type="password"
-                                id="order-password"
-                                name="orderPassword"
+                                id="guestPassword"
+                                name="guestPassword"
                                 placeholder="주문 시 입력한 비밀번호를 입력해주세요"
                                 required
                             />
