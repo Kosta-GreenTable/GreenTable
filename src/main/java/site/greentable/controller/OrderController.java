@@ -105,7 +105,7 @@ public class OrderController implements Controller {
 	        }
 	    }
 
-	    // 계산된 OrderList를 세션에 저장
+	    // 세션에 저장
 	    session.setAttribute("orderItems", orderList);
 
 	    Map<String, Object> priceMap;
@@ -132,6 +132,65 @@ public class OrderController implements Controller {
 
 	    return new ModelAndView("/order/order.jsp");
     }
+	
+	/** 상품 상세페이지 -> 바로 구매 */
+	public ModelAndView buyNow(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    HttpSession session = request.getSession();
+	    UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
+	    int userId = loginUser != null ? loginUser.getUserId() : 0;
+
+	    int productId = Integer.parseInt(request.getParameter("productId"));
+	    int quantity  = Integer.parseInt(request.getParameter("quantity"));
+
+	    // 상품 상세 정보 조회
+	    CartDTO productInfo = orderService.getProductDetail(productId);
+	    if (productInfo == null) {
+	        throw new NotFoundException("상품 ID " + productId + " 가 존재하지 않습니다.");
+	    }
+
+	    // 할인율 적용 계산
+	    int unitPrice = productInfo.getPrice();
+	    if (productInfo.getDiscountRate() > 0) {
+	        unitPrice = (int)(unitPrice * (100 - productInfo.getDiscountRate()) / 100.0);
+	    }
+
+	    // 주문정보 저장
+	    CartDTO orderItem = new CartDTO();
+	    orderItem.setProductId(productId);
+	    orderItem.setQuantity(quantity);
+	    orderItem.setProductName(productInfo.getProductName());
+	    orderItem.setPrice(productInfo.getPrice());                   // 할인 적용된 가격
+	    orderItem.setDiscountRate(productInfo.getDiscountRate());
+	    orderItem.setImageName(productInfo.getImageName());
+
+	    List<CartDTO> orderList = new ArrayList<>();
+	    orderList.add(orderItem);
+
+	    // 가격 계산
+	    Map<String,Object> priceMap = cartService.calculateGuestCartPrices(orderList);
+
+	    // 세션에 주문 정보 저장
+	    session.setAttribute("orderItems",      orderList);
+	    session.setAttribute("totalProductPrice", priceMap.get("totalProductPrice"));
+	    session.setAttribute("totalDiscount",    priceMap.get("totalDiscount"));
+	    session.setAttribute("deliveryFee",      priceMap.get("deliveryFee"));
+	    session.setAttribute("totalPayPrice",    priceMap.get("totalPayPrice"));
+
+	    // 주문번호 생성 및 저장
+	    String merchantUid = generateMerchantUid();
+	    session.setAttribute("merchantUid", merchantUid);
+	    request.setAttribute("merchantUid", merchantUid);
+
+	    request.setAttribute("orderList",         orderList);
+	    request.setAttribute("totalProductPrice", priceMap.get("totalProductPrice"));
+	    request.setAttribute("totalDiscount",     priceMap.get("totalDiscount"));
+	    request.setAttribute("deliveryFee",       priceMap.get("deliveryFee"));
+	    request.setAttribute("totalPayPrice",     priceMap.get("totalPayPrice"));
+
+	    return new ModelAndView("/order/order.jsp");
+	}
+
+	
 	
 	
 	/** merchantUid(고유 주문번호) 생성 함수 */
