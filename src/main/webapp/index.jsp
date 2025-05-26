@@ -145,10 +145,12 @@
               <div id="farm-container"></div>
             </main>
         </c:otherwise>
+
     </c:choose>
 
     <!-- 푸터 인클루드 -->
     <jsp:include page="common/footer.jsp" />
+
 
     <!-- 자바스크립트 -->
     <c:choose>

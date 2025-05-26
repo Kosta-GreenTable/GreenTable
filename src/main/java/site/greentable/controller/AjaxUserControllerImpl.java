@@ -190,6 +190,7 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 	    return null;
 	}
 
+
 	@Override
 	public void withdrawUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setCharacterEncoding("UTF-8");
@@ -238,7 +239,7 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 	}
 
 
-	
+
 
 }
 

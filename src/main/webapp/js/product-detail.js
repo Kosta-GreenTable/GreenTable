@@ -145,6 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const decreaseQuantityBtn = document.getElementById("decrease-quantity");
   const totalPriceAmount = document.getElementById("total-price-amount");
   const stockAlert = document.querySelector(".stock-alert");
+  const buyNowQuantityInput = document.getElementById("buyNowQuantityInput");
   
   // 디버깅을 위한 요소 확인
   console.log("DOM 요소 초기화:", {
@@ -202,6 +203,13 @@ document.addEventListener("DOMContentLoaded", () => {
     
     console.log(`수량 변경: ${quantity}개, 총 금액: ${formatPrice(total)}원`);
     totalPriceAmount.textContent = formatPrice(total) + "원";
+  
+    // 바로 구매하기의 hidden input 값 동기화
+    if (buyNowQuantityInput) {
+      buyNowQuantityInput.value = quantity;
+      console.log(`숨겨진 주문 수량 필드 동기화: ${buyNowQuantityInput.value}`);
+    }
+  
   }
 
   // 재고 부족 알림 표시 함수
@@ -269,14 +277,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // 바로 구매하기 버튼 클릭 이벤트
   if (buyNowButton) {
     buyNowButton.addEventListener("click", function(e) {
+      e.preventDefault();
       if (!quantityInput || !productId) return;
       
       // 재고 확인 후 처리
       const quantity = parseInt(quantityInput.value) || 1;
       
-      if (quantity > maxStock) {
-        e.preventDefault(); // 이벤트 기본 동작 중지
-        
+      if (quantity > maxStock) {        
         // 알림 표시
         showStockAlert();
         
@@ -287,16 +294,34 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       
       console.log(`바로 구매: 상품 ID ${productId}, 수량 ${quantity}개`);
+
+      // form 제출
+      // const form = document.getElementById("orderForm");
+      // if (form) {
+      //   form.submit();
+      // } else {
+      //   console.error("주문 폼(orderForm)을 찾을 수 없습니다.");
+      // }
+      const params = new URLSearchParams({
+      key: "order",
+      methodName: "buyNow",
+      productId,
+      quantity: quantity
+    });
+    window.location.href = `${contextPath}/front?${params}`;
       
       // 재고가 충분하면 바로 구매 페이지로 이동
-      const url = `${contextPath}/front?key=order&methodName=buyNow&productId=${productId}&quantity=${quantity}`;
-      window.location.href = url;
+     // const url = `${contextPath}/front?key=order&methodName=buyNow`;
+       //const url = `${contextPath}/front?key=order&methodName=buyNow&productId=${productId}&quantity=${quantity}`;
+      //window.location.href = url;
     });
   }
-  
+
+
   // 장바구니 담기 버튼 클릭 이벤트
   if (addToCartButton) {
-    addToCartButton.addEventListener("click", function() {
+    addToCartButton.addEventListener("click", function(e) {
+      e.preventDefault();
       if (!quantityInput || !productId) return;
       
       const quantity = parseInt(quantityInput.value) || 1;
@@ -308,10 +333,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       
-      // 디버깅 코드 추가
-      console.log(`장바구니 담기: 상품 ID ${productId}, 수량 ${quantity}개`);
-      console.log(`userId 값: [${userId}], 타입: ${typeof userId}`);
-      
     if (!userId || userId === "0" || parseInt(userId) === 0) {
           // 비회원일 경우 로컬스토리지에 저장
           addCartToLocalStorage(productId, quantity);
@@ -320,7 +341,6 @@ document.addEventListener("DOMContentLoaded", () => {
           // 회원이면 서버로 전송
           addCartToServer(userId, productId, quantity);
         }
-  	  
     });
   }
 
@@ -335,36 +355,38 @@ document.addEventListener("DOMContentLoaded", () => {
         guestCart.push({ productId, quantity });
       }
       localStorage.setItem('guestCart', JSON.stringify(guestCart));
-      alert('장바구니에 담겼습니다.');
+      swal.fire ({text: "상품을 장바구니에 담았습니다!", confirmButtonText: '확인', icon: 'success' });
     }
 
     //회원 장바구니 추가
     const addCartToServer = async (userId, productId, quantity) => {
       try {
-      
+      console.log(`서버에 장바구니 추가 요청: userId=${userId}, productId=${productId}, quantity=${quantity}`);
         const response = await fetch(`${contextPath}/front?key=cart&methodName=insertCart`, {
           method: "POST",
-		  credentials: "same-origin", 
+		      credentials: "same-origin", 
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Requested-With": "XMLHttpRequest"
           },
           body: new URLSearchParams({           
-			
+			      userId: userId,
             productId: productId,
             quantity: quantity     
            }),
           });
-        if (!response.ok) throw new Error("서버 오류");
+        if (!response.ok) throw new Error(`서버 오류: ${response.status}`);
     
         const result = await response.json(); // 필요 시 JSON으로 바꿀 수도 있음
         if (result.success) {
-          alert("장바구니에 담겼습니다.");
+          swal.fire ({text: "상품을 장바구니에 담았습니다!",
+                      confirmButtonText: '확인', icon: "success" });
         } else {
-          alert(result.message || "장바구니 담기에 실패했습니다.");
+          swal.fire ({text: "장바구니 담기에 실패했습니다.", confirmButtonText: '확인', icon: "error" });
         }
       } catch (err) {
         console.error("장바구니 추가 실패:", err);
-        alert("장바구니 담기에 실패했습니다.");
+        swal.fire ({text: "장바구니 담기에 실패했습니다.", confirmButtonText: '확인', icon: "error" });
       }
     }
 
