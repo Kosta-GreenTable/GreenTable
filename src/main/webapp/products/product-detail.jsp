@@ -137,7 +137,8 @@
             </c:choose>
           </span>
         </div>
-        
+      <form id="orderForm" method="post"
+            action="${pageContext.request.contextPath}/front?key=order&methodName=buyNow">
         <div class="button-container">
           <button class="add-to-cart" data-product-id="${product.productId}" ${product.stock <= 0 ? 'disabled' : ''}>장바구니 담기</button>
           <button class="buy-now" data-product-id="${product.productId}" ${product.stock <= 0 ? 'disabled' : ''}>바로 구매하기</button>
@@ -145,7 +146,11 @@
         
         <!-- 상품 ID 숨김 필드 (JS에서 사용) -->
         <input type="hidden" name="productId" value="${product.productId}">
+        <input type="hidden" name="quantity" id="buyNowQuantityInput" value="1" />
         <input type="hidden" name="productPrice" value="${product.discountRate > 0 ? product.price * (100 - product.discountRate) / 100 : product.price}">
+      
+      </form>
+      
       </div>
     </section>
     

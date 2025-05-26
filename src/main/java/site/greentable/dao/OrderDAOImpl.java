@@ -170,7 +170,7 @@ public class OrderDAOImpl implements OrderDAO {
 		ResultSet rs = null;
 		OrderDTO order = null;
 
-		String sql = proFile.getProperty("query.");
+		String sql = proFile.getProperty("query.getOrderDetail");
 		try {
 			con = DbUtil.getConnection();
 			ps = con.prepareStatement(sql);
@@ -194,6 +194,18 @@ public class OrderDAOImpl implements OrderDAO {
 				order.setUsedPoint(rs.getInt("used_point"));
 				order.setOrderStatus(rs.getString("order_status"));
 				order.setOrderAt(rs.getDate("order_at")); // 주문시간 매핑
+				order.setMainImageName(rs.getString("image_name"));
+				order.setOrderDetails(new ArrayList<>());
+			
+				// 주문 상세 정보 추가
+				do {
+					OrderDetailDTO detail = new OrderDetailDTO();
+					detail.setProductId(rs.getInt("product_id"));
+					detail.setProductName(rs.getString("name"));
+					detail.setQuantity(rs.getInt("quantity"));
+					detail.setPrice(rs.getInt("price"));
+					order.getOrderDetails().add(detail);
+				} while (rs.next());
 			}
 		} finally {
 			DbUtil.dbClose(con, ps, rs);
@@ -208,7 +220,7 @@ public class OrderDAOImpl implements OrderDAO {
 		ResultSet rs = null;
 		List<OrderDTO> orderList = new ArrayList<>();
 
-		String sql = proFile.getProperty("query.selectOrderInfo");
+		String sql = proFile.getProperty("query.getOrderInfo");
 		try {
 			con = DbUtil.getConnection();
 			ps = con.prepareStatement(sql);
@@ -257,7 +269,7 @@ public class OrderDAOImpl implements OrderDAO {
 		ResultSet rs = null;
 		OrderDTO order = null;
 
-		String sql = proFile.getProperty("query.selectGuestOrder");
+		String sql = proFile.getProperty("query.getGuestOrder");
 		try {
 			con = DbUtil.getConnection();
 			ps = con.prepareStatement(sql);
