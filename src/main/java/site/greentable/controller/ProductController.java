@@ -150,6 +150,8 @@ public class ProductController implements Controller {
         List<ProductImage> productImages = productService.getProductImages(productId);
 
         if (product == null) {
+        	System.out.println("상품디테일오류");
+        	System.out.println(product);
             request.setAttribute("errorMessage", "상품 정보를 찾을 수 없습니다.");
             return new ModelAndView("/shopping/error.jsp");
         }
