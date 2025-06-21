@@ -1,6 +1,6 @@
 /* 도시락 상품 페이지 전용 스타일 */
 
-/* 도시락 상품 배지 스타일 */
+/* 도시락 상품 배지 스타일 개선 */
 .calorie-badge {
   position: absolute;
   top: 10px;
@@ -8,10 +8,11 @@
   background-color: #42a5f5;
   color: white;
   padding: 5px 10px;
-  border-radius: 3px;
-  font-size: 12px;
-  font-weight: bold;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 600;
   z-index: 1;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* 도시락 상품 카테고리 배너 스타일 */
@@ -66,4 +67,45 @@
 .main-nav ul li.active a {
   color: #42a5f5;
   font-weight: 600;
+}
+
+/* 반응형 스타일 추가 */
+@media (max-width: 1200px) {
+  .calorie-info {
+    margin-bottom: 6px;
+    padding: 2px 7px;
+  }
+}
+
+@media (max-width: 992px) {
+  .calorie-badge {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .calorie-info {
+    font-size: 11px;
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .calorie-badge {
+    font-size: 11px;
+    padding: 3px 7px;
+    border-radius: 4px;
+  }
+
+  .calorie-info {
+    font-size: 10px;
+    padding: 2px 6px;
+    margin-bottom: 4px;
+  }
+}
+
+@media (max-width: 576px) {
+  .calorie-badge {
+    top: 8px;
+    left: 8px;
+  }
 }

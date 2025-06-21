@@ -6,15 +6,23 @@
   font-family: "Noto Sans KR", sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
 body {
   line-height: 1.6;
   color: #333;
   background-color: #ffffff;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* 상단 초록색 바 제거 */
 body::before {
-  display: none; /* 추가: 상단 초록색 바 제거 */
+  display: none;
+  /* 추가: 상단 초록색 바 제거 */
 }
 
 a {
@@ -51,7 +59,8 @@ button {
   font-weight: 500;
   /* 초록색 선 제거: border-bottom 속성 삭제 */
   margin-bottom: 30px;
-  color: #333; /* 색상 변경 */
+  color: #333;
+  /* 색상 변경 */
 }
 
 .subtitle {
@@ -239,6 +248,7 @@ header {
   from {
     transform: translateY(-100%);
   }
+
   to {
     transform: translateY(0);
   }
@@ -349,6 +359,7 @@ header {
   0% {
     opacity: 0.7;
   }
+
   100% {
     opacity: 1;
   }
@@ -509,7 +520,8 @@ header {
 .product-img {
   width: 100%;
   height: 0;
-  padding-bottom: 100%; /* 1:1 비율 유지 */
+  padding-bottom: 100%;
+  /* 1:1 비율 유지 */
   position: relative;
   background-color: #ffffff;
   overflow: hidden;
@@ -809,7 +821,8 @@ footer {
   position: absolute;
   top: -2px;
   left: 0;
-  width: 33.33%; /* 첫 번째 페이지에 위치 */
+  width: 33.33%;
+  /* 첫 번째 페이지에 위치 */
   height: 6px;
   background-color: rgb(0, 156, 90);
   border-radius: 3px;
@@ -876,6 +889,7 @@ footer {
   .farm-card {
     flex: 0 0 100%;
   }
+
   .footer-column {
     flex-basis: 100%;
   }
@@ -884,7 +898,10 @@ footer {
 /* 메인 콘텐츠 컨테이너 스타일 */
 .main-content {
   background-color: #ffffff;
-  padding: 20px 0;
+  padding: 20px 15px;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 /* 헤더와 푸터 컨테이너 스타일 */

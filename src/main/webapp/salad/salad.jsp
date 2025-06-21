@@ -33,18 +33,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       // 컨텍스트 경로를 JavaScript 변수로 설정
       var contextPath = "${pageContext.request.contextPath}";
     </script>
-    <style>
-      /* 카테고리 페이지에서만 적용되는 이벤트 배너 스타일 */
-      .main-banner .banner-container {
-        height: 250px !important; /* 400px에서 250px로 변경 */
-      }
-
-      /* 화살표 버튼 크기 조정 */
-      .main-banner .arrow {
-        width: 32px;
-        height: 32px;
-      }
-    </style>
   </head>
   <body>
     <!-- 헤더 인클루드 -->

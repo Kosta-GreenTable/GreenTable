@@ -150,8 +150,8 @@ public class ProductController implements Controller {
         List<ProductImage> productImages = productService.getProductImages(productId);
 
         if (product == null) {
-        	System.out.println("상품디테일오류");
-        	System.out.println(product);
+            System.out.println("상품디테일오류");
+            System.out.println(product);
             request.setAttribute("errorMessage", "상품 정보를 찾을 수 없습니다.");
             return new ModelAndView("/shopping/error.jsp");
         }
@@ -209,5 +209,125 @@ public class ProductController implements Controller {
         String viewPath = "/" + category + "/" + category + ".jsp";
 
         return new ModelAndView(viewPath);
+    }
+
+    /**
+     * 검색 기능 - 검색 결과 페이지로 이동
+     */
+    public ModelAndView search(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String query = request.getParameter("query");
+        String pageNo = request.getParameter("pageNo");
+        String sortOption = request.getParameter("sort");
+
+        if (pageNo == null || pageNo.isEmpty()) {
+            pageNo = "1";
+        }
+
+        if (query == null || query.isEmpty()) {
+            return new ModelAndView("/index.jsp");
+        }
+
+        int pageNoInt = Integer.parseInt(pageNo);
+        List<Product> list = productService.searchProducts(query, pageNoInt);
+        int totalPages = productService.getSearchTotalPages(query);
+
+        // 정렬 옵션 처리
+        if (sortOption != null && !sortOption.isEmpty()) {
+            switch (sortOption) {
+                case "newest":
+                    list = productService.sortProductsByNewest(list);
+                    break;
+                case "price-asc":
+                    list = productService.sortProductsByPriceAsc(list);
+                    break;
+                case "price-desc":
+                    list = productService.sortProductsByPriceDesc(list);
+                    break;
+                case "discount":
+                    list = productService.sortProductsByDiscount(list);
+                    break;
+                default:
+                    // 기본 정렬(관련도순)은 그대로 유지
+                    break;
+            }
+        }
+
+        // 검색 결과가 없을 경우 추천 상품 제공
+        if (list.isEmpty()) {
+            List<Product> recommendedProducts = productService.getBestProducts(1);
+            // 최대 8개까지 제한
+            if (recommendedProducts.size() > 8) {
+                recommendedProducts = recommendedProducts.subList(0, 8);
+            }
+            request.setAttribute("recommendedProducts", recommendedProducts);
+        }
+
+        request.setAttribute("productList", list);
+        request.setAttribute("query", query);
+        request.setAttribute("pageNo", pageNo);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("category", "검색 결과: " + query);
+        request.setAttribute("sortOption", sortOption);
+
+        return new ModelAndView("/products/search-results.jsp");
+    }
+
+    /**
+     * AJAX 검색 기능 - 실시간 검색 결과 JSON 반환
+     */
+    public void searchAjax(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String query = request.getParameter("query");
+
+        response.setContentType("application/json;charset=UTF-8");
+        java.io.PrintWriter out = response.getWriter();
+
+        try {
+            if (query == null || query.isEmpty()) {
+                out.print("[]");
+                return;
+            }
+
+            // 최대 5개의 검색 결과만 반환
+            List<Product> products = productService.searchProducts(query, 1);
+            if (products.size() > 5) {
+                products = products.subList(0, 5);
+            }
+
+            // JSON 형식으로 변환
+            StringBuilder json = new StringBuilder("[");
+            for (int i = 0; i < products.size(); i++) {
+                Product product = products.get(i);
+                json.append("{");
+                json.append("\"productId\":").append(product.getProductId()).append(",");
+                json.append("\"name\":\"").append(escapeJson(product.getName())).append("\",");
+                json.append("\"category\":\"").append(escapeJson(product.getCategory())).append("\",");
+                json.append("\"price\":").append(product.getPrice()).append(",");
+                json.append("\"mainImageName\":\"").append(escapeJson(product.getMainImageName())).append("\"");
+                json.append("}");
+                if (i < products.size() - 1) {
+                    json.append(",");
+                }
+            }
+            json.append("]");
+
+            out.print(json.toString());
+        } catch (Exception e) {
+            out.print("[]");
+            e.printStackTrace();
+        } finally {
+            out.flush();
+        }
+    }
+
+    // JSON 문자열 이스케이프 처리
+    private String escapeJson(String input) {
+        if (input == null) {
+            return "";
+        }
+        return input.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
     }
 }

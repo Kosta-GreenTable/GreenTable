@@ -125,4 +125,21 @@ public interface ProductDAO {
      * @return 추천 상품 목록
      */
     List<Product> selectRecommendedProducts(int productId, int limit) throws SQLException;
+
+    /**
+     * 검색어로 상품 검색 (페이징)
+     * 
+     * @param query  검색어
+     * @param pageNo 페이지 번호
+     * @return 검색 결과 상품 목록
+     */
+    List<Product> searchProducts(String query, int pageNo) throws SQLException;
+
+    /**
+     * 검색 결과 개수 조회
+     * 
+     * @param query 검색어
+     * @return 검색 결과 개수
+     */
+    int getSearchResultCount(String query) throws SQLException;
 }

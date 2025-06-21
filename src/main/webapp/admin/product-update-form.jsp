@@ -43,13 +43,15 @@
                             <input type="text" id="subName" name="subName" value="${product.subName}">
                         </div>
                         <div class="form-group">
-                            <label for="category">카테고리 <span class="required">*</span></label>
-                            <select id="category" name="category" required>
-                                <option value="">카테고리 선택</option>
-                                <option value="도시락" ${product.category == '도시락' ? 'selected' : ''}>도시락</option>
-                                <option value="샐러드" ${product.category == '샐러드' ? 'selected' : ''}>샐러드</option>
-                            </select>
-                        </div>
+						    <label for="category">카테고리 <span class="required">*</span></label>
+						    <select id="category" name="category" required>
+						        <option value="">카테고리 선택</option>
+						        <option value="도시락" ${product.category == '도시락' ? 'selected' : ''}>도시락</option>
+						        <option value="샐러드" ${product.category == '샐러드' ? 'selected' : ''}>샐러드</option>
+						        <option value="정기배송" ${product.category == '정기배송' ? 'selected' : ''}>정기배송</option>
+						        <option value="베스트" ${product.category == '베스트' ? 'selected' : ''}>베스트</option>
+						    </select>
+						</div>
                         <div class="form-group">
                             <label for="price">가격 (원) <span class="required">*</span></label>
                             <input type="number" id="price" name="price" min="0" value="${product.price}" required>

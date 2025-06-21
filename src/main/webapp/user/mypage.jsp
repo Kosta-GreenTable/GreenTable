@@ -20,8 +20,12 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
   </head>
-  <body>
-    <jsp:include page="/common/header.jsp" />
+  <body>    <jsp:include page="/common/header.jsp" />
+
+    <!-- 로그인 체크 -->
+    <c:if test="${empty sessionScope.loginUser}">
+        <jsp:forward page="auth-required.jsp" />
+    </c:if>
 
     <main class="mypage-container">
       <h1 class="page-title">마이페이지</h1>
@@ -43,10 +47,9 @@
           </div>
 
           <nav class="sidebar-menu">
-            <h3>나의 쇼핑정보</h3>
-            <ul>
-              <li class="active"><a href="/mypage.jsp">주문/배송 조회</a></li>
-              <li><a href="/mycancel.jsp">취소/환불 내역</a></li>
+            <h3>나의 쇼핑정보</h3>            <ul>
+              <li class="active"><a href="${path}/front?key=mypage&methodName=mypage">주문/배송 조회</a></li>
+              <li><a href="${path}/user/mycancel.jsp">취소/환불 내역</a></li>
               <li><a href="${path}/user/mypoint.jsp">적립금 내역</a></li>
               <li><a href="${path}/user/mycoupon.jsp">쿠폰 내역</a></li>
               <li>
@@ -133,7 +136,7 @@
 					</td>
 			        <td class="product-info">
 			          <div class="product-box">
-			            <img src="${order.mainImageName}" alt="상품이미지">
+			            <img src="${path}/save/${order.mainImageName}" alt="상품이미지">
 			            <div class="product-details">
 			              <p class="product-name">
 							<c:choose>
@@ -160,24 +163,12 @@
 			  </table>
 			</div>
 			
-			
-			<div class="view-more">
-				<a href="#" class="btn-view-more">더보기 <i
+					<div class="view-more">
+				<a href="${path}/front?key=mypage&methodName=mypage" class="btn-view-more">더보기 <i
 					class="fas fa-angle-right"></i></a>
 			</div>
 			
 		</section>
-
-				<section class="recent-viewed">
-					<div class="section-header">
-						<h3>최근 본 상품</h3>
-					</div>
-					<div class="product-list">
-						<div class="no-products">
-							<p>최근 본 상품이 없습니다.</p>
-						</div>
-					</div>
-				</section>
 			</div>
 		</div>
 	</main>

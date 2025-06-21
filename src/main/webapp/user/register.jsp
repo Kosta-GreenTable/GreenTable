@@ -52,21 +52,29 @@ pageContext.setAttribute("path", path);
 					action="${pageContext.request.contextPath}/front">
 
 					<input type="hidden" name="key" value="user"> <input
-						type="hidden" name="methodName" value="register">
-
-					<div class="form-group">
+						type="hidden" name="methodName" value="register">					<div class="form-group">
 						<label for="email">이메일 (아이디)<span class="required">*</span></label>
 						<div class="input-with-button">
 							<input type="email" id="email" name="email"
 								placeholder="이메일을 입력하세요" required />
-							<button type="button" class="verify-email-btn">이메일 인증</button>
+							<button type="button" class="duplicate-check-btn" id="duplicate-check-btn">중복확인</button>
 						</div>
-						<p class="form-help">※ 이메일 형식으로 입력해주세요. (예:
+						<p class="form-help" id="email-help">※ 이메일 형식으로 입력해주세요. (예:
 							example@greentable.com)</p>
+						<p class="success-message hidden" id="duplicate-success">✓ 사용 가능한 이메일입니다.</p>
+						<p class="error-message hidden" id="duplicate-error">✗ 이미 사용중인 이메일입니다.</p>
+					</div>
+
+					<div class="form-group hidden" id="email-verification-group">
+						<label for="email-verification">이메일 인증<span class="required">*</span></label>
+						<div class="input-with-button">
+							<button type="button" class="verify-email-btn" id="send-verification-btn" disabled>인증번호 발송</button>
+						</div>
+						<p class="form-help">※ 위에서 중복확인을 완료한 후 이메일 인증을 진행해주세요.</p>
 					</div>
 
 					<div class="form-group hidden" id="verification-code-group">
-						<label for="verification-code">인증번호<span class="required">*</span></label>
+						<label for="verification-code">인증번호 입력<span class="required">*</span></label>
 						<div class="input-with-button">
 							<input type="text" id="verification-code"
 								name="verification-code" placeholder="인증번호를 입력하세요" />
@@ -75,6 +83,8 @@ pageContext.setAttribute("path", path);
 						<p class="verification-time">
 							남은시간: <span id="timer">05:00</span>
 						</p>
+						<p class="success-message hidden" id="verification-success">✓ 이메일 인증이 완료되었습니다.</p>
+						<p class="error-message hidden" id="verification-error">✗ 인증번호가 일치하지 않습니다.</p>
 					</div>
 
 					<div class="form-group">

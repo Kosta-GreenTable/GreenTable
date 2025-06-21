@@ -14,7 +14,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     />
     <link
       rel="stylesheet"
-      href="${pageContext.request.contextPath}/css/mypage.css"
+      href="${pageContext.request.contextPath}/css/user/mypage.css"
     />
     <link
       rel="stylesheet"
@@ -28,12 +28,58 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   <body>
     <!-- 헤더 인클루드 -->
     <jsp:include page="../common/header.jsp" />
-
     <!-- 메인 컨텐츠 - 상품 문의 섹션 -->
     <main class="mypage-container">
-      <h1 class="page-title">상품 문의</h1>
+      <%-- 로그인 체크 --%>
+      <c:if test="${empty sessionScope.loginUser}">
+        <jsp:forward page="../auth-required.jsp" />
+      </c:if>
+      <c:set var="path" value="${pageContext.request.contextPath}" />
+
+      <h1 class="page-title">마이페이지</h1>
 
       <div class="mypage-content">
+        <!-- 사이드바 메뉴 -->
+        <div class="mypage-sidebar">
+          <div class="user-profile">
+            <div class="profile-image">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="user-info">
+              <p class="user-name">
+                <c:out value="${sessionScope.loginUser.userInfoDto.userName}" />
+                님
+              </p>
+            </div>
+          </div>
+
+          <nav class="sidebar-menu">
+            <h3>나의 쇼핑정보</h3>
+            <ul>
+              <li>
+                <a href="${path}/front?key=mypage&methodName=mypage"
+                  >주문/배송 조회</a
+                >
+              </li>
+              <li><a href="${path}/user/mycancel.jsp">취소/환불 내역</a></li>
+              <li><a href="${path}/user/mypoint.jsp">적립금 내역</a></li>
+              <li><a href="${path}/user/mycoupon.jsp">쿠폰 내역</a></li>
+              <li>
+                <a href="${path}/front?key=review&methodName=myReviews"
+                  >상품 리뷰</a
+                >
+              </li>
+              <li class="active">
+                <a href="${path}/front?key=qna&methodName=myQnas">상품 문의</a>
+              </li>
+            </ul>
+            <h3>나의 계정설정</h3>
+            <ul>
+              <li><a href="${path}/user/myinfo.jsp">회원정보 수정</a></li>
+            </ul>
+          </nav>
+        </div>
+
         <!-- 상품 문의 메인 내용 -->
         <div class="mypage-main">
           <!-- 문의 필터링 옵션 -->

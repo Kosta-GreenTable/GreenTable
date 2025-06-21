@@ -1,7 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <c:set var="user" value="${sessionScope.loginUser}" />
+
+<!-- 로그인 체크 -->
+<c:if test="${empty sessionScope.loginUser}">
+    <jsp:forward page="/user/auth-required.jsp" />
+</c:if>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -35,27 +41,24 @@
                         <p class="user-name">${sessionScope.loginUser.userInfoDto.userName}님</p>
                         <button class="profile-edit-btn">회원정보수정</button>
                     </div>
-                </div>
-                <nav class="sidebar-menu">
+                </div>                <nav class="sidebar-menu">
                     <h3>나의 쇼핑정보</h3>
                     <ul>
-                        <li><a href="mypage.jsp">주문/배송 조회</a></li>
-                        <li><a href="mycancel.jsp">취소/반품 내역</a></li>
-                        <li><a href="mypoint.jsp">적립금 내역</a></li>
-                        <li><a href="mycoupon.jsp">쿠폰 내역</a></li>
-                        <li><a href="myreview.jsp">상품 리뷰</a></li>
-                        <li><a href="myqna.jsp">상품 문의</a></li>
+                        <li><a href="${path}/front?key=mypage&methodName=mypage">주문/배송 조회</a></li>
+                        <li><a href="${path}/user/mycancel.jsp">취소/반품 내역</a></li>
+                        <li><a href="${path}/user/mypoint.jsp">적립금 내역</a></li>
+                        <li><a href="${path}/user/mycoupon.jsp">쿠폰 내역</a></li>
+                        <li><a href="${path}/front?key=review&methodName=myReviews">상품 리뷰</a></li>
+                        <li><a href="${path}/front?key=qna&methodName=myQnas">상품 문의</a></li>
                     </ul>
 
                     <h3>나의 계정설정</h3>
                     <ul>
-                        <li class="active"><a href="myinfo.jsp">회원정보 수정</a></li>
+                        <li class="active"><a href="${path}/user/myinfo.jsp">회원정보 수정</a></li>
                     </ul>
                 </nav>
-            </div>
-
-            <c:if test="${empty sessionScope.loginUser}">
-                <p>세션에 로그인 정보가 없습니다.</p>
+            </div>            <c:if test="${empty sessionScope.loginUser}">
+                <jsp:forward page="/user/auth-required.jsp" />
             </c:if>
 
             <!-- 회원정보 수정 메인 폼 -->
@@ -92,24 +95,24 @@
                                 <label for="userPasswordConfirm">비밀번호 확인</label> 
                                 <input type="password" id="userPasswordConfirm" name="passwordConfirm" placeholder="변경할 비밀번호 입력 확인" /> 
                                 <span class="input-guide">※ 위에 입력한 비밀번호를 다시 한번 입력해주세요.</span>
-                            </div>
-
-                            <!-- 휴대전화 -->
+                            </div>                            <!-- 휴대전화 -->
                             <div class="form-group">
                                 <label for="mobile">휴대전화<span class="required">*</span></label>
                                 <div class="phone-group">
                                     <select id="mobile-first" required>
-                                        <option value="010">010</option>
-                                        <option value="011">011</option>
-                                        <option value="016">016</option>
-                                        <option value="017">017</option>
-                                        <option value="018">018</option>
-                                        <option value="019">019</option>
+                                        <option value="010" ${fn:startsWith(user.userInfoDto.phone, '010') ? 'selected' : ''}>010</option>
+                                        <option value="011" ${fn:startsWith(user.userInfoDto.phone, '011') ? 'selected' : ''}>011</option>
+                                        <option value="016" ${fn:startsWith(user.userInfoDto.phone, '016') ? 'selected' : ''}>016</option>
+                                        <option value="017" ${fn:startsWith(user.userInfoDto.phone, '017') ? 'selected' : ''}>017</option>
+                                        <option value="018" ${fn:startsWith(user.userInfoDto.phone, '018') ? 'selected' : ''}>018</option>
+                                        <option value="019" ${fn:startsWith(user.userInfoDto.phone, '019') ? 'selected' : ''}>019</option>
                                     </select> 
                                     <span class="phone-dash">-</span> 
-                                    <input type="text" id="mobile-middle" maxlength="4" placeholder="XXXX" required />
+                                    <input type="text" id="mobile-middle" maxlength="4" placeholder="XXXX" 
+                                           value="${not empty user.userInfoDto.phone ? fn:substring(user.userInfoDto.phone, 3, 7) : ''}" required />
                                     <span class="phone-dash">-</span> 
-                                    <input type="text" id="mobile-last" maxlength="4" placeholder="XXXX" required />
+                                    <input type="text" id="mobile-last" maxlength="4" placeholder="XXXX" 
+                                           value="${not empty user.userInfoDto.phone ? fn:substring(user.userInfoDto.phone, 7, 11) : ''}" required />
                                 </div>
                             </div>
 
@@ -117,11 +120,14 @@
                             <div class="form-group address-group">
                                 <label for="address">주소<span class="required">*</span></label>
                                 <div class="input-with-button">
-                                    <input type="text" id="zipCode" name="zipCode" placeholder="우편번호" readonly required />
+                                    <input type="text" id="zipCode" name="zipCode" placeholder="우편번호" 
+                                           value="${user.userInfoDto.zipCode > 0 ? user.userInfoDto.zipCode : ''}" readonly required />
                                     <button type="button" class="find-address-btn">주소찾기</button>
                                 </div>
-                                <input type="text" id="address1" name="address1" placeholder="기본주소" readonly required /> 
-                                <input type="text" id="address2" name="address2" placeholder="상세주소를 입력하세요" required />
+                                <input type="text" id="address1" name="address1" placeholder="기본주소" 
+                                       value="${user.userInfoDto.address}" readonly required /> 
+                                <input type="text" id="address2" name="address2" placeholder="상세주소를 입력하세요" 
+                                       value="${user.userInfoDto.detailAddress}" required />
                             </div>
 
                             <!-- 버튼 영역 -->

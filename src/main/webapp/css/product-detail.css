@@ -14,10 +14,11 @@ body {
   justify-content: center;
   align-items: flex-start;
   margin: 40px auto;
-  max-width: 1440px;
+  max-width: 1400px;
   gap: 40px;
-  padding: 0 30px;
+  padding: 0 20px;
   flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
 /* 이미지 컨테이너 */
@@ -94,6 +95,7 @@ body {
   border-radius: 8px;
   border: 1px solid #eee;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 20px;
 }
 
 /* 상품 제목 */
@@ -231,6 +233,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* 총 상품 금액 */
@@ -340,13 +343,11 @@ input[type="number"] {
 
 /* 탭 섹션 (상품 상세, 리뷰, QNA 등) */
 .detail-section {
-  max-width: 1440px;
+  max-width: 1400px;
   width: 100%;
   margin: 60px auto;
-  /* 60px에 'px' 단위를 추가하여 올바른 문법으로 수정 */
-  padding: 0 30px;
+  padding: 0 20px;
   box-sizing: border-box;
-  /* 패딩이 너비에 포함되도록 설정 */
 }
 
 /* 탭 네비게이션 */
@@ -394,17 +395,15 @@ input[type="number"] {
 .tab-content {
   display: none;
   padding: 40px;
-  /* 패딩 증가 */
   border: 1px solid #eee;
   border-top: none;
   background-color: #fff;
   font-size: 16px;
   line-height: 1.7;
   min-height: 450px;
-  /* 최소 높이 증가 */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   width: 100%;
-  /* 전체 너비 사용 */
+  box-sizing: border-box;
 }
 
 .tab-content.active {
@@ -534,9 +533,10 @@ input[type="number"] {
 
 /* 리뷰 섹션 */
 .review-section {
-  max-width: 1440px;
+  max-width: 1400px;
   margin: auto auto;
-  padding: 0 30px;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .review-title {
@@ -794,12 +794,13 @@ input[type="number"] {
 
 /* 추천 상품 섹션 */
 .recommended-products {
-  max-width: 1440px;
+  max-width: 1400px;
   margin: 80px auto;
-  padding: 40px 30px;
+  padding: 40px 20px;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
 .recommended-products h2 {
@@ -874,6 +875,7 @@ input[type="number"] {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   color: #333;
   text-align: center;
@@ -934,19 +936,17 @@ input[type="number"] {
 }
 
 /* 반응형 디자인 */
-@media (max-width: 1440px) {
+@media (max-width: 1200px) {
 
-  .detail-section {
-    max-width: 1200px;
+  /* 컨테이너 사이즈 조정 */
+  .product-info-container,
+  .detail-section,
+  .review-section,
+  .recommended-products {
+    max-width: 1140px;
   }
 
-  .tab-content {
-    padding: 35px;
-    min-height: 420px;
-  }
-}
-
-@media (max-width: 1280px) {
+  /* 상품 정보 컨테이너 내부 요소 조정 */
   .product-info-container {
     gap: 30px;
   }
@@ -970,37 +970,42 @@ input[type="number"] {
     font-size: 26px;
   }
 
+  /* 탭 콘텐츠 조정 */
+  .tab-content {
+    padding: 35px;
+    min-height: 420px;
+  }
+
+  /* 상품 리스트 조정 */
   .product-list {
     gap: 25px;
   }
-
-  .detail-section {
-    max-width: 1080px;
-    margin: 50px auto;
-  }
-
-  .tab-content {
-    padding: 30px;
-    min-height: 400px;
-  }
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 992px) {
 
+  /* 컨테이너 사이즈 조정 */
+  .product-info-container,
+  .detail-section,
+  .review-section,
+  .recommended-products {
+    max-width: 960px;
+    padding: 0 20px;
+  }
+
+  /* 상품 정보 컨테이너 내부 요소 조정 */
   .product-image-container,
   .product-info {
-    flex: 0 0 460px;
-    width: 460px;
+    flex: 0 0 450px;
+    width: 450px;
   }
 
   .product-info {
-    min-height: 460px;
-    padding: 20px;
+    min-height: 450px;
   }
 
   .product-info h1 {
     font-size: 22px;
-    margin-bottom: 15px;
   }
 
   .final-price {
@@ -1013,53 +1018,13 @@ input[type="number"] {
     font-size: 15px;
   }
 
-  .product-list {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .detail-section {
-    max-width: 900px;
-    margin: 45px auto;
-  }
-
-  .tab-content {
-    padding: 28px;
-    min-height: 380px;
-  }
-}
-
-@media (max-width: 992px) {
-
-  .detail-section {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 0 20px;
-  }
-
-  .tab-content {
-    padding: 25px;
-    min-height: 350px;
-  }
-
-  .product-image-container,
-  .product-info {
-    flex: 0 0 400px;
-    width: 400px;
-  }
-
-  .product-info {
-    min-height: 400px;
-  }
-
-  .product-info h1 {
-    font-size: 20px;
-  }
-
+  /* 탭 네비게이션 조정 */
   .tabs button {
     padding: 15px 10px;
     font-size: 16px;
   }
 
+  /* 탭 콘텐츠 조정 */
   .tab-content {
     padding: 25px;
     min-height: 350px;
@@ -1069,6 +1034,13 @@ input[type="number"] {
     font-size: 22px;
   }
 
+  /* 상품 리스트 조정 */
+  .product-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  /* 기타 섹션 조정 */
   .product-features,
   .nutrition-info {
     margin: 30px 0;
@@ -1092,12 +1064,17 @@ input[type="number"] {
 
 @media (max-width: 768px) {
 
-  .detail-section {
-    max-width: 100%;
+  /* 컨테이너 사이즈 조정 */
+  .product-info-container,
+  .detail-section,
+  .review-section,
+  .recommended-products {
+    max-width: 720px;
     margin: 30px auto;
     padding: 0 15px;
   }
 
+  /* 탭 네비게이션 조정 */
   .tabs {
     flex-wrap: wrap;
   }
@@ -1108,12 +1085,14 @@ input[type="number"] {
     font-size: 15px;
   }
 
+  /* 탭 콘텐츠 조정 */
   .tab-content {
     padding: 20px;
     min-height: 300px;
     font-size: 15px;
   }
 
+  /* 상품 정보 컨테이너 내부 요소 조정 - 세로 배치로 변경 */
   .product-image-container,
   .product-info {
     flex: 0 0 100%;
@@ -1125,11 +1104,13 @@ input[type="number"] {
     margin-top: 20px;
   }
 
+  /* 상품 리스트 조정 */
   .product-list {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
 
+  /* 상세 정보 섹션 조정 */
   .tab-content h3 {
     font-size: 20px;
   }
@@ -1142,27 +1123,58 @@ input[type="number"] {
   .refund-info li {
     font-size: 15px;
   }
+
+  /* 리뷰 섹션 조정 */
+  .review-images img {
+    width: 140px;
+    height: 140px;
+  }
+
+  /* 버튼 조정 */
+  .write-review button,
+  .write-question button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 576px) {
-  .product-list {
-    grid-template-columns: 1fr;
+
+  /* 컨테이너 사이즈 조정 */
+  .product-info-container,
+  .detail-section,
+  .review-section,
+  .recommended-products {
+    padding: 0 10px;
   }
 
-  .product-card {
-    height: 340px;
+  /* 상품 이미지 컨테이너 조정 */
+  .product-image-container {
+    aspect-ratio: 1 / 1;
+    max-height: 300px;
   }
 
-  .tabs button {
-    flex: 1 0 100%;
+  /* 상품 정보 섹션 조정 */
+  .product-info {
+    padding: 15px;
   }
 
+  .product-info h1 {
+    font-size: 20px;
+  }
+
+  .final-price {
+    font-size: 22px;
+  }
+
+  /* 수량 선택기 조정 */
   .quantity-selector {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
 
+  /* 버튼 조정 */
   .add-to-cart,
   .buy-now {
     padding: 12px 0;
@@ -1172,5 +1184,105 @@ input[type="number"] {
   .write-review button,
   .write-question button {
     width: 100%;
+    padding: 10px 0;
+  }
+
+  /* 탭 네비게이션 조정 */
+  .tabs button {
+    flex: 1 0 100%;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  /* 상세 정보 섹션 조정 */
+  .tab-content {
+    padding: 15px;
+    min-height: 250px;
+  }
+
+  .tab-content h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+  }
+
+  .tab-content p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* 상품 리스트 조정 */
+  .product-list {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .product-card {
+    height: 340px;
+  }
+
+  /* 리뷰 섹션 조정 */
+  .review-images img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .review-navigation {
+    width: 35px;
+    height: 35px;
+  }
+
+  .review-item {
+    padding: 20px 0;
+  }
+
+  /* 추천 상품 섹션 조정 */
+  .recommended-products {
+    padding: 25px 10px;
+    margin: 40px auto;
+  }
+
+  .recommended-products h2 {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+}
+
+/* 매우 작은 화면을 위한 추가 미디어 쿼리 */
+@media (max-width: 380px) {
+
+  /* 상품 이미지 컨테이너 추가 조정 */
+  .product-image-container {
+    max-height: 250px;
+  }
+
+  /* 버튼 컨테이너 세로 배치로 변경 */
+  .button-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* 버튼 크기 조정 */
+  .add-to-cart,
+  .buy-now {
+    width: 100%;
+  }
+
+  /* 탭 콘텐츠 추가 조정 */
+  .tab-content {
+    padding: 12px;
+    min-height: 200px;
+  }
+
+  /* 리뷰 이미지 추가 조정 */
+  .review-images img {
+    width: 100px;
+    height: 100px;
+  }
+
+  /* 리뷰 아이템 추가 조정 */
+  .review-header {
+    flex-direction: column;
+    gap: 5px;
   }
 }
