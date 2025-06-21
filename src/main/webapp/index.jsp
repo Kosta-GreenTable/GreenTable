@@ -10,11 +10,13 @@
       var contextPath = "${pageContext.request.contextPath}";
       // window 객체에도 할당하여 전역 접근 가능하게 함
       window.contextPath = contextPath;
-    </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </script>    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <meta name="theme-color" content="#00c471" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="category-best" content="베스트 상품" />
     <meta name="category-regular" content="정기배송" />
     <meta name="category-lunchbox" content="도시락" />

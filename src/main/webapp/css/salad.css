@@ -66,11 +66,11 @@
 .nutrition-info {
   display: flex;
   align-items: center;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  padding: 5px 8px;
-  border-radius: 3px;
-  font-size: 11px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .nutrition-item {
@@ -128,4 +128,93 @@
 .main-nav ul li.active a {
   color: #00c471;
   font-weight: 600;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 1200px) {
+  .dressing-btn {
+    min-width: 70px;
+  }
+
+  .nutrition-info {
+    padding: 5px 8px;
+  }
+
+  .nutrition-item {
+    margin: 0 4px;
+  }
+}
+
+@media (max-width: 992px) {
+  .dressing-options {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .dressing-title {
+    font-size: 11px;
+  }
+
+  .dressing-btn {
+    min-width: 60px;
+    font-size: 11px;
+    padding: 4px;
+  }
+
+  .nutrition-info {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    padding: 4px 7px;
+  }
+
+  .nutrition-value {
+    font-size: 12px;
+  }
+
+  .nutrition-label,
+  .nutrition-unit {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dressing-options {
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+
+  .dressing-buttons {
+    gap: 4px;
+  }
+
+  .dressing-btn {
+    min-width: 55px;
+    font-size: 10px;
+    padding: 3px;
+  }
+
+  .nutrition-info {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 3px 6px;
+  }
+
+  .nutrition-item {
+    margin: 0 3px;
+  }
+
+  .nutrition-value {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 576px) {
+  .nutrition-item {
+    margin: 0 2px;
+  }
+
+  .nutrition-divider {
+    margin: 0 2px;
+    font-size: 8px;
+  }
 }

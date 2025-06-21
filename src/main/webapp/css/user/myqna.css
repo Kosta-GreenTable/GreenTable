@@ -210,7 +210,7 @@
 .qna-status.waiting {
   position: relative;
   bottom: -15px;
-  left: 120px;
+  left: 30px;
   color: #fff;
   background-color: #ff6b6b;
 }

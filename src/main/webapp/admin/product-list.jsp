@@ -33,6 +33,7 @@
                             <option value="all">모든 카테고리</option>
                             <option value="도시락">도시락</option>
                             <option value="샐러드">샐러드</option>
+                            <option value="정기배송">정기배송</option>
                         </select>
                         <div class="search-box">
                             <input type="text" id="productSearch" placeholder="상품 검색">

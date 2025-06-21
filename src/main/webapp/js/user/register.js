@@ -23,16 +23,199 @@ const contextPath = metaContextPath || extractedPath || '';
 console.log("현재 사용 중인 contextPath:", contextPath);
 
 document.addEventListener("DOMContentLoaded", function () {
-  // 이메일 인증 버튼 이벤트
-  const verifyEmailBtn = document.querySelector(".verify-email-btn");
+  // DOM 요소들 참조
   const emailInput = document.getElementById("email");
-  const verificationCodeGroup = document.getElementById(
-    "verification-code-group"
-  );
+  const duplicateCheckBtn = document.getElementById("duplicate-check-btn");
+  const emailVerificationGroup = document.getElementById("email-verification-group");
+  const sendVerificationBtn = document.getElementById("send-verification-btn");
+  const verificationCodeGroup = document.getElementById("verification-code-group");
   const verificationCodeInput = document.getElementById("verification-code");
   const verifyCodeBtn = document.querySelector(".verify-code-btn");
   const timerSpan = document.getElementById("timer");
-  const emailVerifyModal = document.getElementById("email-verify-modal");
+
+  // 상태 관리 변수
+  let isDuplicateChecked = false;
+  let isEmailVerified = false;
+  let verificationTimer = null;
+
+  // 1. 이메일 중복확인
+  duplicateCheckBtn.addEventListener("click", function() {
+    const email = emailInput.value.trim();
+    
+    if (!email) {
+      showMessage("duplicate-error", "이메일을 입력해주세요.");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      showMessage("duplicate-error", "올바른 이메일 형식을 입력해주세요.");
+      return;
+    }
+
+    // AJAX로 중복확인 요청
+    fetch(`${contextPath}/ajax?key=user&methodName=checkDuplicate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `email=${encodeURIComponent(email)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.available) {
+        showMessage("duplicate-success", "사용 가능한 이메일입니다.");
+        hideMessage("duplicate-error");
+        isDuplicateChecked = true;
+        duplicateCheckBtn.disabled = true;
+        duplicateCheckBtn.textContent = "확인완료";
+        emailVerificationGroup.classList.remove("hidden");
+        sendVerificationBtn.disabled = false;
+      } else {
+        showMessage("duplicate-error", "이미 사용중인 이메일입니다.");
+        hideMessage("duplicate-success");
+        isDuplicateChecked = false;
+      }
+    })
+    .catch(error => {
+      console.error('중복확인 오류:', error);
+      showMessage("duplicate-error", "중복확인 중 오류가 발생했습니다.");
+    });
+  });
+
+  // 2. 이메일 인증번호 발송
+  sendVerificationBtn.addEventListener("click", function() {
+    if (!isDuplicateChecked) {
+      alert("먼저 이메일 중복확인을 완료해주세요.");
+      return;
+    }
+
+    const email = emailInput.value.trim();
+    
+    fetch(`${contextPath}/ajax?key=user&methodName=sendVerification`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `email=${encodeURIComponent(email)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        verificationCodeGroup.classList.remove("hidden");
+        sendVerificationBtn.disabled = true;
+        sendVerificationBtn.textContent = "발송완료";
+        startTimer();
+        alert("인증번호가 발송되었습니다. 이메일을 확인해주세요.");
+      } else {
+        alert("인증번호 발송에 실패했습니다. 다시 시도해주세요.");
+      }
+    })
+    .catch(error => {
+      console.error('인증번호 발송 오류:', error);
+      alert("인증번호 발송 중 오류가 발생했습니다.");
+    });
+  });
+
+  // 3. 인증번호 확인
+  verifyCodeBtn.addEventListener("click", function() {
+    const code = verificationCodeInput.value.trim();
+    const email = emailInput.value.trim();
+
+    if (!code) {
+      showMessage("verification-error", "인증번호를 입력해주세요.");
+      return;
+    }
+
+    fetch(`${contextPath}/ajax?key=user&methodName=verifyCode`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.verified) {
+        showMessage("verification-success", "이메일 인증이 완료되었습니다.");
+        hideMessage("verification-error");
+        isEmailVerified = true;
+        verifyCodeBtn.disabled = true;
+        verifyCodeBtn.textContent = "인증완료";
+        clearTimer();
+      } else {
+        showMessage("verification-error", "인증번호가 일치하지 않습니다.");
+        hideMessage("verification-success");
+      }
+    })
+    .catch(error => {
+      console.error('인증확인 오류:', error);
+      showMessage("verification-error", "인증확인 중 오류가 발생했습니다.");
+    });
+  });
+
+  // 이메일 입력 변경 시 초기화
+  emailInput.addEventListener("input", function() {
+    isDuplicateChecked = false;
+    isEmailVerified = false;
+    duplicateCheckBtn.disabled = false;
+    duplicateCheckBtn.textContent = "중복확인";
+    sendVerificationBtn.disabled = true;
+    sendVerificationBtn.textContent = "인증번호 발송";
+    emailVerificationGroup.classList.add("hidden");
+    verificationCodeGroup.classList.add("hidden");
+    hideMessage("duplicate-success");
+    hideMessage("duplicate-error");
+    hideMessage("verification-success");
+    hideMessage("verification-error");
+    clearTimer();
+  });
+
+  // 유틸리티 함수들
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  function showMessage(id, message) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.textContent = message;
+      element.classList.remove("hidden");
+    }
+  }
+
+  function hideMessage(id) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.classList.add("hidden");
+    }
+  }
+
+  function startTimer() {
+    let timeLeft = 300; // 5분
+    verificationTimer = setInterval(() => {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerSpan.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      if (timeLeft <= 0) {
+        clearTimer();
+        alert("인증시간이 만료되었습니다. 다시 인증번호를 요청해주세요.");
+        sendVerificationBtn.disabled = false;
+        sendVerificationBtn.textContent = "재발송";
+      }
+      timeLeft--;
+    }, 1000);
+  }
+
+  function clearTimer() {
+    if (verificationTimer) {
+      clearInterval(verificationTimer);
+      verificationTimer = null;
+    }
+  }
+
+  // ...existing code...
 
   // 비밀번호 유효성 검사
   const passwordInput = document.getElementById("password");

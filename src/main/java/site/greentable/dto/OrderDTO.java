@@ -1,18 +1,17 @@
 package site.greentable.dto;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderDTO {
 	private int orderId;
 	private int userId;
-	private String merchantUid; 	//고유 주문번호
+	private String merchantUid; // 고유 주문번호
 	private String customerName;
 	private String customerPhone;
 	private String customerEmail;
-	private String recipient;		//수령자
-	private String recipientPhone;  //수령자 번호
+	private String recipient; // 수령자
+	private String recipientPhone; // 수령자 번호
 	private String zipCode;
 	private String address;
 	private String addressDetail;
@@ -21,27 +20,33 @@ public class OrderDTO {
 	private int usedPoint;
 	private String orderStatus;
 	private Date orderAt;
-	
+
+	// 취소/환불 관련 필드
+	private Date cancelledAt;
+	private String cancelReason;
+	private String paymentMethod;
+
 	private String mainImageName;
-	
+
 	private List<OrderDetailDTO> orderDetails;
-	
-	public OrderDTO() {}
-	
+
+	public OrderDTO() {
+	}
+
 	// 주문 목록 조회용 생성자
-    public OrderDTO(int orderId, int userId, String merchantUid, int totalAmount, String orderStatus,
-                    Date orderAt, String mainImageName, List<OrderDetailDTO> orderDetails) {
-        this.orderId = orderId;
-        this.userId = userId;
-        this.merchantUid = merchantUid;
-        this.totalAmount = totalAmount;
-        this.orderStatus = orderStatus;
-        this.orderAt = orderAt;
-        this.mainImageName = mainImageName;
-        this.orderDetails = orderDetails;
-    }
-    
-    // 상세 주문 조회용
+	public OrderDTO(int orderId, int userId, String merchantUid, int totalAmount, String orderStatus,
+			Date orderAt, String mainImageName, List<OrderDetailDTO> orderDetails) {
+		this.orderId = orderId;
+		this.userId = userId;
+		this.merchantUid = merchantUid;
+		this.totalAmount = totalAmount;
+		this.orderStatus = orderStatus;
+		this.orderAt = orderAt;
+		this.mainImageName = mainImageName;
+		this.orderDetails = orderDetails;
+	}
+
+	// 상세 주문 조회용
 	public OrderDTO(int userId, String merchantUid, String customerName, String customerPhone, String customerEmail,
 			String recipient, String recipientPhone, String zipCode, String address, String addressDetail,
 			int totalAmount, int usedPoint, String orderStatus, Date orderAt, String mainImageName,
@@ -64,7 +69,6 @@ public class OrderDTO {
 		this.orderDetails = orderDetails;
 	}
 
-	
 	public String getMainImageName() {
 		return mainImageName;
 	}
@@ -72,7 +76,6 @@ public class OrderDTO {
 	public void setMainImageName(String mainImageName) {
 		this.mainImageName = mainImageName;
 	}
-
 
 	public int getOrderId() {
 		return orderId;
@@ -210,7 +213,71 @@ public class OrderDTO {
 		this.orderAt = orderAt;
 	}
 
+	// 관리자 페이지용 추가 getter 메서드들
+	public String getOrderNo() {
+		return merchantUid;
+	}
 
+	public Date getOrderDate() {
+		return orderAt;
+	}
 
-	
+	public String getUserName() {
+		return customerName;
+	}
+
+	public String getUserEmail() {
+		return customerEmail;
+	}
+
+	public String getStatus() {
+		return orderStatus;
+	}
+
+	public int getPrice() {
+		// OrderDetail에서 가격을 가져오는 로직이 필요하지만
+		// 현재는 총액을 반환
+		return totalAmount;
+	}
+
+	public int getQuantity() {
+		// OrderDetail에서 수량을 가져오는 로직이 필요하지만
+		// 현재는 1을 반환 (단일 상품 기준)
+		return 1;
+	}
+
+	public String getProductName() {
+		// OrderDetail에서 상품명을 가져오는 로직이 필요하지만
+		// 현재는 기본값 반환
+		if (orderDetails != null && !orderDetails.isEmpty()) {
+			return orderDetails.get(0).getProductName();
+		}
+		return "상품명 없음";
+	}
+
+	// 취소/환불 관련 getter/setter 메서드들
+	public Date getCancelledAt() {
+		return cancelledAt;
+	}
+
+	public void setCancelledAt(Date cancelledAt) {
+		this.cancelledAt = cancelledAt;
+	}
+
+	public String getCancelReason() {
+		return cancelReason;
+	}
+
+	public void setCancelReason(String cancelReason) {
+		this.cancelReason = cancelReason;
+	}
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
 }

@@ -91,7 +91,8 @@
 }
 
 .farm-img {
-  height: 160px;
+  height: 220px;
+  /* 높이를 더 크게 조정 */
   overflow: hidden;
 }
 
@@ -125,6 +126,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  line-clamp: 2;
 }
 
 .farm-location {
@@ -271,4 +273,114 @@
   color: #666;
   background-color: #f8f9fa;
   border-radius: 5px;
+}
+
+/* 반응형 디자인 스타일 */
+@media (max-width: 1400px) {
+
+  .farm-grid,
+  .farm-preview-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+
+  .farm-grid,
+  .farm-preview-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .farm-intro {
+    margin: 40px 0;
+  }
+
+  .farm-item {
+    border-radius: 12px;
+  }
+
+  .farm-item-image {
+    height: 160px;
+  }
+
+  .farm-item-info {
+    padding: 15px;
+  }
+
+  .farm-name {
+    font-size: 18px;
+  }
+
+  .farm-location,
+  .farm-description {
+    font-size: 14px;
+  }
+
+  .farm-cta-button {
+    padding: 8px 18px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .farm-grid,
+  .farm-preview-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .farm-item-image {
+    height: 140px;
+  }
+
+  .farm-intro .section-title {
+    font-size: 20px;
+  }
+
+  .farm-name {
+    font-size: 16px;
+  }
+
+  .farm-location,
+  .farm-description {
+    font-size: 13px;
+  }
+
+  .farm-item-info {
+    padding: 12px;
+  }
+
+  .farm-cta-button {
+    padding: 7px 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 576px) {
+
+  .farm-grid,
+  .farm-preview-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .farm-item-image {
+    height: 180px;
+  }
+
+  .farm-intro {
+    margin: 30px 0;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .farm-intro .view-all {
+    align-self: flex-end;
+  }
 }

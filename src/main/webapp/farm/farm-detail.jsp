@@ -1,3 +1,4 @@
+<!-- filepath: c:\Users\user\git\GreenTable\src\main\webapp\farm\farm-detail.jsp -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%> <%@ taglib prefix="c"
 uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib prefix="fmt"
@@ -15,10 +16,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     />
     <link
       rel="stylesheet"
-      href="${pageContext.request.contextPath}/css/menu-fix.css"
-    />
-    <link
-      rel="stylesheet"
       href="${pageContext.request.contextPath}/css/farm-styles.css"
     />
     <link
@@ -29,6 +26,80 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
+
+    <style>
+      /* 지도 관련 스타일 */
+      .farm-map {
+        width: 100%;
+        height: 400px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .map-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        flex-direction: column;
+        color: #666;
+      }
+
+      .map-error {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .map-links {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .map-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+
+      .map-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .kakao-map-btn {
+        background: #ffeb00;
+        color: #000;
+      }
+
+      .directions-btn {
+        background: #00c471;
+        color: white;
+      }
+
+      .google-map-btn {
+        background: #4285f4;
+        color: white;
+      }
+
+      .copy-btn {
+        background: #6c757d;
+        color: white;
+      }
+    </style>
   </head>
   <body>
     <!-- 헤더 인클루드 -->
@@ -55,7 +126,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           <h2 class="section-title">농장 소개</h2>
           <div class="farm-intro-content">
             <div class="farm-intro-text">
-              <!-- 존재하는 필드만 사용하도록 수정 -->
               <p>${farm.description}</p>
               <c:if test="${not empty farm.detailDescription}">
                 <p>${farm.detailDescription}</p>
@@ -66,7 +136,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             </div>
             <div class="farm-intro-image">
               <img
-                src="${pageContext.request.contextPath}/assets/images/farms/detail/${farm.farmImg}"
+                src="${pageContext.request.contextPath}/assets/images/farms/${farm.farmImg}"
                 alt="${farm.name} 상세 이미지"
                 onerror="this.src='https://picsum.photos/seed/detail${farm.farmId}/400/300'"
               />
@@ -135,14 +205,86 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           <p class="farm-location-address">
             <i class="fas fa-map-marker-alt"></i> ${farm.address}
           </p>
+
+          <!-- 농장 위치 정보 표시 -->
+          <c:if test="${not empty farm.latitude and not empty farm.longitude}">
+            <div style="margin-bottom: 10px; color: #666; font-size: 14px">
+              <i class="fas fa-crosshairs"></i>
+              위도: ${farm.latitude}, 경도: ${farm.longitude}
+            </div>
+          </c:if>
+
+          <!-- 지도 영역 -->
           <div
             class="farm-map"
             id="farmMap"
-            data-lat="${farm.latitude}"
-            data-lng="${farm.longitude}"
+            data-lat="${not empty farm.latitude ? farm.latitude : '35.1595'}"
+            data-lng="${not empty farm.longitude ? farm.longitude : '129.1600'}"
             data-name="${farm.name}"
+            data-address="${farm.address}"
           >
-            <!-- 지도가 표시될 영역 -->
+            <!-- 로딩 화면 -->
+            <div class="map-loading" id="mapLoading">
+              <i
+                class="fas fa-map-marked-alt"
+                style="font-size: 32px; margin-bottom: 15px; color: #00c471"
+              ></i>
+              <p style="margin: 0; font-size: 16px">
+                지도를 불러오는 중입니다...
+              </p>
+              <div style="margin-top: 10px">
+                <div
+                  style="
+                    width: 40px;
+                    height: 4px;
+                    background: #e9ecef;
+                    border-radius: 2px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      background: #00c471;
+                      animation: loading 1.5s infinite;
+                    "
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 지도 링크 버튼들 -->
+          <div class="map-links">
+            <a
+              href="javascript:void(0);"
+              onclick="openKakaoMap()"
+              class="map-btn kakao-map-btn"
+            >
+              <i class="fas fa-external-link-alt"></i> 카카오맵에서 보기
+            </a>
+            <a
+              href="javascript:void(0);"
+              onclick="openDirections()"
+              class="map-btn directions-btn"
+            >
+              <i class="fas fa-route"></i> 길찾기
+            </a>
+            <a
+              href="javascript:void(0);"
+              onclick="openGoogleMap()"
+              class="map-btn google-map-btn"
+            >
+              <i class="fab fa-google"></i> 구글맵에서 보기
+            </a>
+            <a
+              href="javascript:void(0);"
+              onclick="copyAddress()"
+              class="map-btn copy-btn"
+            >
+              <i class="fas fa-copy"></i> 주소 복사
+            </a>
           </div>
         </div>
       </section>
@@ -151,50 +293,356 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <!-- 푸터 인클루드 -->
     <jsp:include page="../common/footer.jsp" />
 
+    <!-- 로딩 애니메이션 CSS -->
+    <style>
+      @keyframes loading {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+    </style>
+
     <!-- 카카오맵 API 스크립트 -->
     <script
       type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_MAP_KEY"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=97d32c8286b9ab7d32830cdc50d43210&libraries=services"
     ></script>
 
     <!-- 자바스크립트 -->
     <script>
+      // 전역 변수 선언
+      let map;
+      let marker;
+      let infowindow;
+      let currentLat;
+      let currentLng;
+      let currentFarmName;
+      let currentAddress;
+      let mapInitialized = false;
+
+      // 페이지 로드 시 데이터 초기화
       document.addEventListener("DOMContentLoaded", function () {
-        // 농장 위치 지도 표시
-        const mapContainer = document.getElementById("farmMap");
-        if (mapContainer) {
-          const lat =
-            parseFloat(mapContainer.getAttribute("data-lat")) || 33.450701;
-          const lng =
-            parseFloat(mapContainer.getAttribute("data-lng")) || 126.570667;
-          const farmName = mapContainer.getAttribute("data-name") || "농장";
+        console.log("DOM 로드 완료");
+        initializeFarmData();
 
-          try {
-            const mapOption = {
-              center: new kakao.maps.LatLng(lat, lng),
-              level: 3,
-            };
-            const map = new kakao.maps.Map(mapContainer, mapOption);
-
-            // 마커 표시
-            const markerPosition = new kakao.maps.LatLng(lat, lng);
-            const marker = new kakao.maps.Marker({
-              position: markerPosition,
-            });
-            marker.setMap(map);
-
-            // 인포윈도우 표시
-            const infowindow = new kakao.maps.InfoWindow({
-              content: `<div style="padding:5px;font-size:12px;">${farmName}</div>`,
-            });
-            infowindow.open(map, marker);
-          } catch (e) {
-            console.error("지도 로딩 실패:", e);
-            mapContainer.innerHTML =
-              '<p class="map-error">지도를 불러오는데 실패했습니다.</p>';
-          }
+        // 카카오맵 API 로드 확인 후 지도 초기화
+        if (typeof kakao !== "undefined" && kakao.maps) {
+          console.log("카카오맵 API가 이미 로드되어 있습니다.");
+          initializeMap();
+        } else {
+          console.log("카카오맵 API 로드 대기 중...");
+          setTimeout(checkKakaoMapAPI, 500);
         }
       });
+
+      // 농장 데이터 초기화
+      function initializeFarmData() {
+        const mapContainer = document.getElementById("farmMap");
+        if (mapContainer) {
+          currentLat =
+            parseFloat(mapContainer.getAttribute("data-lat")) || 35.1595;
+          currentLng =
+            parseFloat(mapContainer.getAttribute("data-lng")) || 129.16;
+          currentFarmName = mapContainer.getAttribute("data-name") || "농장";
+          currentAddress = mapContainer.getAttribute("data-address") || "";
+
+          console.log(`농장 정보 초기화: ${currentFarmName}`);
+          console.log(`위치: ${currentLat}, ${currentLng}`);
+          console.log(`주소: ${currentAddress}`);
+        }
+      }
+
+      // 카카오맵 API 로드 확인
+      function checkKakaoMapAPI(attempts = 0) {
+        if (typeof kakao !== "undefined" && kakao.maps) {
+          console.log("카카오맵 API 로드 완료");
+          initializeMap();
+        } else if (attempts < 20) {
+          console.log(`카카오맵 API 로드 대기 중... (${attempts + 1}/20)`);
+          setTimeout(() => checkKakaoMapAPI(attempts + 1), 500);
+        } else {
+          console.error("카카오맵 API 로드 실패");
+          showMapError("카카오맵 API를 불러올 수 없습니다.");
+        }
+      }
+
+      // 지도 초기화
+      function initializeMap() {
+        if (mapInitialized) return;
+
+        console.log("지도 초기화 시작");
+        const mapContainer = document.getElementById("farmMap");
+
+        if (!mapContainer) {
+          console.error("지도 컨테이너를 찾을 수 없습니다.");
+          return;
+        }
+
+        try {
+          // 지도 옵션 설정
+          const mapOption = {
+            center: new kakao.maps.LatLng(currentLat, currentLng),
+            level: 3,
+          };
+
+          // 지도 생성
+          map = new kakao.maps.Map(mapContainer, mapOption);
+          console.log("지도 생성 완료");
+
+          // 마커 생성
+          const markerPosition = new kakao.maps.LatLng(currentLat, currentLng);
+          marker = new kakao.maps.Marker({
+            position: markerPosition,
+            title: currentFarmName,
+          });
+
+          // 마커를 지도에 표시
+          marker.setMap(map);
+          console.log("마커 생성 완료");
+
+          // 인포윈도우 생성
+          const infoContent = `
+            <div style="padding:15px;font-size:14px;font-family:'Malgun Gothic',sans-serif;min-width:200px;">
+              <strong style="color:#00c471;font-size:16px;display:block;margin-bottom:5px;">${currentFarmName}</strong>
+              <span style="color:#666;font-size:12px;line-height:1.4;">${currentAddress}</span>
+            </div>
+          `;
+
+          infowindow = new kakao.maps.InfoWindow({
+            content: infoContent,
+          });
+
+          // 마커 클릭 이벤트
+          kakao.maps.event.addListener(marker, "click", function () {
+            if (infowindow.getMap()) {
+              infowindow.close();
+            } else {
+              infowindow.open(map, marker);
+            }
+          });
+
+          // 마커 호버 이벤트
+          kakao.maps.event.addListener(marker, "mouseover", function () {
+            infowindow.open(map, marker);
+          });
+
+          // 지도 컨트롤 추가
+          addMapControls();
+
+          // 주소로 좌표 검색 (기본값인 경우)
+          if (isDefaultLocation() && currentAddress) {
+            searchAddressByGeocoder(currentAddress);
+          }
+
+          mapInitialized = true;
+          console.log("지도 초기화 완료");
+        } catch (error) {
+          console.error("지도 초기화 중 오류:", error);
+          showMapError("지도를 생성하는데 실패했습니다.");
+        }
+      }
+
+      // 지도 컨트롤 추가
+      function addMapControls() {
+        try {
+          // 지도타입 컨트롤
+          const mapTypeControl = new kakao.maps.MapTypeControl();
+          map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+          // 줌 컨트롤
+          const zoomControl = new kakao.maps.ZoomControl();
+          map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+          console.log("지도 컨트롤 추가 완료");
+        } catch (error) {
+          console.warn("지도 컨트롤 추가 실패:", error);
+        }
+      }
+
+      // 기본 위치인지 확인
+      function isDefaultLocation() {
+        return currentLat === 35.1595 && currentLng === 129.16;
+      }
+
+      // 주소로 좌표 검색
+      function searchAddressByGeocoder(address) {
+        if (!address || typeof kakao.maps.services === "undefined") {
+          console.warn("주소 검색 서비스를 사용할 수 없습니다.");
+          return;
+        }
+
+        console.log(`주소 검색 시작: ${address}`);
+
+        const geocoder = new kakao.maps.services.Geocoder();
+        geocoder.addressSearch(address, function (result, status) {
+          if (status === kakao.maps.services.Status.OK) {
+            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+            // 지도 중심과 마커 위치 변경
+            map.setCenter(coords);
+            marker.setPosition(coords);
+
+            // 전역 변수 업데이트
+            currentLat = parseFloat(result[0].y);
+            currentLng = parseFloat(result[0].x);
+
+            console.log(
+              `주소 검색 성공: ${address} -> ${currentLat}, ${currentLng}`
+            );
+          } else {
+            console.warn(`주소 검색 실패: ${address}`);
+          }
+        });
+      }
+
+      // 지도 에러 표시
+      function showMapError(message) {
+        const mapContainer = document.getElementById("farmMap");
+        if (mapContainer) {
+          mapContainer.innerHTML = `
+            <div class="map-error">
+              <div style="text-align: center; color: #666; padding: 40px;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 32px; margin-bottom: 15px; color: #ffc107;"></i>
+                <p style="margin: 0 0 15px 0; font-size: 16px;">${message}</p>
+                <button onclick="retryMapInit()" style="padding:10px 20px;background:#00c471;color:white;border:none;border-radius:5px;cursor:pointer;">
+                  다시 시도
+                </button>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // 지도 초기화 재시도
+      function retryMapInit() {
+        console.log("지도 초기화 재시도");
+        mapInitialized = false;
+
+        const mapContainer = document.getElementById("farmMap");
+        mapContainer.innerHTML = `
+          <div class="map-loading">
+            <i class="fas fa-map-marked-alt" style="font-size: 32px; margin-bottom: 15px; color: #00c471;"></i>
+            <p style="margin: 0; font-size: 16px;">지도를 불러오는 중입니다...</p>
+          </div>
+        `;
+
+        setTimeout(initializeMap, 1000);
+      }
+
+      // 카카오맵에서 보기
+      function openKakaoMap() {
+        try {
+          let url;
+          if (currentAddress) {
+            const searchQuery = encodeURIComponent(currentAddress);
+            url = `https://map.kakao.com/?q=${searchQuery}`;
+          } else if (currentLat && currentLng) {
+            const encodedName = encodeURIComponent(currentFarmName);
+            url = `https://map.kakao.com/link/map/${encodedName},${currentLat},${currentLng}`;
+          } else {
+            const searchQuery = encodeURIComponent(currentFarmName);
+            url = `https://map.kakao.com/?q=${searchQuery}`;
+          }
+          window.open(url, "_blank");
+        } catch (error) {
+          console.error("카카오맵 열기 오류:", error);
+          alert("카카오맵을 열 수 없습니다.");
+        }
+      }
+
+      // 길찾기
+      function openDirections() {
+        try {
+          let url;
+          if (currentLat && currentLng) {
+            const encodedName = encodeURIComponent(currentFarmName);
+            url = `https://map.kakao.com/link/to/${encodedName},${currentLat},${currentLng}`;
+          } else {
+            const searchQuery = encodeURIComponent(
+              currentAddress || currentFarmName
+            );
+            url = `https://map.kakao.com/?q=${searchQuery}`;
+          }
+          window.open(url, "_blank");
+        } catch (error) {
+          console.error("길찾기 열기 오류:", error);
+          alert("길찾기를 열 수 없습니다.");
+        }
+      }
+
+      // 구글맵에서 보기
+      function openGoogleMap() {
+        try {
+          let url;
+          if (currentAddress) {
+            const searchQuery = encodeURIComponent(currentAddress);
+            url = `https://www.google.com/maps/search/${searchQuery}`;
+          } else if (currentLat && currentLng) {
+            url = `https://www.google.com/maps/@${currentLat},${currentLng},15z`;
+          } else {
+            const searchQuery = encodeURIComponent(currentFarmName);
+            url = `https://www.google.com/maps/search/${searchQuery}`;
+          }
+          window.open(url, "_blank");
+        } catch (error) {
+          console.error("구글맵 열기 오류:", error);
+          alert("구글맵을 열 수 없습니다.");
+        }
+      }
+
+      // 주소 복사
+      function copyAddress() {
+        const textToCopy = currentAddress || currentFarmName;
+
+        if (!textToCopy) {
+          alert("복사할 주소가 없습니다.");
+          return;
+        }
+
+        // 클립보드 API 사용
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard
+            .writeText(textToCopy)
+            .then(function () {
+              alert(`주소가 복사되었습니다:\n${textToCopy}`);
+            })
+            .catch(function (err) {
+              console.error("클립보드 복사 실패:", err);
+              fallbackCopyText(textToCopy);
+            });
+        } else {
+          fallbackCopyText(textToCopy);
+        }
+      }
+
+      // 클립보드 복사 대체 방법
+      function fallbackCopyText(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.top = "-1000px";
+        textArea.style.left = "-1000px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          const successful = document.execCommand("copy");
+          if (successful) {
+            alert(`주소가 복사되었습니다:\n${text}`);
+          } else {
+            prompt("아래 주소를 복사해주세요:", text);
+          }
+        } catch (err) {
+          console.error("복사 실패:", err);
+          prompt("아래 주소를 복사해주세요:", text);
+        }
+
+        document.body.removeChild(textArea);
+      }
     </script>
   </body>
 </html>

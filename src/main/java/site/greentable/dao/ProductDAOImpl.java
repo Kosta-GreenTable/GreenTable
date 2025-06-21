@@ -820,74 +820,151 @@ public class ProductDAOImpl implements ProductDAO {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         List<Product> recommendedProducts = new ArrayList<>();
-        
+
         try {
             conn = DbUtil.getConnection();
-            
+
             // 1. 현재 상품의 카테고리 조회
             String categoryQuery = "SELECT category FROM products WHERE product_id = ?";
             pstmt = conn.prepareStatement(categoryQuery);
             pstmt.setInt(1, productId);
             rs = pstmt.executeQuery();
-            
+
             String category = "";
             if (rs.next()) {
                 category = rs.getString("category");
             }
-            
+
             rs.close();
             pstmt.close();
-            
+
             // 2. 동일 카테고리의 다른 상품 중에서 가져오기 (properties 파일에서 쿼리 가져오기)
             pstmt = conn.prepareStatement(proFile.getProperty("product.getRecommendedByCategory"));
             pstmt.setString(1, category);
             pstmt.setInt(2, productId);
             pstmt.setInt(3, limit);
-            
+
             rs = pstmt.executeQuery();
-            
-            while(rs.next()) {
+
+            while (rs.next()) {
                 Product product = new Product();
                 product.setProductId(rs.getInt("product_id"));
                 product.setName(rs.getString("name"));
                 product.setPrice(rs.getInt("price"));
                 product.setDiscountRate(rs.getInt("discount_rate"));
                 product.setMainImageName(rs.getString("main_image"));
-                
+
                 recommendedProducts.add(product);
             }
-            
+
             // 추천 상품이 부족하면 다른 카테고리에서도 가져오기
             if (recommendedProducts.size() < limit) {
                 rs.close();
                 pstmt.close();
-                
+
                 int remainingCount = limit - recommendedProducts.size();
-                
+
                 // 다른 카테고리 상품 가져오기 (properties 파일에서 쿼리 가져오기)
                 pstmt = conn.prepareStatement(proFile.getProperty("product.getRecommendedProducts"));
                 pstmt.setInt(1, productId);
-                pstmt.setString(2, category);  // 현재 카테고리와 다른 상품 찾기
+                pstmt.setString(2, category); // 현재 카테고리와 다른 상품 찾기
                 pstmt.setInt(3, remainingCount);
-                
+
                 rs = pstmt.executeQuery();
-                
-                while(rs.next()) {
+
+                while (rs.next()) {
                     Product product = new Product();
                     product.setProductId(rs.getInt("product_id"));
                     product.setName(rs.getString("name"));
                     product.setPrice(rs.getInt("price"));
                     product.setDiscountRate(rs.getInt("discount_rate"));
                     product.setMainImageName(rs.getString("main_image"));
-                    
                     recommendedProducts.add(product);
                 }
             }
-            
+
         } finally {
             DbUtil.dbClose(conn, pstmt, rs);
         }
-        
+
         return recommendedProducts;
+    }
+
+    @Override
+    public List<Product> searchProducts(String query, int pageNo) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<Product> list = new ArrayList<>();
+
+        try {
+            conn = DbUtil.getConnection();
+            String sql = "SELECT p.product_id, p.name, p.sub_name, p.price, p.discount_rate, p.category, p.stock, pi.image_name FROM products p "
+                    + "LEFT JOIN product_images pi ON p.product_id = pi.product_id AND pi.is_main=1 "
+                    + "WHERE p.name LIKE ? OR p.sub_name LIKE ? OR p.category LIKE ? "
+                    + "ORDER BY p.product_id ASC LIMIT ?, ?";
+
+            pstmt = conn.prepareStatement(sql);
+
+            String searchParam = "%" + query + "%";
+            pstmt.setString(1, searchParam);
+            pstmt.setString(2, searchParam);
+            pstmt.setString(3, searchParam);
+
+            // 페이징 처리
+            int startIndex = (pageNo - 1) * PAGE_SIZE;
+            pstmt.setInt(4, startIndex);
+            pstmt.setInt(5, PAGE_SIZE);
+
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Product product = new Product();
+                product.setProductId(rs.getInt("product_id"));
+                product.setName(rs.getString("name"));
+                product.setSubName(rs.getString("sub_name"));
+                product.setPrice(rs.getInt("price"));
+                product.setDiscountRate(rs.getInt("discount_rate"));
+                product.setCategory(rs.getString("category"));
+                product.setStock(rs.getInt("stock"));
+                product.setMainImageName(rs.getString("image_name"));
+
+                list.add(product);
+            }
+        } finally {
+            DbUtil.dbClose(conn, pstmt, rs);
+        }
+
+        return list;
+    }
+
+    @Override
+    public int getSearchResultCount(String query) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int count = 0;
+
+        try {
+            conn = DbUtil.getConnection();
+            String sql = "SELECT COUNT(*) FROM products WHERE name LIKE ? OR sub_name LIKE ? OR category LIKE ?";
+
+            pstmt = conn.prepareStatement(sql);
+
+            String searchParam = "%" + query + "%";
+            pstmt.setString(1, searchParam);
+            pstmt.setString(2, searchParam);
+            pstmt.setString(3, searchParam);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } finally {
+            DbUtil.dbClose(conn, pstmt, rs);
+        }
+
+        return count;
     }
 }
