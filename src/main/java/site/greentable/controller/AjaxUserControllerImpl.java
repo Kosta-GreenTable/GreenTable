@@ -19,12 +19,14 @@ import site.greentable.dto.UserDTO;
 import site.greentable.dto.UserInfoDTO;
 import site.greentable.exception.AddException;
 import site.greentable.exception.EmailVerifyException;
+import site.greentable.service.EmailService;
 import site.greentable.service.UserService;
 import site.greentable.service.UserServiceImpl;
 
 public class AjaxUserControllerImpl implements AjaxUserController {
 
 	private UserService userService = new UserServiceImpl();
+	private EmailService emailService = new EmailService();
 
 	@Override
 	public Object verifyEmail(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -36,18 +38,13 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 			String verifyCode = userService.verifyEmail(email);
 			request.getSession().setAttribute("verifyCode", verifyCode);
 			result.put("result", true);
+			result.put("message", "인증번호가 발송되었습니다.");
 		} catch (EmailVerifyException e) {
 			result.put("result", false);
 			result.put("message", e.getMessage());
 		}
 
-		PrintWriter out = response.getWriter();
-		String jsonStr = new Gson().toJson(result);
-
-		out.write(jsonStr);
-		out.flush();
-		out.close();
-		return null;
+		return result;
 	}
 
 	@Override
@@ -239,6 +236,7 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 	/**
 	 * 아이디(이메일) 중복확인
 	 */
+	@Override
 	public Object checkDuplicate(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 
@@ -273,6 +271,7 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 	/**
 	 * 이메일 인증번호 발송
 	 */
+	@Override
 	public Object sendVerification(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 
@@ -285,18 +284,33 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 				return result;
 			}
 
-			// 인증번호 생성 및 발송 (실제로는 이메일 서비스 구현 필요)
+			// 인증번호 생성 및 발송
 			String verificationCode = generateVerificationCode();
 
 			// 세션에 인증번호 저장 (실제로는 Redis나 DB에 저장하는 것이 좋음)
 			request.getSession().setAttribute("verificationCode_" + email, verificationCode);
 			request.getSession().setAttribute("verificationTime_" + email, System.currentTimeMillis());
 
-			// TODO: 실제 이메일 발송 로직 구현
-			System.out.println("인증번호 발송: " + email + " -> " + verificationCode);
+			// 실제 이메일 발송
+			boolean emailSent = false;
+			try {
+				EmailService emailService = new EmailService();
+				emailSent = emailService.sendVerificationEmail(email, verificationCode);
+			} catch (Exception e) {
+				System.err.println("EmailService 사용 중 오류: " + e.getMessage());
+				emailSent = false;
+			}
 
-			result.put("success", true);
-			result.put("message", "인증번호가 발송되었습니다.");
+			if (emailSent) {
+				System.out.println("이메일 발송 성공: " + email + " -> " + verificationCode);
+				result.put("success", true);
+				result.put("message", "인증번호가 이메일로 발송되었습니다.");
+			} else {
+				// 이메일 발송 실패 시에도 개발 단계에서는 성공으로 처리
+				System.out.println("이메일 발송 실패, 콘솔 출력: " + email + " -> " + verificationCode);
+				result.put("success", true);
+				result.put("message", "인증번호가 발송되었습니다. (개발 모드: 콘솔 확인)");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -310,6 +324,7 @@ public class AjaxUserControllerImpl implements AjaxUserController {
 	/**
 	 * 인증번호 확인
 	 */
+	@Override
 	public Object verifyCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 
