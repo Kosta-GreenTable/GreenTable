@@ -1,0 +1,156 @@
+/* 인증 오류 페이지 스타일 */
+.auth-error-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2ecc71a3);
+    padding: 20px;
+}
+
+.auth-error-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    padding: 60px 40px;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.error-icon {
+    margin-bottom: 30px;
+}
+
+.error-icon i {
+    font-size: 4rem;
+    color: #667eea;
+    background: linear-gradient(135deg, #2ecc71a3);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.error-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.error-message {
+    color: #666;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.error-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.login-btn,
+.home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    justify-content: center;
+}
+
+.login-btn {
+    background: linear-gradient(135deg, #2ecc71);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 196, 113, 0.3);
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 196, 113, 0.4);
+    color: white;
+}
+
+.home-btn {
+    background: #f8f9fa;
+    color: #666;
+    border: 2px solid #e9ecef;
+}
+
+.home-btn:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    color: #495057;
+}
+
+.additional-info {
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.additional-info p {
+    color: #888;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.register-link {
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.register-link:hover {
+    color: #2ecc71;
+    text-decoration: underline;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .auth-error-card {
+        padding: 40px 30px;
+        margin: 10px;
+    }
+
+    .error-title {
+        font-size: 1.5rem;
+    }
+
+    .error-message {
+        font-size: 1rem;
+    }
+
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .login-btn,
+    .home-btn {
+        width: 100%;
+        max-width: 200px;
+    }
+}

@@ -1,0 +1,276 @@
+@charset "UTF-8";
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+span,
+applet,
+object,
+iframe,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font-family: "Roboto", sans-serif;
+    vertical-align: middle;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+
+
+html,
+body {
+    min-height: 100vh;
+    font-family: "Roboto", sans-serif;
+    min-width: 1480px;
+}
+
+body {
+    flex-direction: column;
+    margin-top: 190px;
+}
+
+body > * {
+    font-family: "Roboto", sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    background-color: transparent;
+}
+
+@media screen and (min-width: 1200px) {
+    body {
+        min-width: 1200px;
+    }
+}
+
+@media screen and (min-width: 1300px) {
+    body {
+        min-width: 1300px;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    body {
+        min-width: 1400px;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    body {
+        min-width: 1600px;
+    }
+}
+
+@media screen and (min-width: 1900px) {
+    body {
+        min-width: 1900px;
+    }
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: "";
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.main-content {
+    min-height: calc(100vh - 136px);
+}
+
+.hd__contianer {
+    display: flex;
+}
+
+.hd__inner1100 {
+    width: 1100px;
+    margin: 0 auto;
+}
+
+.hd__inner960 {
+    width: 960px;
+    margin: 0 auto;
+}
+
+.hd__inner900 {
+    width: 900px;
+    margin: 0 auto;
+}
+
+.hd__inner500 {
+    width: 500px;
+    margin: 0 auto;
+}
+
+.hd__inner400 {
+    width: 400px;
+    margin: 0 auto;
+}
+
+.hd__inner1400 {
+    width: 1400px;
+    margin: 0 auto;
+}
+.hr {
+    width: 100%;
+    height: 1px;
+    border-top: 0.5px solid #9e9e9e;
+}
+
+.text-xsm {
+    font-size: 18px;
+}
+.text-sm {
+    font-size: 20px;
+}
+.text-md {
+    font-size: 24px;
+}
+.text-lg {
+    font-size: 30px;
+}
+
+.light-gray {
+    color: #a1a1a1;
+}
+.f-bold {
+    font-weight: bold;
+}
+.lf-btn-brown {
+    background: #ca1a5a;
+}
+
+.lf-btn-light-brown {
+    background: #aea49e;
+}
+.dark-pink {
+    color: #ca1a5a;
+}
+.modal-backdrop {
+    width: 100% !important;
+    height: 100% !important;
+}
+.hidden {
+    display: none;
+}
+a {
+    color: inherit;
+}
+
+/* SweetAlert2 확인 버튼 색상 전역 override */
+.swal2-confirm {
+    background-color: rgb(0, 196, 113) !important;
+    color: #fff !important;
+}
+.swal2-confirm:focus {
+    box-shadow: 0 0 0 2px rgba(0,196,113,0.4) !important;
+}

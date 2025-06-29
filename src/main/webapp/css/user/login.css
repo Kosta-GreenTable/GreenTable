@@ -1,0 +1,444 @@
+/* 로그인 페이지 스타일 */
+.login-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 50px 20px;
+}
+
+.login-wrapper {
+  background-color: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 40px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.login-title {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* 에러 메시지 스타일 */
+.error-message {
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #c53030;
+  font-size: 14px;
+}
+
+.error-message i {
+  color: #e53e3e;
+  font-size: 16px;
+}
+
+/* 탭 스타일 */
+.login-tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  padding: 15px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.tab-btn.active {
+  color: #000;
+  font-weight: 600;
+}
+
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #00c471;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* 폼 스타일 */
+.login-form {
+  margin-bottom: 20px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+  border-color: #00c471;
+  outline: none;
+}
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0 20px;
+}
+
+.save-id {
+  display: flex;
+  align-items: center;
+}
+
+.save-id input {
+  margin-right: 5px;
+}
+
+.login-links a {
+  color: #666;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.login-links a:hover {
+  color: #00c471;
+  text-decoration: underline;
+}
+
+.divider {
+  margin: 0 8px;
+  color: #ccc;
+}
+
+.login-btn {
+  width: 100%;
+  background-color: #00c471;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 15px 0;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+  background-color: #00a65a;
+}
+
+/* 소셜 로그인 */
+.social-login {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.social-login h3 {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.social-login h3::before,
+.social-login h3::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background-color: #eee;
+}
+
+.social-login h3::before {
+  left: 0;
+}
+
+.social-login h3::after {
+  right: 0;
+}
+
+.social-btns {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48%;
+  padding: 12px 0;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  transition: all 0.3s;
+}
+
+.social-btn img {
+  margin-right: 10px;
+}
+
+.social-btn.kakao {
+  background-color: #fee500;
+  color: #3c1e1e;
+}
+
+.social-btn.google {
+  background-color: #ffffff;
+  color: #444;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 비회원 주문조회 */
+.non-member-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #666;
+}
+
+.non-member-info i {
+  color: #00c471;
+  margin-right: 5px;
+}
+
+/* 모달 스타일 */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 500px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: modal-in 0.3s ease-out;
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+}
+
+.modal-tabs {
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-tab {
+  flex: 1;
+  padding: 15px 0;
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+}
+
+.modal-tab.active {
+  color: #000;
+  font-weight: 500;
+}
+
+.modal-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #00c471;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-tab-content {
+  display: none;
+}
+
+.modal-tab-content.active {
+  display: block;
+}
+
+/* 인증 관련 스타일 */
+.verify-input {
+  display: flex;
+}
+
+.verify-input input {
+  flex: 1;
+  border-radius: 5px 0 0 5px;
+}
+
+.verify-btn {
+  min-width: 120px;
+  background-color: #f1f1f1;
+  color: #555;
+  border: 1px solid #ddd;
+  border-left: none;
+  border-radius: 0 5px 5px 0;
+  padding: 0 15px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.verify-btn:hover {
+  background-color: #eaeaea;
+}
+
+.verify-time {
+  font-size: 12px;
+  color: #f44336;
+  margin-top: 5px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 30px 15px;
+  }
+
+  .login-wrapper {
+    padding: 25px;
+  }
+
+  .social-btns {
+    flex-direction: column;
+  }
+
+  .social-btn {
+    width: 100%;
+  }
+
+  .verify-btn {
+    min-width: 100px;
+    font-size: 12px;
+  }
+}
+
+/* 체크박스 커스텀 스타일 */
+.save-id input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin-right: 8px;
+  position: relative;
+  cursor: pointer;
+}
+
+.save-id input[type="checkbox"]:checked {
+  background-color: #00c471;
+  border-color: #00c471;
+}
+
+.save-id input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.save-id label {
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+}

@@ -3,3 +3,6 @@ build/
 .classpath
 .project
 .git/
+env.properties
+/bin/
+

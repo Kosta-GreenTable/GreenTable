@@ -1,0 +1,163 @@
+@charset "UTF-8";
+/* 적립금 페이지 추가 스타일 */
+      .point-summary {
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        padding: 20px 30px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .point-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .point-amount {
+        font-size: 24px;
+        font-weight: 700;
+        color: #00c471;
+      }
+
+      .point-amount span {
+        font-size: 16px;
+        font-weight: normal;
+        color: #666;
+      }
+
+      .point-filter {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .filter-period {
+        display: flex;
+        gap: 10px;
+      }
+
+      .period-btn {
+        padding: 6px 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #666;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .period-btn.active {
+        background-color: #00c471;
+        color: #fff;
+        border-color: #00c471;
+      }
+
+      .filter-date {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .date-input {
+        padding: 6px 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 13px;
+      }
+
+      .search-btn {
+        padding: 6px 15px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .point-history {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+      }
+
+      .point-history th {
+        background-color: #f5f5f5;
+        padding: 12px 15px;
+        text-align: center;
+        font-size: 14px;
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .point-history td {
+        padding: 15px;
+        text-align: center;
+        font-size: 14px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .point-history .amount {
+        font-weight: 500;
+      }
+
+      .point-history .plus {
+        color: #00c471;
+      }
+
+      .point-history .minus {
+        color: #ff6b6b;
+      }
+
+      .point-history .detail {
+        text-align: left;
+      }
+
+      .point-pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+      }
+
+      .page-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        margin: 0 3px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 13px;
+        color: #666;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+
+      .page-btn:hover {
+        background-color: #f5f5f5;
+      }
+
+      .page-btn.active {
+        background-color: #00c471;
+        border-color: #00c471;
+        color: #fff;
+      }
+
+      .page-btn.arrow {
+        color: #999;
+      }
+
+      .no-history {
+        padding: 50px 0;
+        text-align: center;
+        color: #888;
+        font-size: 14px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }

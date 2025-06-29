@@ -26,12 +26,12 @@
     <!--
     <Manager pathname="SESSIONS.ser" />
     -->
-    <!-- DBCP를 연결 -->
+     <!-- DBCP를 연결 -->
       <Resource name="jdbc/mySql"
           auth="Container"
           type="javax.sql.DataSource" 
           driverClassName="com.mysql.cj.jdbc.Driver"
-          url="jdbc:mysql://localhost:3306/web_basic"
+          url="jdbc:mysql://localhost:3306/greentable"
           username="root" 
           password="admin" 
           maxTotal="20" 

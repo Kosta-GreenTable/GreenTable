@@ -1,0 +1,275 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: #fff;
+    color: #222;
+    margin: 80px auto 200px;
+    padding: 20px;
+  }
+  
+  .container {
+    max-width: 1100px;
+    margin: auto;
+  }
+  
+  .section {
+    margin-bottom: 40px;
+  }
+
+  .empty-order {
+    text-align: center;
+    font-size: 25px;
+    margin: 200px auto;
+  }
+
+  .order-title {
+    font-size: 35px;
+    font-weight: bold;
+    margin: 45px 0 15px;
+  }
+  
+  .order-subtitle {
+    display: flex;
+    margin: 40px 0 10px;
+    gap: 10px;
+    font-size: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  th {
+    width: 150px;
+    background-color: #f9f9f9;
+    font-weight: bold;
+  }
+  
+  .payment-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    background-color: #fafafa;
+    padding: 15px;
+    border: 1px solid #ddd;
+  }
+  
+  .amount-box {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .amount-box.equal {
+    flex: 0;
+    font-size: 20px;
+  }
+  
+  .amount-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 4px;
+  }
+  
+  .amount-value {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .amount-value.final {
+    color: #ff5722;
+  }
+  
+  /* 상단 상품 정보 */
+  .order-detail {
+    width: 100%;
+    margin-top: 20px;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  
+  .product-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid #000;
+  }
+  
+  .product-table th, .product-table td {
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+  }
+  
+  .product-image img {
+    width: 120px;
+    height: auto;
+  }
+  
+  .product-info {
+    display: flex;
+    text-align: left;
+  }
+  
+  .product-name {
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 4px;
+    align-content: center;
+    padding: 50px;
+  }
+  
+  .product-desc {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 4px;
+  }
+  
+  .product-option {
+    font-size: 13px;
+    color: #888;
+  }
+  
+  .delivery-status {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .delivery-button {
+    margin-top: 5px;
+    padding: 5px 10px;
+    font-size: 13px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+
+  /* 결제박스 */
+  body {
+    margin: 0;
+    padding: 40px;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    font-size: 14px;
+    color: #000;
+  }
+  
+  .order-wrapper {
+    width: 1100px;
+    margin: 80px auto 200px
+  }
+  
+  .title {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  .payment-box {
+    display: flex;
+    border: 1px solid #000;
+  }
+  
+  .column {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .operator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    font-size: 30px;
+    font-weight: bold;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+  }
+  
+  .label {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .amount {
+    font-size: 30px;
+    font-weight: bold;
+  }
+  
+  .amount span {
+    font-size: 16px;
+    margin-left: 2px;
+  }
+  
+  .amount.highlight {
+    color: #e65000;
+    font-size: 33px;
+    font-weight: bold;
+  }
+  
+  .sub {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+  }
+  
+  .sub div {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .notice {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #555;
+  }
+  
+  .product-img {
+    width: 125px;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .home-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 50px;
+    background-color: #000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 60px auto 130px;
+  }
+
+  .home-btn:hover {
+    opacity: 0.6;
+  }
+
+  .sub-title {
+    border-bottom: 4px solid black;
+    font-size: 20px;
+    margin: 50px 0 20px;
+    padding: 15px 0;
+    font-weight: bold;
+  }
+
+  .order-subtitle2 {
+    font-weight: 400;
+    margin-right: 15px;
+    font-size: 18px;
+    color: #666;
+  }

@@ -1,0 +1,663 @@
+/* 상품 문의 페이지 스타일 */
+
+/* 문의 헤더 섹션 스타일 */
+.qna-header {
+  margin-bottom: 25px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.section-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.btn-new-question {
+  padding: 8px 18px;
+  background-color: #00c471;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-new-question:hover {
+  background-color: #00a65a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.qna-description {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* 필터링 옵션 스타일 */
+.qna-filter {
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filter-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+}
+
+.filter-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-right: 15px;
+  white-space: nowrap;
+}
+
+.period-selector {
+  display: flex;
+  gap: 5px;
+}
+
+.period-btn {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+  color: #666;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.period-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.period-btn.active {
+  background-color: #00c471;
+  color: white;
+  border-color: #00c471;
+  font-weight: 500;
+}
+
+.filter-group select {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #666;
+  min-width: 120px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 28px;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #00c471;
+  box-shadow: 0 0 0 2px rgba(0, 196, 113, 0.2);
+}
+
+/* 문의 목록 테이블 스타일 */
+.qna-list-section {
+  margin-bottom: 40px;
+}
+
+.qna-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid #00c471;
+}
+
+.qna-table thead th {
+  background-color: #f9f9f9;
+  padding: 14px 12px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+}
+
+.qna-table tbody td {
+  padding: 16px 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.qna-table .qna-item {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.qna-table .qna-item:hover {
+  background-color: #f7f7f7;
+}
+
+.qna-table .qna-title {
+  text-align: left;
+  font-weight: 500;
+  color: #333;
+}
+
+.qna-table .qna-title:hover {
+  color: #00c471;
+}
+
+.no-data {
+  text-align: center;
+  padding: 30px 0;
+  color: #888;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+.product-info-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.product-info-cell img {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  margin-right: 10px;
+  object-fit: cover;
+  border: 1px solid #eee;
+}
+
+.product-info-cell span {
+  font-size: 14px;
+  color: #333;
+  text-align: left;
+}
+
+.qna-status {
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.qna-status.waiting {
+  position: relative;
+  bottom: -15px;
+  left: 30px;
+  color: #fff;
+  background-color: #ff6b6b;
+}
+
+.qna-status.completed {
+  color: #fff;
+  background-color: #00c471;
+}
+
+/* 문의 내용 스타일 */
+.qna-content {
+  background-color: #f9f9f9;
+}
+
+.qna-content>td {
+  padding: 0 !important;
+}
+
+.question-content,
+.answer-content {
+  padding: 20px;
+  position: relative;
+  color: #333;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.question-content {
+  border-bottom: 1px solid #eee;
+}
+
+.question-header,
+.answer-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.question-label,
+.answer-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.question-label {
+  background-color: #ffeaea;
+  color: #ff6b6b;
+}
+
+.answer-label {
+  background-color: #e6faef;
+  color: #00c471;
+}
+
+.question-title,
+.answer-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.question-body,
+.answer-body {
+  padding: 0 0 0 38px;
+  margin-bottom: 15px;
+}
+
+.question-body p,
+.answer-body p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #666;
+  white-space: pre-line;
+}
+
+.question-footer,
+.answer-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 0 38px;
+}
+
+.question-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.no-edit-msg {
+  font-size: 13px;
+  color: #777;
+  font-style: italic;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-edit {
+  background-color: #f1f1f1;
+  color: #666;
+}
+
+.btn-edit:hover {
+  background-color: #e5e5e5;
+  color: #333;
+}
+
+.btn-delete {
+  background-color: #ffeaea;
+  color: #ff6b6b;
+}
+
+.btn-delete:hover {
+  background-color: #ffdbdb;
+  color: #ff4444;
+}
+
+.answer-date {
+  font-size: 13px;
+  color: #999;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 6px 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #333;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination button:hover,
+.pagination button.active {
+  background-color: #00c471;
+  color: white;
+  border-color: #00c471;
+}
+
+.page-info {
+  color: #666;
+  font-size: 13px;
+  margin: 0 10px;
+}
+
+/* 안내사항 섹션 스타일 */
+.info-section {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 30px;
+  border-left: 3px solid #00c471;
+}
+
+.info-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-list li {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.info-list li i {
+  color: #00c471;
+  margin-right: 8px;
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+/* 모달 스타일 */
+.modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  width: 500px;
+  max-width: 90%;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  background-color: #f9f9f9;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-modal:hover {
+  color: #333;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.form-group .required {
+  color: #ff6b6b;
+  margin-left: 3px;
+}
+
+.form-group select,
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.form-group select:focus,
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #00c471;
+  box-shadow: 0 0 0 2px rgba(0, 196, 113, 0.2);
+}
+
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  padding-right: 30px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.text-length {
+  font-size: 12px;
+  color: #888;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.checkbox-container label {
+  display: inline-flex;
+  align-items: center;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.help-text {
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+  margin-left: 22px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  background-color: #f1f1f1;
+  color: #666;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: #e5e5e5;
+  color: #333;
+}
+
+.submit-btn {
+  padding: 10px 20px;
+  background-color: #00c471;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #00a65a;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 992px) {
+  .filter-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .qna-table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .period-selector {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .period-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .qna-table thead th:first-child,
+  .qna-table tbody td:first-child {
+    display: none;
+  }
+
+  .qna-content>td {
+    white-space: normal;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
