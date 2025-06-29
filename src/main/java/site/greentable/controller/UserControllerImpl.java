@@ -93,13 +93,33 @@ public class UserControllerImpl implements UserController {
 			System.out.println("==== POST 요청 확인 ====");
 			String email = request.getParameter("email");
 			String password = request.getParameter("password");
+			String userName = request.getParameter("name"); // HTML form에서는 name="name"으로 되어있음
+			String phone = request.getParameter("phone");
+			String zipCode = request.getParameter("zipCode");
+			String address = request.getParameter("address1"); // HTML form에서는 name="address1"
+			String detailAddress = request.getParameter("address2"); // HTML form에서는 name="address2"
+
 			System.out.println("이메일: " + email);
 			System.out.println("비밀번호: " + password);
+			System.out.println("이름: " + userName);
 
 			try {
 				UserDTO userDto = new UserDTO();
 				userDto.setEmail(email);
 				userDto.setPassword(password);
+				userDto.setLastLogin(java.time.LocalDateTime.now()
+						.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+				// UserInfoDTO 설정
+				UserInfoDTO userInfoDto = new UserInfoDTO();
+				userInfoDto.setUserName(userName != null ? userName : "");
+				userInfoDto.setPhone(phone != null ? phone : "");
+				userInfoDto.setZipCode(zipCode != null && !zipCode.isEmpty() ? Integer.parseInt(zipCode) : 0);
+				userInfoDto.setAddress(address != null ? address : "");
+				userInfoDto.setDetailAddress(detailAddress != null ? detailAddress : "");
+
+				userDto.setUserInfoDto(userInfoDto);
+
 				userService.register(userDto);
 				System.out.println("==== 회원가입 성공 ====");
 				return new ModelAndView("user/login.jsp", true);
