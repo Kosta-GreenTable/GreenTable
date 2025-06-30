@@ -382,12 +382,12 @@ AWS EC2 프리티어 환경에서 메모리 최적화 운영
 
 ## 🧐 팀 소개
 
-| 이름       | 전공        | 이메일                                                         | 역할                                |
-| -------- | --------- | ----------------------------------------------------------- | --------------------------------- |
-| 홍길동 | 컴퓨터공학과    | [ej.kim.dev@greentable.io](mailto:ej.kim.dev@greentable.io) | Full-stack (기획 & 시스템 아키텍처)        |
-| 홍길동      | 정보통신공학과   | [sy.lee@greentable.io](mailto:sy.lee@greentable.io)         | Front-end (JSP, AJAX UI/UX)       |
-| 홍길동      | 소프트웨어학과   | [jh.park@greentable.io](mailto:jh.park@greentable.io)       | Back-end (Controller, DAO, DB 설계) |
-| 홍길동      | 데이터사이언스학과 | [ws.jung@greentable.io](mailto:ws.jung@greentable.io)       | DevOps (Docker, 배포, 테스트 자동화)      |
+| 이름  | 이메일                                                         | 역할                                |
+| --- | ----------------------------------------------------------- | --------------------------------- |
+| 홍길동 | [ej.kim.dev@greentable.io](mailto:ej.kim.dev@greentable.io) | Full-stack (기획 & 시스템 아키텍처)        |
+| 홍길동 | [sy.lee@greentable.io](mailto:sy.lee@greentable.io)         | Front-end (JSP, AJAX UI/UX)       |
+| 홍길동 | [jh.park@greentable.io](mailto:jh.park@greentable.io)       | Back-end (Controller, DAO, DB 설계) |
+| 홍길동 | [ws.jung@greentable.io](mailto:ws.jung@greentable.io)       | DevOps (Docker, 배포, 테스트 자동화)      |
 
 </br>
 
