@@ -245,7 +245,7 @@ AWS EC2 (Ubuntu 22.04)
 
 <div align="center">시스템 아키텍처</div>
 
-![시스템 아키텍쳐](https://github.com/user-attachments/assets/8aea0c2f-73e3-451d-b47e-f7d3e30e33a2)
+![시스템 아키텍쳐](https://github.com/user-attachments/assets/cf3a83a7-e3e2-4c55-b8cd-9d59d15969aa)
 
 </br>
 
