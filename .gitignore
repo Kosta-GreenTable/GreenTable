@@ -5,20 +5,28 @@ build/
 .git/
 /bin/
 
+# Docker 관련 파일들 (민감한 정보 포함)
+docker-compose.yml
+Dockerfile
+.dockerignore
+setenv.sh
+
 # 환경 설정 파일들 (민감한 정보 포함)
 env.properties
 .env
 resources/env.properties
 resources/dbQuery.properties
 resources/database.properties
+resources/actionMapping.properties
+resources/ajaxMapping.properties
+actionMapping.properties
+ajaxMapping.properties
+dbQuery.properties
 
 # 빌드 산출물
 *.war
 *.jar
 logs/
-
-# Docker 관련 (민감한 정보가 있을 경우)
-setenv.sh
 
 # IDE 관련
 .idea/
