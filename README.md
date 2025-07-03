@@ -201,9 +201,9 @@ SNS 기반 공동구매나 블로그 판매 등 기존의 농산물 유통 방�
 </br>
 
 <div align="center">시스템 개요도</div>
-<div align="center">시스템 개요도 이미지 추가 해야함함</div>
 
 ![시스템 개요](https://github.com/user-attachments/assets/10ed0cc9-c687-4597-bc39-8b0d691df2bf)
+![시스템 개요](https://github.com/user-attachments/assets/1c62f8f7-dfc5-4205-a585-74f62d10e60e)
 
 </br>
 </details>
@@ -385,9 +385,9 @@ AWS EC2 프리티어 환경에서 메모리 최적화 운영
 | 이름  | 이메일                                                         | 역할                                |
 | --- | ----------------------------------------------------------- | --------------------------------- |
 | 홍길동 | [ej.kim.dev@greentable.io](mailto:ej.kim.dev@greentable.io) | Full-stack (기획 & 시스템 아키텍처)        |
-| 홍길동 | [sy.lee@greentable.io](mailto:sy.lee@greentable.io)         | Front-end (JSP, AJAX UI/UX)       |
+| 홍길동 | [sy.lee@greentable.io](mailto:sy.lee@greentable.io)         | DevOps (Docker, 배포, 테스트 자동화)      |
 | 홍길동 | [jh.park@greentable.io](mailto:jh.park@greentable.io)       | Back-end (Controller, DAO, DB 설계) |
-| 홍길동 | [ws.jung@greentable.io](mailto:ws.jung@greentable.io)       | DevOps (Docker, 배포, 테스트 자동화)      |
+| 정정화 | [jeonghwa485@gmail.com](mailto:jeonghwa485@gmail.com)       | Front-end (JSP, AJAX UI/UX)      |
 
 </br>
 
