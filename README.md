@@ -200,10 +200,9 @@ SNS 기반 공동구매나 블로그 판매 등 기존의 농산물 유통 방�
 
 </br>
 
-<div align="center">시스템 개요도</div>
+<div align="center">시스템 개요도</div> </br>
 
-![시스템 개요](https://github.com/user-attachments/assets/10ed0cc9-c687-4597-bc39-8b0d691df2bf)
-![시스템 개요](https://github.com/user-attachments/assets/1c62f8f7-dfc5-4205-a585-74f62d10e60e)
+![시스템 개요](https://github.com/user-attachments/assets/492f9b85-91a1-4e9b-9e64-9bb26c9b950f)
 
 </br>
 </details>
@@ -243,9 +242,9 @@ AWS EC2 (Ubuntu 22.04)
 
 </br>
 
-<div align="center">시스템 아키텍처</div>
+<div align="center">시스템 아키텍처</div>  </br>
 
-![시스템 아키텍쳐](https://github.com/user-attachments/assets/cf3a83a7-e3e2-4c55-b8cd-9d59d15969aa)
+![시스템 아키텍쳐](https://github.com/user-attachments/assets/4a638f8f-ce9a-487b-bf57-48e5d8cda628)
 
 </br>
 
@@ -254,66 +253,74 @@ AWS EC2 (Ubuntu 22.04)
 프론트엔드는 JSP + JSTL 3.0을 사용하여 Server-Side Rendering 방식으로 구현했으며, AJAX 기반 비동기 통신으로 사용자 경험을 향상시켰습니다. 역할 기반 세션 관리를 통해 관리자/농가/일반 사용자별 차별화된 UI를 제공합니다.
 
 🐳 컨테이너 구성도
-┌─────────────────────────────────────────────────────────────┐
-│                    AWS EC2 (Ubuntu 22.04)                  │
-│                                                             │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │                Docker Compose                       │   │
-│  │                                                     │   │
+<!-- 
+┌───────────────────────────────────────────────────────────┐
+│                    AWS EC2 (Ubuntu 22.04)                 │
+│                                                           │
+│  ┌────────────────────────────────────────────────────┐   │
+│  │                Docker Compose                      │   │
+│  │                                                    │   │
 │  │  ┌──────────────────┐    ┌──────────────────────┐  │   │
 │  │  │   MySQL 8.0      │    │   GreenTable App     │  │   │
 │  │  │   Container      │    │   Container          │  │   │
 │  │  │                  │    │                      │  │   │
-│  │  │ • Port: 3306     │◄───┤ • Tomcat 10.1       │  │   │
+│  │  │ • Port: 3306     │◄───┤ • Tomcat 10.1        │  │   │
 │  │  │ • greentable DB  │    │ • JDK 17             │  │   │
-│  │  │ • Volume Mount   │    │ • Jakarta EE 10     │  │   │
+│  │  │ • Volume Mount   │    │ • Jakarta EE 10      │  │   │
 │  │  │ • healthcheck    │    │ • Port: 8080         │  │   │
 │  │  └──────────────────┘    │ • JNDI DataSource    │  │   │
 │  │                          └──────────────────────┘  │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                                                             │
-│                          │                                 │
-│                          ▼                                 │
-│                   Internet Gateway                         │
-└─────────────────────────────────────────────────────────────┘
+│  └────────────────────────────────────────────────────┘   │
+│                                                           │
+│                          │                                │
+│                          ▼                                │
+│                   Internet Gateway                        │
+└───────────────────────────────────────────────────────────┘
                            │
                            ▼
                     👥 사용자 접근
               http://3.36.75.98:8080/GreenTable/
+-->
+
+![컨테이너 구성도](https://github.com/user-attachments/assets/2fb2a353-c74b-4e5b-a8be-8cf80891ad5b)    
 
 🔄 시스템 처리 흐름
+<!-- 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                            요청 처리 워크플로우                              │
+│                            요청 처리 워크플로우                               │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│ 👤 사용자 요청                                                              │
+│ 👤 사용자 요청                                                               │
 │     │                                                                       │
 │     ▼                                                                       │
-│ 🌐 JSP + JSTL 3.0 (Presentation Layer)                                    │
+│ 🌐 JSP + JSTL 3.0 (Presentation Layer)                                      │
 │     │                                                                       │
 │     ▼                                                                       │
-│ 🎮 DispatcherServlet (Front Controller)                                   │
-│     │ ┌─────────────────────────────────────┐                             │
-│     │ │    Reflection API 동적 라우팅        │                             │
-│     │ │ key=product&methodName=list         │                             │
-│     │ │ ↓                                   │                             │
-│     │ │ ProductController.list() 호출       │                             │
-│     │ └─────────────────────────────────────┘                             │
+│ 🎮 DispatcherServlet (Front Controller)                                     │
+│     │ ┌─────────────────────────────────────┐                               │
+│     │ │    Reflection API 동적 라우팅        │                               │
+│     │ │ key=product&methodName=list         │                               │
+│     │ │ ↓                                   │                               │
+│     │ │ ProductController.list() 호출       │                               │
+│     │ └─────────────────────────────────────┘                               │
 │     ▼                                                                       │
-│ 💼 Service Layer (Business Logic)                                          │
+│ 💼 Service Layer (Business Logic)                                           │
 │     │                                                                       │
 │     ▼                                                                       │
-│ 🗃️ DAO Layer (Data Access)                                                │
-│     │ ┌─────────────────────────────────────┐                             │
-│     │ │      이중 연결 방식                  │                             │
-│     │ │ 1순위: JNDI DataSource              │                             │
-│     │ │ 2순위: Direct JDBC                  │                             │
-│     │ │ PreparedStatement 100% 적용         │                             │
-│     │ └─────────────────────────────────────┘                             │
+│ 🗃️ DAO Layer (Data Access)                                                  │
+│     │ ┌─────────────────────────────────────┐                               │
+│     │ │      이중 연결 방식                  │                               │
+│     │ │ 1순위: JNDI DataSource              │                               │
+│     │ │ 2순위: Direct JDBC                  │                               │
+│     │ │ PreparedStatement 100% 적용         │                               │
+│     │ └─────────────────────────────────────┘                               │
 │     ▼                                                                       │
-│ 🗄️ MySQL 8.0 Database                                                     │
+│ 🗄️ MySQL 8.0 Database                                                       │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
+-->
+
+![시스템 처리 흐름](https://github.com/user-attachments/assets/96ef0ba6-51a7-44dc-a227-6ba5deba9a11)
 
 🏗 서비스 아키텍처
 ✅ 아키텍처 구성
