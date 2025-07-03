@@ -2,6 +2,14 @@
 pageEncoding="UTF-8"%> <%@ taglib prefix="c"
 uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib prefix="fmt"
 uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="java.lang.System" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -28,23 +36,22 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
-    <style>
+    />    <style>
       /* 인라인 스타일은 최소화하고 외부 CSS 파일로 관리 */
       .container {
-        max-width: 1200px;
+        max-width: 1400px;
         margin: 0 auto;
         padding: 0 20px;
       }
 
       .farm-page {
-        margin-top: 20px;
+        margin-top: 40px;
         margin-bottom: 50px;
       }
 
       .farm-card {
         height: 100%;
-        border-radius: 10px;
+        border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -249,7 +256,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     >
                       <div class="farm-img">
                         <img
-                          src="${pageContext.request.contextPath}/assets/images/farms/${farm.farmImg}"
+                          src="${s3BaseUrl}/farms/${farm.farmImg}"
                           alt="${farm.name} 이미지"
                           onerror="this.onerror=null; this.src='https://picsum.photos/seed/farm${farm.farmId}/300/250';"
                         />

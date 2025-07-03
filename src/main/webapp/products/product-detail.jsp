@@ -1,6 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page import="site.greentable.util.ImageUtil" %>
+<%@ page import="java.lang.System" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -45,19 +55,20 @@
         <c:choose>
           <c:when test="${not empty productImages}">
             <c:forEach var="image" items="${productImages}" varStatus="status">
+              <!-- S3 전용 이미지 URL -->
               <img
                 class="product-image ${status.index == 0 ? '' : 'hidden'}"
-                src="${pageContext.request.contextPath}/assets/images/products/${image.imageName}"
+                src="${s3BaseUrl}/${image.imageName}"
                 alt="${product.name} 이미지 ${status.index + 1}"
                 ${status.index > 0 ? 'style="display: none"' : ''}
-                onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/assets/images/no-image.jpg';"
+                onerror="this.onerror=null; this.src='${s3BaseUrl}/products/no-image.jpg';"
               />
             </c:forEach>
           </c:when>
           <c:otherwise>
             <img
               class="product-image"
-              src="${pageContext.request.contextPath}/assets/images/no-image.jpg"
+              src="${s3BaseUrl}/products/no-image.jpg"
               alt="${product.name}"
             />
           </c:otherwise>
@@ -162,8 +173,9 @@
           <button class="review-navigation left">&lt;</button>
           <div class="review-images">
             <c:forEach var="image" items="${reviewImages}">
-              <img src="${pageContext.request.contextPath}/assets/images/reviews/${image.imageName}" alt="리뷰 이미지" 
-                   onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/assets/images/no-image.jpg';" />
+              <!-- S3 전용 리뷰 이미지 URL -->
+              <img src="${s3BaseUrl}/${image.imageName}" alt="리뷰 이미지" 
+                   onerror="this.onerror=null; this.src='${s3BaseUrl}/reviews/no-image.jpg';" />
             </c:forEach>
           </div>
           <button class="review-navigation right">&gt;</button>
@@ -187,9 +199,9 @@
           <c:if test="${not empty productImages && productImages.size() > 0}">
             <c:forEach var="image" items="${productImages}">
               <div class="detail-image">
-                <img src="${pageContext.request.contextPath}/assets/images/products/${image.imageName}" 
+                <img src="${s3BaseUrl}/${image.imageName}" 
                      alt="상품 상세 이미지" 
-                     onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/assets/images/no-image.jpg';" />
+                     onerror="this.onerror=null; this.src='${s3BaseUrl}/products/no-image.jpg';" />
               </div>
             </c:forEach>
           </c:if>
@@ -237,9 +249,10 @@
                 <p>${review.content}</p>
                 <c:if test="${not empty review.imageName}">
                   <div class="review-image">
-                    <img src="${pageContext.request.contextPath}/assets/images/reviews/${review.imageName}" 
+                    <!-- S3 전용 리뷰 이미지 URL -->
+                    <img src="${s3BaseUrl}/${review.imageName}" 
                          alt="리뷰 이미지" 
-                         onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/assets/images/no-image.jpg';" />
+                         onerror="this.onerror=null; this.src='${s3BaseUrl}/reviews/no-image.jpg';" />
                   </div>
                 </c:if>
               </div>
@@ -340,9 +353,10 @@
       <div class="product-list">
         <c:forEach var="recommended" items="${recommendedProducts}">
           <div class="product-card" onclick="location.href='${pageContext.request.contextPath}/front?key=product&methodName=detail&productId=${recommended.productId}'">
-            <img src="${pageContext.request.contextPath}/assets/images/products/${recommended.mainImageName}" 
+            <!-- S3 전용 이미지 URL -->
+            <img src="${s3BaseUrl}/${recommended.mainImageName}" 
                 alt="${recommended.name}" 
-                onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/assets/images/no-image.jpg';" />
+                onerror="this.onerror=null; this.src='${s3BaseUrl}/products/no-image.jpg';" />
             <h3>${recommended.name}</h3>
             
             <c:choose>
@@ -357,10 +371,6 @@
                 <p class="product-price"><fmt:formatNumber value="${recommended.price}" pattern="#,###" />원</p>
               </c:otherwise>
             </c:choose>
-            
-            <button class="quick-add" data-product-id="${recommended.productId}" onclick="event.stopPropagation();">
-              <i class="fas fa-shopping-cart"></i> 장바구니 담기
-            </button>
           </div>
         </c:forEach>
         

@@ -10,6 +10,7 @@ import site.greentable.dto.ReviewImageDTO;
 import site.greentable.dto.UserDTO;
 import site.greentable.service.ReviewService;
 import site.greentable.service.ReviewServiceImpl;
+import site.greentable.util.S3Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -114,20 +115,13 @@ public class ReviewControllerImpl implements ReviewController {
                 && request.getContentType().startsWith("multipart/form-data");
 
         if (isMultipart) {
-            // 파일 저장 경로
-            String uploadDir = request.getServletContext().getRealPath("/uploads/reviews");
-            File uploadDirObj = new File(uploadDir);
-            if (!uploadDirObj.exists()) {
-                uploadDirObj.mkdirs();
-            }
-
             // 기본 파라미터 가져오기
             productId = Integer.parseInt(request.getParameter("productId"));
             orderDetailId = Integer.parseInt(request.getParameter("orderDetailId"));
             rating = Integer.parseInt(request.getParameter("rating"));
             content = request.getParameter("content");
 
-            // 파일 처리
+            // 파일 처리 - S3 업로드 방식
             try {
                 Collection<Part> parts = request.getParts();
                 for (Part part : parts) {
@@ -135,25 +129,29 @@ public class ReviewControllerImpl implements ReviewController {
                     if (fieldName.equals("photos") && part.getSize() > 0) {
                         String fileName = part.getSubmittedFileName();
                         if (fileName != null && !fileName.isEmpty()) {
-                            // 파일 이름 중복 방지를 위해 고유한 이름 생성
-                            String uniqueName = System.currentTimeMillis() + "_" + fileName;
-                            String filePath = uploadDir + File.separator + uniqueName;
+                            try {
+                                // S3에 업로드 (reviews/ 폴더에 저장)
+                                String s3Key = S3Util.uploadFile(part, "reviews/");
+                                
+                                if (s3Key != null) {
+                                    // 이미지 정보 저장
+                                    ReviewImageDTO image = new ReviewImageDTO();
+                                    image.setRealName(s3Key); // S3 키를 realName으로 저장
+                                    image.setOriginalName(fileName);
+                                    image.setMain(images.isEmpty()); // 첫 번째 이미지를 대표 이미지로 설정
 
-                            // 파일 저장
-                            part.write(filePath);
-
-                            // 이미지 정보 저장
-                            ReviewImageDTO image = new ReviewImageDTO();
-                            image.setRealName(uniqueName);
-                            image.setOriginalName(fileName);
-                            image.setMain(images.isEmpty()); // 첫 번째 이미지를 대표 이미지로 설정
-
-                            images.add(image);
+                                    images.add(image);
+                                    System.out.println("리뷰 이미지 S3 업로드 성공: " + s3Key);
+                                }
+                            } catch (IOException e) {
+                                System.err.println("리뷰 이미지 S3 업로드 실패: " + e.getMessage());
+                                // S3 업로드 실패해도 리뷰 등록은 계속 진행 (이미지 없이)
+                            }
                         }
                     }
                 }
             } catch (IOException | IllegalStateException e) {
-                request.setAttribute("errorMsg", "파일 업로드 중 오류가 발생했습니다: " + e.getMessage());
+                request.setAttribute("errorMsg", "파일 처리 중 오류가 발생했습니다: " + e.getMessage());
                 return new ModelAndView("/error.jsp");
             }
         } else {
@@ -254,6 +252,25 @@ public class ReviewControllerImpl implements ReviewController {
 
         int productId = review.getProductId();
 
+        // 리뷰에 연결된 S3 이미지들 삭제
+        List<ReviewImageDTO> reviewImages = reviewService.getReviewImages(reviewId);
+        for (ReviewImageDTO image : reviewImages) {
+            try {
+                // S3 키인지 확인 (reviews/로 시작하는 경우)
+                if (image.getRealName().startsWith("reviews/")) {
+                    boolean deleted = S3Util.deleteFile(image.getRealName());
+                    if (deleted) {
+                        System.out.println("리뷰 S3 이미지 삭제 성공: " + image.getRealName());
+                    } else {
+                        System.err.println("리뷰 S3 이미지 삭제 실패: " + image.getRealName());
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("리뷰 S3 이미지 삭제 중 오류: " + image.getRealName() + " - " + e.getMessage());
+                // 이미지 삭제 실패해도 리뷰 삭제는 계속 진행
+            }
+        }
+
         // 리뷰 삭제
         reviewService.deleteReview(reviewId);
 
@@ -329,20 +346,13 @@ public class ReviewControllerImpl implements ReviewController {
                 && request.getContentType().startsWith("multipart/form-data");
 
         if (isMultipart) {
-            // 파일 저장 경로
-            String uploadDir = request.getServletContext().getRealPath("/uploads/reviews");
-            File uploadDirObj = new File(uploadDir);
-            if (!uploadDirObj.exists()) {
-                uploadDirObj.mkdirs();
-            }
-
             // 기본 파라미터 가져오기
             reviewId = Integer.parseInt(request.getParameter("reviewId"));
             rating = Integer.parseInt(request.getParameter("rating"));
             content = request.getParameter("content");
             imageChanged = Boolean.parseBoolean(request.getParameter("imageChanged"));
 
-            // 파일 처리
+            // 파일 처리 - S3 업로드 방식
             try {
                 Collection<Part> parts = request.getParts();
                 for (Part part : parts) {
@@ -353,25 +363,29 @@ public class ReviewControllerImpl implements ReviewController {
                             // 이미지가 변경되었음을 표시
                             imageChanged = true;
 
-                            // 파일 이름 중복 방지를 위해 고유한 이름 생성
-                            String uniqueName = System.currentTimeMillis() + "_" + fileName;
-                            String filePath = uploadDir + File.separator + uniqueName;
+                            try {
+                                // S3에 업로드 (reviews/ 폴더에 저장)
+                                String s3Key = S3Util.uploadFile(part, "reviews/");
+                                
+                                if (s3Key != null) {
+                                    // 이미지 정보 저장
+                                    ReviewImageDTO image = new ReviewImageDTO();
+                                    image.setRealName(s3Key); // S3 키를 realName으로 저장
+                                    image.setOriginalName(fileName);
+                                    image.setMain(images.isEmpty()); // 첫 번째 이미지를 대표 이미지로 설정
 
-                            // 파일 저장
-                            part.write(filePath);
-
-                            // 이미지 정보 저장
-                            ReviewImageDTO image = new ReviewImageDTO();
-                            image.setRealName(uniqueName);
-                            image.setOriginalName(fileName);
-                            image.setMain(images.isEmpty()); // 첫 번째 이미지를 대표 이미지로 설정
-
-                            images.add(image);
+                                    images.add(image);
+                                    System.out.println("리뷰 이미지 S3 업로드 성공 (수정): " + s3Key);
+                                }
+                            } catch (IOException e) {
+                                System.err.println("리뷰 이미지 S3 업로드 실패 (수정): " + e.getMessage());
+                                // S3 업로드 실패해도 리뷰 수정은 계속 진행 (이미지 없이)
+                            }
                         }
                     }
                 }
             } catch (IOException | IllegalStateException e) {
-                request.setAttribute("errorMsg", "파일 업로드 중 오류가 발생했습니다: " + e.getMessage());
+                request.setAttribute("errorMsg", "파일 처리 중 오류가 발생했습니다: " + e.getMessage());
                 return new ModelAndView("/error.jsp");
             }
         } else {

@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="java.lang.System" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -70,7 +78,7 @@
                                     <td>${farm.farmId}</td>
                                     <td class="product-image-cell">
                                         <!-- 이미지 경로 수정 및 fallback 개선 -->
-                                        <img src="${pageContext.request.contextPath}/assets/images/farms/${farm.farmImg}" 
+                                        <img src="${s3BaseUrl}/farms/${farm.farmImg}" 
                                              alt="${farm.name}" 
                                              onerror="this.src='https://picsum.photos/seed/farm${farm.farmId}/200/150'">
                                     </td>

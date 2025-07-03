@@ -1,0 +1,472 @@
+/* 검색 결과 페이지 전체 스타일 */
+.product-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* 검색 결과 헤더 */
+.product-category {
+    margin-bottom: 40px;
+    text-align: center;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.product-category::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #4CAF50;
+    border-radius: 3px;
+}
+
+.product-category h2 {
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.search-result-count {
+    color: #666;
+    font-size: 18px;
+}
+
+/* 상품 그리드 개선 */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-bottom: 50px;
+    padding: 10px;
+}
+
+/* 정렬 옵션 스타일 */
+.sort-options {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sort-container {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 8px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.sort-container span {
+    color: #666;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.sort-select {
+    border: none;
+    background-color: transparent;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    padding: 5px;
+    cursor: pointer;
+    outline: none;
+}
+
+/* 가격 필터 스타일 */
+.price-filter-container {
+    margin-bottom: 30px;
+    background-color: #f9f9f9;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.price-filter-header {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.price-filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.price-filter-btn {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background-color: white;
+    color: #555;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.price-filter-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.price-filter-btn.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* 상품 카드 스타일 개선 */
+.product-card {
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.product-card a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.product-image {
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+    background-color: #f9f9f9;
+}
+
+.product-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 80%, rgba(0, 0, 0, 0.03) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.08);
+}
+
+.product-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(76, 175, 80, 0.9);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.product-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    position: relative;
+}
+
+.product-category-label {
+    font-size: 12px;
+    color: #4CAF50;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.product-info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: #222;
+    line-height: 1.3;
+}
+
+.product-subname {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    height: 40px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+}
+
+.product-price {
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.original-price {
+    display: block;
+    color: #999;
+    text-decoration: line-through;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.discount-rate {
+    font-weight: bold;
+    color: #f44336;
+    margin-right: 6px;
+    font-size: 16px;
+}
+
+.final-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+}
+
+/* 검색 결과 없음 스타일 */
+.no-search-results {
+    grid-column: 1 / -1;
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin: 20px 0;
+}
+
+.no-search-results p:first-child {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.no-search-results p:last-child {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    gap: 10px;
+}
+
+.pagination a,
+.pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #555;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.pagination a:hover {
+    background-color: #f5f5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pagination span.current {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+}
+
+/* 추천 상품 섹션 */
+.recommended-products-section {
+    grid-column: 1 / -1;
+    margin-top: 40px;
+    border-top: 1px solid #eee;
+    padding-top: 30px;
+}
+
+.recommended-products-section h3 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.recommended-products-section h3:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #4CAF50;
+    border-radius: 3px;
+}
+
+.recommended-products {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* 맨 위로 버튼 */
+.back-to-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-to-top-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.back-to-top-btn:hover {
+    background-color: #3d9140;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .product-list-container {
+        padding: 30px 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .product-category h2 {
+        font-size: 24px;
+    }
+
+    .product-image {
+        height: 180px;
+    }
+
+    .product-info {
+        padding: 15px;
+    }
+
+    .final-price {
+        font-size: 18px;
+    }
+
+    .recommended-products {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .price-filter-options {
+        justify-content: center;
+    }
+
+    .sort-options {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .product-category h2 {
+        font-size: 22px;
+    }
+
+    .product-category::after {
+        width: 60px;
+    }
+
+    .product-image {
+        height: 200px;
+    }
+
+    .pagination a,
+    .pagination span {
+        width: 36px;
+        height: 36px;
+    }
+
+    .back-to-top-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .recommended-products {
+        grid-template-columns: 1fr;
+    }
+
+    .recommended-products-section h3 {
+        font-size: 20px;
+    }
+}

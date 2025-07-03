@@ -103,4 +103,9 @@ public class ReviewServiceImpl implements ReviewService {
             return 0; // 오류 발생 시 0 반환
         }
     }
+
+    @Override
+    public List<ReviewImageDTO> getReviewImages(int reviewId) throws Exception {
+        return reviewDAO.getReviewImages(reviewId);
+    }
 }

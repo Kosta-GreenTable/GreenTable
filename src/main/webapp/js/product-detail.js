@@ -477,69 +477,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   
-  // 빠른 장바구니 담기 버튼
-  const quickAddButtons = document.querySelectorAll(".quick-add");
-  quickAddButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation(); // 부모 요소의 클릭 이벤트 방지 (상품 상세로 이동하는 것 방지)
-      
-      const productId = button.getAttribute('data-product-id');
-      if (!productId) return;
-      
-      console.log(`빠른 장바구니: 상품 ID ${productId}, 수량 1개`);
-      
-      // AJAX 요청으로 장바구니에 상품 추가
-      fetch(`${contextPath}/front?key=cart&methodName=add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `productId=${productId}&quantity=1`
-      })
-      .then(response => {
-        if (!response.ok) throw new Error('서버 응답 오류');
-        return response.json();
-      })
-      .then(data => {
-        console.log('빠른 장바구니 응답:', data);
-        
-        if (data.success) {
-          // 버튼 텍스트 및 스타일 변경으로 직관적인 피드백 제공
-          const originalText = button.innerHTML;
-          button.innerHTML = '<i class="fas fa-check"></i> 담기 완료';
-          button.style.backgroundColor = '#00c471';
-          button.style.color = 'white';
-          
-          // 3초 후 원래 상태로 복원
-          setTimeout(() => {
-            button.innerHTML = originalText;
-            button.style.backgroundColor = '';
-            button.style.color = '';
-          }, 2000);
-          
-          // 장바구니 아이콘 업데이트 (옵션)
-          const cartCount = document.querySelector('.cart-count');
-          if (cartCount) {
-            cartCount.textContent = data.cartCount || parseInt(cartCount.textContent || '0') + 1;
-          }
-        } else {
-          if (data.needLogin) {
-            if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-              window.location.href = `${contextPath}/front?key=user&methodName=loginForm`;
-            }
-          } else {
-            alert(data.message || "장바구니에 상품을 추가할 수 없습니다.");
-          }
-        }
-      })
-      .catch(error => {
-        console.error('장바구니 추가 중 오류 발생:', error);
-        alert("장바구니 추가 중 오류가 발생했습니다. 다시 시도해주세요.");
-      });
-    });
-  });
-
   // 초기 금액 설정
   updateTotalPrice();
   

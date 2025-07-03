@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  greentable_mysql:
+    image: mysql:8.0
+    container_name: greentable_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: greentable123
+      MYSQL_DATABASE: greentable
+      MYSQL_USER: greentable
+      MYSQL_PASSWORD: greentable123
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: unless-stopped
+    networks:
+      - greentable_network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-pgreentable123",
+        ]
+      timeout: 20s
+      retries: 10
+      interval: 30s
+      start_period: 60s
+
+  greentable_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: greentable_app
+    env_file:
+      - .env
+    depends_on:
+      greentable_mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=greentable_mysql
+      - DB_PORT=3306
+      - DB_NAME=greentable
+      - DB_USERNAME=root
+      - DB_PASSWORD=greentable123
+      - MAIL_USERNAME=${MAIL_USERNAME:-kosta295mail@gmail.com}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-vnjimaiikpaqojsn}
+      - MAIL_SMTP_HOST=${MAIL_SMTP_HOST:-smtp.gmail.com}
+      - MAIL_SMTP_PORT=${MAIL_SMTP_PORT:-587}
+      # AWS S3 설정
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-ap-northeast-2}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME:-greentable-images-your-region}
+      - S3_BASE_URL=${S3_BASE_URL:-https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com}
+      # Tomcat 파일 업로드 제한 완전 해제 (FileCountLimitExceededException 방지)
+      - CATALINA_OPTS=-Dorg.apache.tomcat.util.http.fileupload.FileUploadBase.FILE_COUNT_MAX=-1 -Dorg.apache.tomcat.util.http.fileupload.FileUploadBase.SIZE_MAX=-1 -Dorg.apache.tomcat.util.http.fileupload.FileUploadBase.FILE_SIZE_MAX=-1 -Djakarta.servlet.http.fileupload.FileUploadBase.FILE_COUNT_MAX=-1 -Djakarta.servlet.http.fileupload.FileUploadBase.SIZE_MAX=-1 -Djakarta.servlet.http.fileupload.FileUploadBase.FILE_SIZE_MAX=-1 -Djakarta.servlet.multipart.maxFileSize=-1 -Djakarta.servlet.multipart.maxRequestSize=-1 -Djakarta.servlet.multipart.fileSizeThreshold=0 -Dorg.apache.tomcat.util.http.fileupload.impl.FileItemIteratorImpl.FILE_COUNT_MAX=-1 -Dorg.apache.tomcat.util.http.fileupload.impl.FileItemStreamImpl.FILE_COUNT_MAX=-1 -Dfile.encoding=UTF-8
+    restart: unless-stopped
+    networks:
+      - greentable_network
+
+volumes:
+  mysql_data:
+
+networks:
+  greentable_network:
+    driver: bridge

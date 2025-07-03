@@ -1,6 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="site.greentable.util.ImageUtil" %>
+<%@ page import="java.lang.System" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -45,7 +54,8 @@
                                         <c:if test="${image.main}">
                                             <div class="main-image-container">
                                                 <h4>대표 이미지</h4>
-                                                <img src="${pageContext.request.contextPath}/assets/images/products/${image.imageName}" alt="${product.name} 대표 이미지">
+                                                <!-- S3 전용 이미지 URL -->
+                                                <img src="${s3BaseUrl}/${image.imageName}" alt="${product.name} 대표 이미지">
                                             </div>
                                         </c:if>
                                     </c:forEach>
@@ -53,7 +63,7 @@
                                 <c:otherwise>
                                     <div class="main-image-container">
                                         <h4>대표 이미지</h4>
-                                        <img src="${pageContext.request.contextPath}/assets/images/no-image.jpg" alt="이미지 없음">
+                                        <img src="${s3BaseUrl}/products/no-image.jpg" alt="이미지 없음">
                                     </div>
                                 </c:otherwise>
                             </c:choose>
@@ -67,7 +77,8 @@
                                     <c:if test="${not image.main}">
                                         <c:set var="hasAdditionalImages" value="true" />
                                         <div class="additional-image">
-                                            <img src="${pageContext.request.contextPath}/assets/images/products/${image.imageName}" alt="${product.name} 추가 이미지">
+                                            <!-- S3 전용 이미지 URL -->
+                                            <img src="${s3BaseUrl}/${image.imageName}" alt="${product.name} 추가 이미지">
                                         </div>
                                     </c:if>
                                 </c:forEach>

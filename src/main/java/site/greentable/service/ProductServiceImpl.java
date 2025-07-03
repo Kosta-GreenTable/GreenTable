@@ -198,9 +198,64 @@ public class ProductServiceImpl implements ProductService {
     public int getTotalProductCount() throws SQLException {
         return productDAO.getTotalProductCount();
     }
-    
+
     @Override
     public List<Product> getRecommendedProducts(int productId, int limit) throws SQLException {
         return productDAO.selectRecommendedProducts(productId, limit);
+    }
+
+    @Override
+    public List<Product> searchProducts(String query, int pageNo) throws SQLException {
+        return productDAO.searchProducts(query, pageNo);
+    }
+
+    @Override
+    public int getSearchTotalPages(String query) throws SQLException {
+        int totalCount = productDAO.getSearchResultCount(query);
+        return (int) Math.ceil((double) totalCount / PAGE_SIZE);
+    }
+
+    @Override
+    public List<Product> sortProductsByNewest(List<Product> products) {
+        if (products == null || products.isEmpty()) {
+            return products;
+        }
+
+        // 상품 등록일(상품 ID가 클수록 최신)의 내림차순으로 정렬
+        products.sort((p1, p2) -> Integer.compare(p2.getProductId(), p1.getProductId()));
+        return products;
+    }
+
+    @Override
+    public List<Product> sortProductsByPriceAsc(List<Product> products) {
+        if (products == null || products.isEmpty()) {
+            return products;
+        }
+
+        // 할인된 가격의 오름차순으로 정렬
+        products.sort((p1, p2) -> Integer.compare(p1.getDiscountedPrice(), p2.getDiscountedPrice()));
+        return products;
+    }
+
+    @Override
+    public List<Product> sortProductsByPriceDesc(List<Product> products) {
+        if (products == null || products.isEmpty()) {
+            return products;
+        }
+
+        // 할인된 가격의 내림차순으로 정렬
+        products.sort((p1, p2) -> Integer.compare(p2.getDiscountedPrice(), p1.getDiscountedPrice()));
+        return products;
+    }
+
+    @Override
+    public List<Product> sortProductsByDiscount(List<Product> products) {
+        if (products == null || products.isEmpty()) {
+            return products;
+        }
+
+        // 할인율의 내림차순으로 정렬
+        products.sort((p1, p2) -> Integer.compare(p2.getDiscountRate(), p1.getDiscountRate()));
+        return products;
     }
 }

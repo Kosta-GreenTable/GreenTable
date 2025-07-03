@@ -113,12 +113,62 @@ public interface ProductService {
      * 전체 상품 개수 조회
      */
     int getTotalProductCount() throws SQLException;
-    
+
     /**
      * 현재 상품과 동일한 카테고리의 다른 상품 중 몇 개를 추천 상품으로 가져옵니다.
+     * 
      * @param productId 현재 상품의 ID
-     * @param limit 가져올 추천 상품 수
+     * @param limit     가져올 추천 상품 수
      * @return 추천 상품 목록
      */
     List<Product> getRecommendedProducts(int productId, int limit) throws SQLException;
+
+    /**
+     * 검색어로 상품 검색 (페이징)
+     * 
+     * @param query  검색어
+     * @param pageNo 페이지 번호
+     * @return 검색 결과 상품 목록
+     */
+    List<Product> searchProducts(String query, int pageNo) throws SQLException;
+
+    /**
+     * 검색 결과의 총 페이지 수 계산
+     * 
+     * @param query 검색어
+     * @return 총 페이지 수
+     */
+    int getSearchTotalPages(String query) throws SQLException;
+
+    /**
+     * 상품 목록을 최신순으로 정렬
+     * 
+     * @param products 정렬할 상품 목록
+     * @return 정렬된 상품 목록
+     */
+    List<Product> sortProductsByNewest(List<Product> products);
+
+    /**
+     * 상품 목록을 가격 오름차순으로 정렬
+     * 
+     * @param products 정렬할 상품 목록
+     * @return 정렬된 상품 목록
+     */
+    List<Product> sortProductsByPriceAsc(List<Product> products);
+
+    /**
+     * 상품 목록을 가격 내림차순으로 정렬
+     * 
+     * @param products 정렬할 상품 목록
+     * @return 정렬된 상품 목록
+     */
+    List<Product> sortProductsByPriceDesc(List<Product> products);
+
+    /**
+     * 상품 목록을 할인율 높은순으로 정렬
+     * 
+     * @param products 정렬할 상품 목록
+     * @return 정렬된 상품 목록
+     */
+    List<Product> sortProductsByDiscount(List<Product> products);
 }

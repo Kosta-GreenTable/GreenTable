@@ -36,6 +36,13 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentIndex = 0;
     totalPagesEl.textContent = bannerEvents.length;
     
+    // 터치 이벤트를 위한 변수들
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    // 배너 자동 슬라이드 타이머
+    let autoSlideTimer;
+    
     // 배너 초기 렌더링
     function renderBanner() {
       console.log('배너 렌더링 시작...');
@@ -73,45 +80,77 @@ document.addEventListener("DOMContentLoaded", function() {
       currentPageEl.textContent = currentIndex + 1;
     }
     
-    // 이벤트 핸들러
-    leftArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-      console.log('왼쪽 화살표 클릭됨');
+    // 배너 이전/다음 표시
+    function showPrevBanner() {
+      console.log('이전 배너 표시');
       currentIndex = (currentIndex - 1 + bannerEvents.length) % bannerEvents.length;
       updateBanner();
-    });
+    }
     
-    rightArrow.addEventListener('click', (e) => {
-      e.preventDefault();
-      console.log('오른쪽 화살표 클릭됨');
+    function showNextBanner() {
+      console.log('다음 배너 표시');
       currentIndex = (currentIndex + 1) % bannerEvents.length;
       updateBanner();
-    });
+    }
     
-    // 자동 슬라이드 기능
-    let slideInterval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % bannerEvents.length;
-      updateBanner();
-    }, 5000);
+    // 이벤트 핸들러 등록
+    function setupEventHandlers() {
+      leftArrow.addEventListener('click', showPrevBanner);
+      rightArrow.addEventListener('click', showNextBanner);
+      
+      // 터치 이벤트 처리
+      bannerSlider.addEventListener('touchstart', handleTouchStart, { passive: true });
+      bannerSlider.addEventListener('touchend', handleTouchEnd, { passive: true });
+      
+      // 마우스 이벤트 처리 (데스크톱)
+      bannerSlider.addEventListener('mouseenter', pauseAutoSlide);
+      bannerSlider.addEventListener('mouseleave', startAutoSlide);
+      
+      // 자동 슬라이드 시작
+      startAutoSlide();
+    }
     
-    // 배너에 마우스를 올리면 자동 슬라이드 정지
-    bannerSlider.addEventListener('mouseenter', () => {
-      console.log('배너에 마우스 올림 - 자동 슬라이드 정지');
-      clearInterval(slideInterval);
-    });
+    // 터치 이벤트 핸들러
+    function handleTouchStart(e) {
+      touchStartX = e.changedTouches[0].screenX;
+      pauseAutoSlide(); // 터치 시작 시 자동 슬라이드 일시 중지
+    }
     
-    // 배너에서 마우스가 벗어나면 자동 슬라이드 재개
-    bannerSlider.addEventListener('mouseleave', () => {
-      console.log('배너에서 마우스 벗어남 - 자동 슬라이드 재개');
-      clearInterval(slideInterval); // 기존 인터벌 제거 (중복 방지)
-      slideInterval = setInterval(() => {
-        currentIndex = (currentIndex + 1) % bannerEvents.length;
-        updateBanner();
-      }, 5000);
-    });
+    function handleTouchEnd(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+      startAutoSlide(); // 터치 종료 시 자동 슬라이드 재개
+    }
+    
+    // 스와이프 처리
+    function handleSwipe() {
+      const SWIPE_THRESHOLD = 50; // 스와이프로 인식할 최소 거리
+      
+      if (touchStartX - touchEndX > SWIPE_THRESHOLD) {
+        // 왼쪽으로 스와이프: 다음 배너
+        showNextBanner();
+      } else if (touchEndX - touchStartX > SWIPE_THRESHOLD) {
+        // 오른쪽으로 스와이프: 이전 배너
+        showPrevBanner();
+      }
+    }
+    
+    // 자동 슬라이드 시작
+    function startAutoSlide() {
+      // 기존 타이머 제거
+      clearInterval(autoSlideTimer);
+      // 새 타이머 설정 (5초마다 다음 배너)
+      autoSlideTimer = setInterval(showNextBanner, 5000);
+    }
+    
+    // 자동 슬라이드 일시 중지
+    function pauseAutoSlide() {
+      clearInterval(autoSlideTimer);
+    }
     
     // 최초 렌더링
     console.log('배너 초기 렌더링 시작');
     renderBanner();
+    setupEventHandlers();
     console.log('direct-event-loader.js 실행 완료');
 });

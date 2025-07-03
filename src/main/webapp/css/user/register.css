@@ -21,6 +21,25 @@
   color: #333;
 }
 
+/* 메시지 스타일 */
+.success-message {
+  color: #28a745;
+  font-size: 13px;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
 /* 회원가입 단계 표시 */
 .register-step {
   display: flex;
@@ -359,6 +378,7 @@
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -489,7 +509,7 @@
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 /* 반응형 스타일 */

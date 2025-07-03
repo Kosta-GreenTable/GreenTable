@@ -38,4 +38,13 @@ public interface ReviewService {
      * @return 주문 상세 ID (없으면 0 반환)
      */
     int getLatestOrderDetailId(int userId, int productId) throws Exception;
+
+    /**
+     * 리뷰에 연결된 이미지 목록을 가져옵니다.
+     * 
+     * @param reviewId 리뷰 ID
+     * @return 리뷰 이미지 목록
+     * @throws Exception 데이터 조회 중 오류 발생시
+     */
+    List<ReviewImageDTO> getReviewImages(int reviewId) throws Exception;
 }

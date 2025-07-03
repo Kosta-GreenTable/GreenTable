@@ -13,7 +13,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
     >
     <button
       class="btn-danger"
-      onclick="location.href='${pageContext.request.contextPath}/front?key=user&methodName=logout'"
+      onclick="location.href='${pageContext.request.contextPath}/front?key=admin&methodName=logout'"
     >
       <i class="fas fa-sign-out-alt"></i> 로그아웃
     </button>

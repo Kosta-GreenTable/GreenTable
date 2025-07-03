@@ -3,6 +3,28 @@ build/
 .classpath
 .project
 .git/
-env.properties
 /bin/
 
+# 환경 설정 파일들 (민감한 정보 포함)
+env.properties
+.env
+resources/env.properties
+resources/dbQuery.properties
+resources/database.properties
+
+# 빌드 산출물
+*.war
+*.jar
+logs/
+
+# Docker 관련 (민감한 정보가 있을 경우)
+setenv.sh
+
+# IDE 관련
+.idea/
+*.iml
+.vscode/
+
+# OS 관련
+.DS_Store
+Thumbs.db
