@@ -18,33 +18,33 @@ import site.greentable.exception.NotFoundException;
 import site.greentable.util.DbUtil;
 
 public class OrderServiceImpl implements OrderService {
-	OrderDAO orderDao = new OrderDAOImpl();
-	ProductDAO productDao = new ProductDAOImpl();
+    OrderDAO orderDao = new OrderDAOImpl();
+    ProductDAO productDao = new ProductDAOImpl();
 
-	@Override
-	public boolean processOrder(List<CartDTO> orderItems, Map<String, Object> orderData)
-			throws SQLException {
-		Connection con = null;
+    @Override
+    public boolean processOrder(List<CartDTO> orderItems, Map<String, Object> orderData)
+            throws SQLException {
+        Connection con = null;
         boolean result = false;
-        
+
         try {
             // 1. 트랜잭션 시작
             con = DbUtil.getConnection();
             con.setAutoCommit(false);
-            
+
             System.out.println("orderService - orderData : " + orderData);
-            
+
             // 2. 주문 시퀀스 생성
             int orderId = orderDao.createOrderSeq(con);
-            
+
             // 3. 주문 정보 저장
-            orderDao.insertOrder(con, orderId,orderData);
-            
+            orderDao.insertOrder(con, orderId, orderData);
+
             // 4. 주문 상세 정보 저장
             for (CartDTO item : orderItems) {
                 orderDao.insertOrderDetail(con, orderId, item);
             }
-            
+
             // 5. 결제 정보 저장
             PaymentDTO paymentDTO = new PaymentDTO();
             paymentDTO.setOrderId(orderId);
@@ -53,66 +53,96 @@ public class OrderServiceImpl implements OrderService {
             paymentDTO.setPaymentStatus((String) orderData.get("paymentStatus"));
             paymentDTO.setImpUid((String) orderData.get("impUid"));
             paymentDTO.setMerchantUid((String) orderData.get("merchantUid"));
-            
+
             orderDao.insertPayment(con, paymentDTO);
-            
-            
+
             // 6. 회원인 경우 사용자 정보 업데이트
             Integer userId = (Integer) orderData.get("userId");
             if (userId != null && userId > 0) {
                 // 누적 주문금액, 주문횟수 업데이트
                 orderDao.updateUserOrderInfo(con, userId, (Integer) orderData.get("totalAmount"));
-                
+
                 // 포인트 사용 처리
                 Integer usedPoint = (Integer) orderData.getOrDefault("usedPoint", 0);
                 if (usedPoint > 0) {
-                	orderDao.updateUserPoint(con, userId, usedPoint);
+                    orderDao.updateUserPoint(con, userId, usedPoint);
                 }
             }
-            
+
             // 7. 트랜잭션 커밋
             con.commit();
             result = true;
-            
+
         } catch (Exception e) {
             // 예외 발생 시 롤백
-            if (con != null) con.rollback();
+            if (con != null)
+                con.rollback();
             throw e;
         } finally {
             if (con != null) {
                 con.setAutoCommit(true);
                 con.close();
             }
-        }       
+        }
         return result;
-	}
+    }
 
-	
-	@Override
-	public CartDTO getProductDetail(int productId) throws SQLException {
-		Product product = productDao.selectProductDetail(productId);
-		if (product != null) {
-			CartDTO cart = new CartDTO(product.getName(), productId, product.getPrice(), 
-										product.getDiscountRate(), product.getMainImageName());
-			return cart;
-		} else {
-			return null;
-		}
-	}
+    @Override
+    public CartDTO getProductDetail(int productId) throws SQLException {
+        Product product = productDao.selectProductDetail(productId);
+        if (product != null) {
+            CartDTO cart = new CartDTO(product.getName(), productId, product.getPrice(),
+                    product.getDiscountRate(), product.getMainImageName());
+            return cart;
+        } else {
+            return null;
+        }
+    }
 
+    @Override
+    public List<OrderDTO> getOrdersByUserId(int userId) throws SQLException {
+        return orderDao.selectOrdersByUser(userId);
+    }
 
-	@Override
-	public List<OrderDTO> getOrdersByUserId(int userId) throws SQLException {
-		return orderDao.selectOrdersByUser(userId);
-	}
+    @Override
+    public OrderDTO getGuestOrder(String merchantUid, String guestPassword) throws SQLException, NotFoundException {
+        OrderDTO order = orderDao.selectGuestOrder(merchantUid, guestPassword);
+        if (order == null)
+            throw new NotFoundException("주문번호 또는 비밀번호가 일치하지 않습니다.");
+        return order;
+    }
 
+    @Override
+    public List<OrderDTO> getCancelledOrdersByUserId(Integer userId, String period, String status, String search,
+            int page) throws SQLException {
+        // 페이지당 10개씩 표시
+        int pageSize = 10;
+        int offset = (page - 1) * pageSize;
 
-	@Override
-	public OrderDTO getGuestOrder(String merchantUid, String guestPassword) throws SQLException, NotFoundException {
-		OrderDTO order = orderDao.selectGuestOrder(merchantUid, guestPassword);
-		if(order == null) throw new NotFoundException("주문번호 또는 비밀번호가 일치하지 않습니다.");
-		return order;
-	}
-	
+        // 취소/환불 주문 목록 조회 (현재는 기본 주문 목록에서 취소 상태만 필터링)
+        List<OrderDTO> allOrders = orderDao.selectOrdersByUser(userId);
+        return allOrders.stream()
+                .filter(order -> order.getOrderStatus().contains("취소") || order.getOrderStatus().contains("환불"))
+                .skip(offset)
+                .limit(pageSize)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public int getCancelledOrdersCount(Integer userId, String period, String status, String search)
+            throws SQLException {
+        // 취소/환불 주문 총 개수 조회 (현재는 기본 주문 목록에서 취소 상태만 필터링)
+        List<OrderDTO> allOrders = orderDao.selectOrdersByUser(userId);
+        return (int) allOrders.stream()
+                .filter(order -> order.getOrderStatus().contains("취소") || order.getOrderStatus().contains("환불"))
+                .count();
+    }
+
+    @Override
+    public OrderDTO getOrderDetailById(int orderId) throws SQLException {
+        // 주문 상세 정보 조회 (현재는 기본 구현 - 실제로는 OrderDAO에 새 메서드 필요)
+        // 임시로 빈 OrderDTO 반환
+        return new OrderDTO();
+    }
 
 }

@@ -80,6 +80,14 @@
     padding: 0 20px;
 }
 
+/* 농장 위치 섹션 스타일 */
+.farm-location-section {
+    background-color: #f9f9f9;
+    padding: 60px 20px;
+    border-radius: 10px;
+    margin: 50px auto;
+}
+
 /* 품질 관리 섹션 스타일 - 수정 */
 .quality-control-section {
     background-color: #f9f9f9;
@@ -163,7 +171,7 @@
     transform: scale(1.03);
 }
 
-/* 농가 위치 정보 */
+/* 농가 위치 정보 스타일 */
 .farm-location-address {
     margin-bottom: 20px;
     font-size: 16px;
@@ -178,17 +186,110 @@
     font-size: 18px;
 }
 
+/* 지도 스타일 */
 .farm-map {
+    width: 100%;
     height: 400px;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border: 2px solid #e8e8e8;
+    background-color: #f8f8f8;
+    margin-bottom: 20px;
 }
 
+/* 지도 에러 스타일 */
 .map-error {
-    padding: 30px;
-    text-align: center;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     color: #e74c3c;
+    font-size: 16px;
+    text-align: center;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.map-error i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: #e74c3c;
+}
+
+.map-error p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* 커스텀 인포윈도우 스타일 */
+.custom-infowindow {
+    padding: 10px;
+    font-family: 'Malgun Gothic', sans-serif;
+    min-width: 200px;
+}
+
+.infowindow-title {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.infowindow-address {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* 지도 링크 버튼 스타일 */
+.map-links {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.kakao-map-btn,
+.directions-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.kakao-map-btn {
+    background-color: #ffeb3b;
+    color: #333;
+    border-color: #ffeb3b;
+}
+
+.kakao-map-btn:hover {
+    background-color: #fdd835;
+    border-color: #fdd835;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.directions-btn {
+    background-color: #00c471;
+    color: #fff;
+    border-color: #00c471;
+}
+
+.directions-btn:hover {
+    background-color: #00a85a;
+    border-color: #00a85a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* 제품 목록 스타일 */
@@ -309,8 +410,9 @@
 /* 농가 리스트 스타일 */
 .farm-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4열로 통일 */
+    gap: 30px;
     margin-top: 30px;
 }
 
@@ -343,10 +445,22 @@
 }
 
 /* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .farm-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+}
+
 @media (max-width: 992px) {
     .quality-steps {
         grid-template-columns: repeat(2, 1fr);
         max-width: 700px;
+    }
+
+    .farm-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
     }
 }
 
@@ -375,6 +489,21 @@
     .farm-banner-overlay h1 {
         font-size: 24px;
     }
+
+    .farm-map {
+        height: 300px;
+    }
+
+    .map-links {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .kakao-map-btn,
+    .directions-btn {
+        width: 200px;
+        justify-content: center;
+    }
 }
 
 @media (max-width: 576px) {
@@ -385,6 +514,14 @@
 
     .quality-step {
         padding: 20px 15px;
+    }
+
+    .farm-location-section {
+        padding: 40px 15px;
+    }
+
+    .map-links {
+        gap: 10px;
     }
 }
 
@@ -407,5 +544,17 @@
 
     .farm-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .farm-map {
+        height: 250px;
+    }
+
+    .kakao-map-btn,
+    .directions-btn {
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 13px;
     }
 }

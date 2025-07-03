@@ -4,6 +4,15 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page import="site.greentable.util.ImageUtil" %>
+<%@ page import="java.lang.System" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 	<jsp:include page="/common/header.jsp"/>
 <!DOCTYPE html>
 <html>
@@ -46,7 +55,9 @@
       		<tr data-product-id="${cart.productId}" >
 		  		<td><input type="checkbox" class="cart-checkbox" checked></td>
 		  		<td class="product-info">
-					<img src="${cart.imageName}" alt="상품 이미지">
+					<!-- S3 전용 이미지 URL -->
+					<img src="${s3BaseUrl}/${cart.imageName}" alt="상품 이미지"
+					     onerror="this.onerror=null; this.src='${s3BaseUrl}/products/no-image.jpg';">
 					<div>
 			  			<p>${cart.productName}</p>
 					</div>

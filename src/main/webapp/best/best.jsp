@@ -2,6 +2,15 @@
 pageEncoding="UTF-8"%> <%@ taglib prefix="c"
 uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib prefix="fmt"
 uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="site.greentable.util.ImageUtil" %>
+<%@ page import="java.lang.System" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -33,18 +42,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       // 컨텍스트 경로를 JavaScript 변수로 설정
       var contextPath = "${pageContext.request.contextPath}";
     </script>
-    <style>
-      /* 카테고리 페이지에서만 적용되는 이벤트 배너 스타일 */
-      .main-banner .banner-container {
-        height: 250px !important; /* 400px에서 250px로 변경 */
-      }
-
-      /* 화살표 버튼 크기 조정 */
-      .main-banner .arrow {
-        width: 32px;
-        height: 32px;
-      }
-    </style>
   </head>
   <body>
     <!-- 헤더 인클루드 -->
@@ -106,14 +103,16 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               <div class="product-image">
                 <c:choose>
                   <c:when test="${not empty product.mainImageName}">
+                    <!-- S3 전용 이미지 URL -->
                     <img
-                      src="${pageContext.request.contextPath}/assets/images/products/${product.mainImageName}"
+                      src="${s3BaseUrl}/${product.mainImageName}"
                       alt="${product.name}"
+                      onerror="this.onerror=null; this.src='${s3BaseUrl}/products/no-image.jpg';"
                     />
                   </c:when>
                   <c:otherwise>
                     <img
-                      src="${pageContext.request.contextPath}/assets/images/no-image.jpg"
+                      src="${s3BaseUrl}/products/no-image.jpg"
                       alt="${product.name}"
                     />
                   </c:otherwise>

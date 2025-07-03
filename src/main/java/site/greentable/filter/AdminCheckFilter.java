@@ -32,9 +32,48 @@ public class AdminCheckFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 
-		String key = request.getParameter("key");
-		String methodName = request.getParameter("methodName");
 		String requestURI = req.getRequestURI();
+
+		// 정적 자원(CSS, JS, 이미지 등)에 대한 요청은 필터링하지 않음
+		if (requestURI.endsWith(".css") || requestURI.endsWith(".js") ||
+				requestURI.endsWith(".png") || requestURI.endsWith(".jpg") ||
+				requestURI.endsWith(".jpeg") || requestURI.endsWith(".gif") ||
+				requestURI.endsWith(".ico") || requestURI.contains("/css/") ||
+				requestURI.contains("/js/") || requestURI.contains("/images/") ||
+				requestURI.contains("/assets/")) {
+			chain.doFilter(request, response);
+			return;
+		}
+
+		String key = null;
+		String methodName = null;
+
+		// 멀티파트 요청인지 확인
+		String contentType = req.getContentType();
+		boolean isMultipart = contentType != null && contentType.toLowerCase().startsWith("multipart/");
+
+		if (isMultipart) {
+			// 멀티파트 요청의 경우 쿼리 스트링에서 파라미터 추출
+			String queryString = req.getQueryString();
+			if (queryString != null) {
+				String[] params = queryString.split("&");
+				for (String param : params) {
+					String[] keyValue = param.split("=");
+					if (keyValue.length == 2) {
+						if ("key".equals(keyValue[0])) {
+							key = keyValue[1];
+						} else if ("methodName".equals(keyValue[0])) {
+							methodName = keyValue[1];
+						}
+					}
+				}
+			}
+		} else {
+			// 일반 요청의 경우 기존 방식 사용
+			key = request.getParameter("key");
+			methodName = request.getParameter("methodName");
+		}
+
 		// key나 methodName이 null이거나 빈문자열일경우 에러발생
 		if ("".equals(key) || key == null || "".equals(methodName) || methodName == null) {
 
@@ -53,26 +92,26 @@ public class AdminCheckFilter implements Filter {
 		}
 
 		/**
-		if (key.equals("admin")) {
-
-			HttpSession session = req.getSession();
-
-			if (session.getAttribute("userId") != "admin") {
-				// 동기 요청일 경우 에러 메시지 세팅 후 403에러페이지로 포워딩한다
-				if (requestURI.contains("front")) {
-					req.setAttribute("error", new Exception("관리자만 접근 가능합니다"));
-					req.getRequestDispatcher("error/403.jsp").forward(request, response);
-					// 아닐경우 그냥 상태코드 세팅하고 에러메시지 전송
-				} else {
-					res.setStatus(HttpServletResponse.SC_FORBIDDEN);
-					Map<String, String> jsonMap = new HashMap<>();
-					jsonMap.put("errorMsg", "관리자만 접근 가능합니다");
-					res.getWriter().print(gson.toJson(jsonMap));
-				}
-				return;// 함수를 빠져나가라
-			}
-		}
-		**/
+		 * if (key.equals("admin")) {
+		 * 
+		 * HttpSession session = req.getSession();
+		 * 
+		 * if (session.getAttribute("userId") != "admin") {
+		 * // 동기 요청일 경우 에러 메시지 세팅 후 403에러페이지로 포워딩한다
+		 * if (requestURI.contains("front")) {
+		 * req.setAttribute("error", new Exception("관리자만 접근 가능합니다"));
+		 * req.getRequestDispatcher("error/403.jsp").forward(request, response);
+		 * // 아닐경우 그냥 상태코드 세팅하고 에러메시지 전송
+		 * } else {
+		 * res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		 * Map<String, String> jsonMap = new HashMap<>();
+		 * jsonMap.put("errorMsg", "관리자만 접근 가능합니다");
+		 * res.getWriter().print(gson.toJson(jsonMap));
+		 * }
+		 * return;// 함수를 빠져나가라
+		 * }
+		 * }
+		 **/
 
 		chain.doFilter(request, response);
 	}

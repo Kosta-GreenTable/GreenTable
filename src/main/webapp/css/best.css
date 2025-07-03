@@ -1,27 +1,32 @@
-/* 베스트 상품 배지 스타일 */
+/* 베스트 상품 배지 스타일 개선 */
 .best-badge {
   position: absolute;
   background-color: #ff6b6b;
   color: white;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 15px;
   z-index: 10;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* BEST 상위 3개 특별 스타일 */
 .product-item[data-best-rank="1"] .best-badge {
   background-color: #FF4500;
+  font-size: 16px;
+  padding: 7px 14px;
 }
 
 .product-item[data-best-rank="2"] .best-badge {
   background-color: #FF4500;
+  font-size: 15px;
+  padding: 6px 13px;
 }
 
 .product-item[data-best-rank="3"] .best-badge {
   background-color: #FF4500;
+  font-size: 15px;
+  padding: 6px 13px;
 }
 
 /* 정렬 버튼 활성화 스타일 수정 */
@@ -43,6 +48,36 @@
 
 .product-sort button:hover {
   color: #00c471;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 992px) {
+  .best-badge {
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+  }
+
+  .product-item[data-best-rank="1"] .best-badge,
+  .product-item[data-best-rank="2"] .best-badge,
+  .product-item[data-best-rank="3"] .best-badge {
+    font-size: 14px;
+    padding: 5px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .best-badge {
+    padding: 4px 8px;
+    font-size: 13px;
+  }
+
+  .product-item[data-best-rank="1"] .best-badge,
+  .product-item[data-best-rank="2"] .best-badge,
+  .product-item[data-best-rank="3"] .best-badge {
+    font-size: 13px;
+    padding: 4px 10px;
+  }
 }
 
 /* 헤더에 표시되는 BEST 배지 제거 */

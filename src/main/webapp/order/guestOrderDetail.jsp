@@ -2,6 +2,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page import="site.greentable.util.ImageUtil" %>
+<%@ page import="java.lang.System" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <jsp:include page="/common/header.jsp"/>
@@ -44,7 +53,16 @@
                     <c:forEach var="detail" items="${order.orderDetails}">
                         <tr>
                             <td class="product-info">
-                                <img class="product-img" src="${order.mainImageName}" alt="${detail.productName}">
+                                <c:choose>
+                                  <c:when test="${order.mainImageName.startsWith('products/')}">
+                                    <!-- S3 이미지 URL -->
+                                    <img class="product-img" src="${s3BaseUrl}/${order.mainImageName}" alt="${detail.productName}">
+                                  </c:when>
+                                  <c:otherwise>
+                                    <!-- 기존 로컬 이미지 -->
+                                    <img class="product-img" src="${s3BaseUrl}/${order.mainImageName}" alt="${detail.productName}">
+                                  </c:otherwise>
+                                </c:choose>
                                 <div class="product-name">${detail.productName}</div>
                             </td>
                             <td>${detail.quantity}</td>

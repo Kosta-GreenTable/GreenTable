@@ -6,6 +6,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page import="site.greentable.util.ImageUtil" %>
+<%@ page import="java.lang.System" %>
 <%
 	Integer userId = (Integer) session.getAttribute("userId");
     UserDTO user = (UserDTO) session.getAttribute("loginUser");
@@ -15,6 +17,12 @@
     String userPhone = user != null && user.getUserInfoDto() != null ? user.getUserInfoDto().getPhone() : "";
 
     List<CartDTO> orderItems = (List<CartDTO>) session.getAttribute("orderItems");
+    
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
 %>
 <c:if test="${not empty sessionScope.loginUser.userInfoDto.phone}">
   <c:set var="phoneParts" value="${fn:split(sessionScope.loginUser.userInfoDto.phone,'-')}" />
@@ -206,7 +214,16 @@
                         <c:forEach var="item" items="${orderList}">
                             <div class="product-info">
                                 <div class="product-image">
-                                    <img src="${item.imageName}" alt="상품 이미지">
+                                    <c:choose>
+                                      <c:when test="${item.imageName.startsWith('products/')}">
+                                        <!-- S3 이미지 URL -->
+                                        <img src="${s3BaseUrl}/${item.imageName}" alt="상품 이미지">
+                                      </c:when>
+                                      <c:otherwise>
+                                        <!-- 기존 로컬 이미지 -->
+                                        <img src="${s3BaseUrl}/${item.imageName}" alt="상품 이미지">
+                                      </c:otherwise>
+                                    </c:choose>
                                 </div>
                                 <div class="product-description">
                                     <h4>${item.productName}</h4>

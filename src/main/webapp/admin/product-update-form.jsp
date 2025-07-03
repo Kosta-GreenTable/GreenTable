@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="java.lang.System" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -23,13 +31,13 @@
 
             <div class="product-form-container">
                 <div class="form-navigation">
-                    <a href="${pageContext.request.contextPath}/front?key=admin&methodName=productDetail&productId=${product.productId}" class="back-link">
-                        <i class="fas fa-arrow-left"></i> 상품 상세 정보로 돌아가기
+                    <a href="${pageContext.request.contextPath}/front?key=admin&methodName=productList" class="back-link">
+                        <i class="fas fa-arrow-left"></i> 상품 목록으로 돌아가기
                     </a>
                 </div>
 
                 <form action="${pageContext.request.contextPath}/front?key=admin&methodName=productUpdate" method="post" enctype="multipart/form-data" class="product-form" id="productForm">
-                    <!-- 상품 ID (hidden) -->
+                    <!-- 상품 번호 (hidden) -->
                     <input type="hidden" name="productId" value="${product.productId}">
                     
                     <div class="form-section">
@@ -48,6 +56,8 @@
                                 <option value="">카테고리 선택</option>
                                 <option value="도시락" ${product.category == '도시락' ? 'selected' : ''}>도시락</option>
                                 <option value="샐러드" ${product.category == '샐러드' ? 'selected' : ''}>샐러드</option>
+                                <option value="정기배송" ${product.category == '정기배송' ? 'selected' : ''}>정기배송</option>
+                                <option value="베스트" ${product.category == '베스트' ? 'selected' : ''}>베스트</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -99,16 +109,36 @@
                             <label>현재 이미지</label>
                             <div class="current-images">
                                 <c:choose>
-                                    <c:when test="${not empty productImages}">
+                                    <c:when test="${not empty productImages and productImages.size() > 0}">
                                         <div class="image-grid">
-                                            <c:forEach var="image" items="${productImages}">
+                                            <c:forEach var="image" items="${productImages}" varStatus="status">
                                                 <div class="current-image-item">
-                                                    <img src="${pageContext.request.contextPath}/assets/images/products/${image.imageName}" alt="${product.name}">
+                                                    <img src="${s3BaseUrl}/${image.imageName}" alt="${product.name} - 이미지 ${status.index + 1}"
+                                                         onerror="this.onerror=null; this.src='${s3BaseUrl}/products/no-image.jpg';">
                                                     <div class="image-info">
-                                                        ${image.main ? '<span class="main-badge">대표 이미지</span>' : ''}
+                                                        <c:choose>
+                                                            <c:when test="${image.isMain}">
+                                                                <span class="main-badge">대표 이미지</span>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <span class="additional-badge">추가 이미지 ${status.index}</span>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
                                                 </div>
                                             </c:forEach>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${not empty product.mainImageName and product.mainImageName != 'no-image.jpg'}">
+                                        <!-- 기존 단일 이미지 표시 (하위 호환성) -->
+                                        <div class="image-grid">
+                                            <div class="current-image-item">
+                                                <img src="${s3BaseUrl}/${product.mainImageName}" alt="${product.name}"
+                                                     onerror="this.onerror=null; this.src='${s3BaseUrl}/products/no-image.jpg';">
+                                                <div class="image-info">
+                                                    <span class="main-badge">대표 이미지</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </c:when>
                                     <c:otherwise>
@@ -132,10 +162,11 @@
                             <div class="main-image-upload">
                                 <h4>새 대표 이미지</h4>
                                 <div class="image-preview" id="mainImagePreview">
-                                    <img src="${pageContext.request.contextPath}/assets/images/no-image.jpg" alt="대표 이미지 미리보기">
+                                    <img src="${s3BaseUrl}/products/no-image.jpg" alt="대표 이미지 미리보기">
                                 </div>
-                                <input type="file" id="productImage0" name="productImage0" accept="image/*">
-                                <label for="productImage0" class="image-upload-btn">이미지 선택</label>
+                                <!-- 이름 변경 -->
+                                <input type="file" id="mainImage" name="mainImage" accept="image/*">
+                                <label for="mainImage" class="image-upload-btn">이미지 선택</label>
                                 <p class="help-text">권장 크기: 500x500px, 최대 5MB</p>
                             </div>
                             
@@ -144,24 +175,27 @@
                                 <div class="image-upload-grid">
                                     <div class="image-item">
                                         <div class="image-preview" id="additionalImagePreview1">
-                                            <img src="${pageContext.request.contextPath}/assets/images/no-image.jpg" alt="추가 이미지 1 미리보기">
+                                            <img src="${s3BaseUrl}/products/no-image.jpg" alt="추가 이미지 1 미리보기">
                                         </div>
-                                        <input type="file" id="productImage1" name="productImage1" accept="image/*">
-                                        <label for="productImage1" class="image-upload-btn">이미지 선택</label>
+                                        <!-- 이름 변경 -->
+                                        <input type="file" id="image1" name="image1" accept="image/*">
+                                        <label for="image1" class="image-upload-btn">이미지 선택</label>
                                     </div>
                                     <div class="image-item">
                                         <div class="image-preview" id="additionalImagePreview2">
-                                            <img src="${pageContext.request.contextPath}/assets/images/no-image.jpg" alt="추가 이미지 2 미리보기">
+                                            <img src="${s3BaseUrl}/products/no-image.jpg" alt="추가 이미지 2 미리보기">
                                         </div>
-                                        <input type="file" id="productImage2" name="productImage2" accept="image/*">
-                                        <label for="productImage2" class="image-upload-btn">이미지 선택</label>
+                                        <!-- 이름 변경 -->
+                                        <input type="file" id="image2" name="image2" accept="image/*">
+                                        <label for="image2" class="image-upload-btn">이미지 선택</label>
                                     </div>
                                     <div class="image-item">
                                         <div class="image-preview" id="additionalImagePreview3">
-                                            <img src="${pageContext.request.contextPath}/assets/images/no-image.jpg" alt="추가 이미지 3 미리보기">
+                                            <img src="${s3BaseUrl}/products/no-image.jpg" alt="추가 이미지 3 미리보기">
                                         </div>
-                                        <input type="file" id="productImage3" name="productImage3" accept="image/*">
-                                        <label for="productImage3" class="image-upload-btn">이미지 선택</label>
+                                        <!-- 이름 변경 -->
+                                        <input type="file" id="image3" name="image3" accept="image/*">
+                                        <label for="image3" class="image-upload-btn">이미지 선택</label>
                                     </div>
                                 </div>
                                 <p class="help-text">각 이미지 권장 크기: 500x500px, 최대 5MB</p>
@@ -171,7 +205,7 @@
 
                     <div class="form-actions">
                         <button type="submit" class="btn-primary">상품 수정</button>
-                        <button type="button" id="cancelBtn" class="btn-secondary" data-return-url="${pageContext.request.contextPath}/front?key=admin&methodName=productDetail&productId=${product.productId}">취소</button>
+                        <button type="button" id="cancelBtn" class="btn-secondary" data-return-url="${pageContext.request.contextPath}/front?key=admin&methodName=productList">취소</button>
                     </div>
                 </form>
             </div>
@@ -198,7 +232,7 @@
                         // 이미지 미리보기 초기화
                         const previewImages = imageUploadSection.querySelectorAll('.image-preview img');
                         previewImages.forEach(img => {
-                            img.src = '${pageContext.request.contextPath}/assets/images/no-image.jpg';
+                            img.src = '${s3BaseUrl}/products/no-image.jpg';
                         });
                     }
                 });

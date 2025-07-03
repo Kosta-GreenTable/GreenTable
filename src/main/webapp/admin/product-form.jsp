@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%> <%@ taglib prefix="c"
 uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -108,11 +115,17 @@ uri="http://java.sun.com/jsp/jstl/core" %>
               </div>
               <div class="form-group">
                 <label for="kcal">칼로리 (kcal)</label>
-                <input type="number" id="kcal" name="kcal" min="0" />
+                <input type="number" id="kcal" name="kcal" min="0" value="0" />
               </div>
               <div class="form-group">
                 <label for="amount">중량 (g)</label>
-                <input type="number" id="amount" name="amount" min="0" />
+                <input
+                  type="number"
+                  id="amount"
+                  name="amount"
+                  min="0"
+                  value="0"
+                />
               </div>
               <div class="form-group">
                 <label for="nutrition">보관 방법</label>
@@ -131,18 +144,18 @@ uri="http://java.sun.com/jsp/jstl/core" %>
                   <h4>대표 이미지 <span class="required">*</span></h4>
                   <div class="image-preview" id="mainImagePreview">
                     <img
-                      src="${pageContext.request.contextPath}/assets/images/no-image.jpg"
+                      src="${s3BaseUrl}/products/no-image.jpg"
                       alt="대표 이미지 미리보기"
                     />
                   </div>
                   <input
                     type="file"
-                    id="productImage0"
-                    name="productImage0"
+                    id="mainImage"
+                    name="mainImage"
                     accept="image/*"
                     required
                   />
-                  <label for="productImage0" class="image-upload-btn"
+                  <label for="mainImage" class="image-upload-btn"
                     >이미지 선택</label
                   >
                   <p class="help-text">권장 크기: 500x500px, 최대 5MB</p>
@@ -154,51 +167,51 @@ uri="http://java.sun.com/jsp/jstl/core" %>
                     <div class="image-item">
                       <div class="image-preview" id="additionalImagePreview1">
                         <img
-                          src="${pageContext.request.contextPath}/assets/images/no-image.jpg"
+                          src="${s3BaseUrl}/products/no-image.jpg"
                           alt="추가 이미지 1 미리보기"
                         />
                       </div>
                       <input
                         type="file"
-                        id="productImage1"
-                        name="productImage1"
+                        id="image1"
+                        name="image1"
                         accept="image/*"
                       />
-                      <label for="productImage1" class="image-upload-btn"
+                      <label for="image1" class="image-upload-btn"
                         >이미지 선택</label
                       >
                     </div>
                     <div class="image-item">
                       <div class="image-preview" id="additionalImagePreview2">
                         <img
-                          src="${pageContext.request.contextPath}/assets/images/no-image.jpg"
+                          src="${s3BaseUrl}/products/no-image.jpg"
                           alt="추가 이미지 2 미리보기"
                         />
                       </div>
                       <input
                         type="file"
-                        id="productImage2"
-                        name="productImage2"
+                        id="image2"
+                        name="image2"
                         accept="image/*"
                       />
-                      <label for="productImage2" class="image-upload-btn"
+                      <label for="image2" class="image-upload-btn"
                         >이미지 선택</label
                       >
                     </div>
                     <div class="image-item">
                       <div class="image-preview" id="additionalImagePreview3">
                         <img
-                          src="${pageContext.request.contextPath}/assets/images/no-image.jpg"
+                          src="${s3BaseUrl}/products/no-image.jpg"
                           alt="추가 이미지 3 미리보기"
                         />
                       </div>
                       <input
                         type="file"
-                        id="productImage3"
-                        name="productImage3"
+                        id="image3"
+                        name="image3"
                         accept="image/*"
                       />
-                      <label for="productImage3" class="image-upload-btn"
+                      <label for="image3" class="image-upload-btn"
                         >이미지 선택</label
                       >
                     </div>
@@ -223,5 +236,105 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 
     <script src="${pageContext.request.contextPath}/admin/js/admin-script.js"></script>
     <script src="${pageContext.request.contextPath}/admin/js/product-form.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 취소 버튼 이벤트
+        const cancelBtn = document.getElementById("cancelBtn");
+        if (cancelBtn) {
+          cancelBtn.addEventListener("click", function () {
+            if (
+              confirm("작성 중인 내용이 사라집니다. 정말 취소하시겠습니까?")
+            ) {
+              window.location.href =
+                "${pageContext.request.contextPath}/front?key=admin&methodName=productList";
+            }
+          });
+        }
+
+        // 이미지 미리보기 기능
+        function setupImagePreview(inputId, previewId) {
+          const input = document.getElementById(inputId);
+          const preview = document.getElementById(previewId);
+
+          if (input && preview) {
+            input.addEventListener("change", function (e) {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                  const img = preview.querySelector("img");
+                  if (img) {
+                    img.src = e.target.result;
+                  }
+                };
+                reader.readAsDataURL(file);
+              }
+            });
+          }
+        }
+
+        // 모든 이미지 입력에 대해 미리보기 설정
+        setupImagePreview("mainImage", "mainImagePreview");
+        setupImagePreview("image1", "additionalImagePreview1");
+        setupImagePreview("image2", "additionalImagePreview2");
+        setupImagePreview("image3", "additionalImagePreview3");
+
+        // 폼 유효성 검사
+        const form = document.getElementById("productForm");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            const name = document.getElementById("name").value.trim();
+            const category = document.getElementById("category").value;
+            const price = document.getElementById("price").value;
+            const stock = document.getElementById("stock").value;
+
+            if (!name) {
+              alert("상품명을 입력해주세요.");
+              document.getElementById("name").focus();
+              e.preventDefault();
+              return false;
+            }
+
+            if (!category) {
+              alert("카테고리를 선택해주세요.");
+              document.getElementById("category").focus();
+              e.preventDefault();
+              return false;
+            }
+
+            if (!price || price <= 0) {
+              alert("올바른 가격을 입력해주세요.");
+              document.getElementById("price").focus();
+              e.preventDefault();
+              return false;
+            }
+
+            if (!stock || stock < 0) {
+              alert("올바른 재고 수량을 입력해주세요.");
+              document.getElementById("stock").focus();
+              e.preventDefault();
+              return false;
+            }
+
+            // 폼 제출 확인
+            if (!confirm("상품을 등록하시겠습니까?")) {
+              e.preventDefault();
+              return false;
+            }
+          });
+        }
+
+        // 숫자 입력 필드 유효성 검사
+        const numberInputs = document.querySelectorAll('input[type="number"]');
+        numberInputs.forEach((input) => {
+          input.addEventListener("input", function () {
+            if (this.value < 0) {
+              this.value = 0;
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>

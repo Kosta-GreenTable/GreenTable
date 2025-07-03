@@ -1,10 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="site.greentable.util.ImageUtil" %>
+<%@ page import="java.lang.System" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="context-path" content="${pageContext.request.contextPath}">
     <title>그린테이블 관리자 - 상품 관리</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -21,7 +31,8 @@
             <!-- 상단 헤더 포함 -->
             <jsp:include page="common/admin-top-header.jsp">
                 <jsp:param name="pageTitle" value="상품 관리" />
-            </jsp:include>           
+            </jsp:include>
+            
             <div class="product-management">
                 <div class="product-actions">
                     <div style="display: flex; gap: 10px;">
@@ -33,12 +44,14 @@
                             <option value="all">모든 카테고리</option>
                             <option value="도시락">도시락</option>
                             <option value="샐러드">샐러드</option>
+                            <option value="정기배송">정기배송</option>
                         </select>
                         <div class="search-box">
                             <input type="text" id="productSearch" placeholder="상품 검색">
                             <button class="search-btn"><i class="fas fa-search"></i></button>
                         </div>
-                    </div>                </div>
+                    </div>
+                </div>
                 
                 <c:if test="${not empty successMessage || not empty errorMessage}">
                     <div class="alert ${not empty errorMessage ? 'alert-danger' : 'alert-success'}" style="margin-bottom: 20px; padding: 10px; border-radius: 4px; background-color: ${not empty errorMessage ? '#f8d7da' : '#d4edda'}; color: ${not empty errorMessage ? '#721c24' : '#155724'}; border: 1px solid ${not empty errorMessage ? '#f5c6cb' : '#c3e6cb'};">
@@ -66,11 +79,13 @@
                                     <td>${product.productId}</td>
                                     <td class="product-image-cell">
                                         <c:choose>
-                                            <c:when test="${not empty product.mainImage}">
-                                                <img src="${pageContext.request.contextPath}/assets/images/products/${product.mainImage}" alt="${product.name}">
+                                            <c:when test="${not empty product.mainImageName}">
+                                                <!-- S3 전용 이미지 URL -->
+                                                <img src="${s3BaseUrl}/${product.mainImageName}" alt="${product.name}" class="product-thumbnail"
+                                                     onerror="this.onerror=null; this.src='${s3BaseUrl}/products/no-image.jpg';">
                                             </c:when>
                                             <c:otherwise>
-                                                <img src="${pageContext.request.contextPath}/assets/images/no-image.jpg" alt="이미지 없음">
+                                                <img src="${s3BaseUrl}/products/no-image.jpg" alt="이미지 없음" class="product-thumbnail">
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -87,11 +102,18 @@
                                                 -
                                             </c:otherwise>
                                         </c:choose>
-                                    </td>                                    <td class="action-column">
+                                    </td>
+                                    <td class="action-column">
                                         <div class="action-buttons">
-                                            <a href="${pageContext.request.contextPath}/front?key=admin&methodName=productDetail&productId=${product.productId}" class="btn-small btn-info" title="상세보기"><i class="fas fa-eye"></i></a>
-                                            <a href="${pageContext.request.contextPath}/front?key=admin&methodName=productUpdateForm&productId=${product.productId}" class="btn-small btn-secondary" title="수정"><i class="fas fa-edit"></i></a>
-                                            <button class="btn-small btn-danger delete-product" data-id="${product.productId}" title="삭제"><i class="fas fa-trash-alt"></i></button>
+                                            <a href="${pageContext.request.contextPath}/front?key=admin&methodName=productDetail&productId=${product.productId}" class="btn-view" title="상세보기">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="${pageContext.request.contextPath}/front?key=admin&methodName=productUpdateForm&productId=${product.productId}" class="btn-edit" title="수정">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button class="btn-delete delete-product" data-id="${product.productId}" title="삭제">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -104,7 +126,9 @@
                             </c:if>
                         </tbody>
                     </table>
-                </div>                <!-- 페이지네이션 향상된 버전 -->
+                </div>
+                
+                <!-- 페이지네이션 -->
                 <div class="pagination">
                     <c:if test="${not empty totalPages && totalPages > 1}">
                         <ul class="page-numbers">
@@ -138,7 +162,7 @@
                             <!-- 다음 블록으로 이동 -->
                             <c:if test="${endPage < totalPages}">
                                 <li>
-                                    <a href="${pageContext.request.contextPath}/front?key=admin&methodName=productList&page=${startPage + pageCnt.blockcount}" title="다음"><i class="fas fa-angle-right"></i></a>
+                                    <a href="${pageContext.request.contextPath}/front?key=admin&methodName=productList&page=${endPage+1}" title="다음"><i class="fas fa-angle-right"></i></a>
                                 </li>
                             </c:if>
                             
@@ -162,7 +186,7 @@
             <p>정말 이 상품을 삭제하시겠습니까?</p>
             <p>이 작업은 되돌릴 수 없습니다.</p>
             <div class="modal-buttons">
-                <a id="confirmDelete" href="${pageContext.request.contextPath}/front?key=admin&methodName=productDelete&productId=${product.productId}" class="btn-danger">삭제</a>
+                <a id="confirmDelete" href="#" class="btn-danger">삭제</a>
                 <button id="cancelDelete" class="btn-secondary">취소</button>
             </div>
         </div>

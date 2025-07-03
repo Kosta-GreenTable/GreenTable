@@ -20,12 +20,10 @@ import site.greentable.exception.UnAuthorizedException;
 
 /**
  * 모든 요청을 중앙집중적으로 관리해줄 진입점(FrontController) Controller이다.
+ * 
+ * MultipartConfig는 web.xml에서 무제한으로 설정되어 있음
  */
-@MultipartConfig( // 어노테이션을 통해 서블릿이 파일 업로드 기능을 할 수 있도록 웹 컨테이너에 지시
-		maxFileSize = 1024 * 1024 * 5, // 5M - 한 번에 업로드 할 수 있는 파일 크기 제한
-		maxRequestSize = 1024 * 1024 * 50 // 50M -전체 요청의 크기 제한. 기본값은 무제한
-)
-@WebServlet(urlPatterns = "/front", loadOnStartup = 2)
+// @WebServlet(urlPatterns = "/front", loadOnStartup = 2)
 public class DispatcherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -44,14 +42,36 @@ public class DispatcherServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String key = request.getParameter("key");
-		String methodName = request.getParameter("methodName");
+		String key = null;
+		String methodName = null;
+
+		// 멀티파트 요청인지 확인
+		String contentType = request.getContentType();
+		boolean isMultipart = contentType != null && contentType.toLowerCase().startsWith("multipart/");
+
+		if (isMultipart) {
+			// 멀티파트 요청의 경우 쿼리 스트링에서 파라미터 추출
+			String queryString = request.getQueryString();
+			if (queryString != null) {
+				String[] params = queryString.split("&");
+				for (String param : params) {
+					String[] keyValue = param.split("=");
+					if (keyValue.length == 2) {
+						if ("key".equals(keyValue[0])) {
+							key = keyValue[1];
+						} else if ("methodName".equals(keyValue[0])) {
+							methodName = keyValue[1];
+						}
+					}
+				}
+			}
+		} else {
+			// 일반 요청의 경우 기존 방식 사용
+			key = request.getParameter("key");
+			methodName = request.getParameter("methodName");
+		}
+
 		Controller controller = map.get(key);
-
-	
-		
-
-
 
 		System.out.println("==================DispatcherServlet.service() called  ================");
 		System.out.println("key=" + key + ", methodName=" + methodName);
@@ -76,26 +96,26 @@ public class DispatcherServlet extends HttpServlet {
 
 			// Ajax 등에서 이미 직접 출력 처리한 경우
 			if (response.isCommitted()) {
-			    return; // // 이미 응답 끝냈으면 아무것도 하지 말고 종료
+				return; // // 이미 응답 끝냈으면 아무것도 하지 말고 종료
 			}
-			
+
 			if (result == null) {
-			    return; // 응답은 커밋되지 않았지만, 처리할 것도 없음
+				return; // 응답은 커밋되지 않았지만, 처리할 것도 없음
 			}
-			
+
 			if (!(result instanceof ModelAndView)) {
-			    throw new NotFoundException("Controller 메서드가 ModelAndView를 반환하지 않았습니다: "
-			        + con.getClass().getName() + "#" + methodName);
+				throw new NotFoundException("Controller 메서드가 ModelAndView를 반환하지 않았습니다: "
+						+ con.getClass().getName() + "#" + methodName);
 			}
-			
+
 			ModelAndView mv = (ModelAndView) result;
 
 			if (mv.isRedirect()) {
-			    response.sendRedirect(mv.getViewName());
+				response.sendRedirect(mv.getViewName());
 			} else {
-			    request.getRequestDispatcher(mv.getViewName()).forward(request, response);
+				request.getRequestDispatcher(mv.getViewName()).forward(request, response);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("error", e.getCause());

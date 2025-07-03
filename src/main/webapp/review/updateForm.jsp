@@ -1,5 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="site.greentable.util.ImageUtil" %>
+<%@ page import="java.lang.System" %>
+<%
+    String s3BaseUrl = System.getenv("S3_BASE_URL");
+    if (s3BaseUrl == null) {
+        s3BaseUrl = "https://greentable-images-your-region.s3.ap-northeast-2.amazonaws.com";
+    }
+    pageContext.setAttribute("s3BaseUrl", s3BaseUrl);
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -59,7 +68,8 @@
                             <c:if test="${not empty review.images}">
                                 <c:forEach var="image" items="${review.images}">
                                     <div class="photo-preview-item">
-                                        <img src="${pageContext.request.contextPath}/uploads/reviews/${image.realName}" alt="리뷰 이미지">
+                                        <img src="${s3BaseUrl}/${image.realName}" alt="리뷰 이미지"
+                                             onerror="this.onerror=null; this.src='${s3BaseUrl}/reviews/no-image.jpg';">
                                         <button type="button" class="remove-photo" data-image-id="${image.reviewImageId}">&times;</button>
                                     </div>
                                 </c:forEach>
