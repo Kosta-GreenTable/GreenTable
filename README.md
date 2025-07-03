@@ -1,6 +1,8 @@
 ## 📌 GreenTable: 친환경 농산물 쇼핑몰 SaaS
 
-![GreenTable Main Image](https://github.com/your-repo/assets/main-image.png)
+<p align="center">
+  <img src="https://github.com/Kosta-GreenTable/GreenTable/blob/main/src/main/webapp/image/logo_1.png?raw=true" alt="GreenTable Main Image" />
+</p>
 
 </br>
 
@@ -8,7 +10,7 @@
 
 **GreenTable**은 소비자와 생산자 간의 신뢰를 기반으로 한 **친환경 농산물 쇼핑몰 SaaS 플랫폼**입니다.  
 기존의 온라인 마켓에서는 친환경 인증 여부 확인이 어렵고, 중간 유통 과정이 복잡하여 생산자는 제값을 받기 힘들며, 소비자 또한 신뢰할 수 있는 제품을 구매하기 어려운 상황입니다.  
-저희는 이러한 문제점을 해결하고자 **생산자 중심의 상품 등록 시스템**, **신뢰 기반 후기 시스템**, **관리자 승인 기반의 품질 유지**, 그리고 **간편한 주문 및 배송 프로세스**를 갖춘 서비스를 기획하게 되었습니다.
+저희는 이러한 문제점을 해결하고자 **생산자 중심의 시스템**, **관리자 농가 승인 기반의 품질 유지**, 그리고 **간편한 주문 및 배송 프로세스**를 갖춘 서비스를 기획하게 되었습니다.
 
 </br>
 
@@ -22,7 +24,8 @@
 - 신뢰 기반의 소비자 확보가 어렵습니다.  
 - 중간 유통 과정에서 수수료로 인해 실제 수익이 낮아집니다.
 
-**GreenTable**은 농가가 직접 상품을 등록하고, 후기를 통해 소비자와 직접적인 신뢰 관계를 형성할 수 있게 지원합니다.
+**GreenTable**은 관리자가 승인한 농가 정보를 기반으로, 해당 농가의 상품을 시스템에 등록하고,
+소비자는 후기와 평점을 통해 농가와 신뢰 관계를 형성할 수 있도록 지원합니다.
 
 </br>
 
@@ -62,29 +65,6 @@
 </br>
 
 </details> 
-
-<details> 
-<summary><b>4. 농가-소비자-관리자 간 역할 분리 부족</b></summary>
-
-</br>
-
-기존 시스템은 생산자와 관리자의 역할이 불분명하거나,  
-모든 회원이 동일한 권한으로 상품을 등록/관리하여  
-서비스의 **신뢰성 유지에 한계**가 있습니다.
-
-**GreenTable**은 **3가지 권한 체계**를 명확히 분리하여 운영합니다.  
-- 👤 **소비자**: 상품 검색, 주문, 장바구니, 찜, 주문 내역 조회, 후기 작성  
-- 🧑‍🌾 **농가**: 농가 소개 페이지 생성 및 수정 (상품 등록 권한 없음)  
-- 🧑‍💼 **관리자**: 상품 등록 및 관리, 회원 목록 확인, 농가 등록 승인, 판매 통계 조회
-
-각 권한에 따라 접근 가능한 기능이 구분되어 있어,  
-보다 명확하고 안정적인 서비스 운영이 가능합니다.
-
-</br>
-
-</details>
-
-물론입니다! 아래는 우학동 프로젝트 설명 섹션의 스타일을 그대로 따르면서, GreenTable 프로젝트에 맞게 작성한 `## 🚀 프로젝트 설명` 섹션입니다. 마크다운 형식 그대로 GitHub README.md에 복붙하시면 됩니다:
 
 ---
 
@@ -135,7 +115,7 @@
 * 후기조차 마케팅 위주로 편향되는 경우가 많습니다.
 * 소비자가 실질적으로 구별하기 어려운 구조입니다.
 
-**GreenTable**은 관리자 승인 절차를 통해
+**GreenTable**은 관리자 상품 관리를 통해
 
 * 무분별한 상품 등록을 방지하고
 * 친환경 인증이나 출처가 명확한 상품만 노출합니다.
@@ -144,7 +124,7 @@
 
 </br>
 
-<div align="center">관리자 상품 승인 UI</div>
+<div align="center">관리자 상품 등록 UI</div>
 
 ![상품승인](https://github.com/your-repo/assets/admin-approval.png)
 
@@ -180,32 +160,6 @@ SNS 기반 공동구매나 블로그 판매 등 기존의 농산물 유통 방�
 
 </details>
 
-<details> 
-<summary><b>4. 역할 분리를 통한 체계적 운영</b></summary> 
-
-</br>
-
-기존 시스템은 생산자와 관리자의 역할이 불명확하거나 모든 사용자가 상품을 등록할 수 있어
-플랫폼의 **신뢰 유지에 한계**가 있습니다.
-
-**GreenTable**은 아래와 같이 명확한 권한 분리를 통해 서비스 운영을 체계화했습니다.
-
-* 👤 **소비자**: 상품 검색, 장바구니, 주문, 찜, 후기 작성
-* 🧑‍🌾 **농가**: 농가 소개 페이지 생성 및 수정 (상품 등록 권한 없음)
-* 🧑‍💼 **관리자**: 상품 등록 및 승인, 회원 정보 열람, 농가 등록 승인, 통계 확인
-
-이를 통해 오직 관리자가 상품을 등록하고 승인함으로써
-`품질이 검증된 상품만 소비자에게 노출되도록` 설계했습니다.
-
-</br>
-
-<div align="center">권한별 UI 예시</div>
-
-![권한분리](https://github.com/your-repo/assets/roles-ui.png)
-
-</br>
-
-</details>
 
 </br>
 
@@ -215,8 +169,8 @@ SNS 기반 공동구매나 블로그 판매 등 기존의 농산물 유통 방�
 
 | Front-end         | Back-end       | Database  | DevOps           |
 | ----------------- | -------------- | --------- | ---------------- |
-| JSP               | Jakarta EE 10  | MySQL 8.0 | Docker           |
-| JSTL 3.0          | Tomcat 10.1    |           | Docker Compose   |
+| JSP               | Jakarta EE 10  |    MySQL  | Docker           |
+| JSTL              | Tomcat 10.1    |           | Docker Compose   |
 | JavaScript + AJAX | Reflection API |           | AWS EC2 (Ubuntu) |
 |                   | Servlet/Filter |           | Linux            |
 
@@ -249,6 +203,7 @@ SNS 기반 공동구매나 블로그 판매 등 기존의 농산물 유통 방�
 <div align="center">시스템 개요도</div>
 
 ![시스템 개요](https://github.com/user-attachments/assets/10ed0cc9-c687-4597-bc39-8b0d691df2bf)
+![시스템 개요](https://github.com/user-attachments/assets/1c62f8f7-dfc5-4205-a585-74f62d10e60e)
 
 </br>
 </details>
@@ -290,7 +245,7 @@ AWS EC2 (Ubuntu 22.04)
 
 <div align="center">시스템 아키텍처</div>
 
-![시스템 아키텍쳐](https://github.com/user-attachments/assets/8aea0c2f-73e3-451d-b47e-f7d3e30e33a2)
+![시스템 아키텍쳐](https://github.com/user-attachments/assets/cf3a83a7-e3e2-4c55-b8cd-9d59d15969aa)
 
 </br>
 
@@ -427,12 +382,12 @@ AWS EC2 프리티어 환경에서 메모리 최적화 운영
 
 ## 🧐 팀 소개
 
-| 이름       | 전공        | 이메일                                                         | 역할                                |
-| -------- | --------- | ----------------------------------------------------------- | --------------------------------- |
-| 홍길동 | 컴퓨터공학과    | [ej.kim.dev@greentable.io](mailto:ej.kim.dev@greentable.io) | Full-stack (기획 & 시스템 아키텍처)        |
-| 홍길동      | 정보통신공학과   | [sy.lee@greentable.io](mailto:sy.lee@greentable.io)         | Front-end (JSP, AJAX UI/UX)       |
-| 홍길동      | 소프트웨어학과   | [jh.park@greentable.io](mailto:jh.park@greentable.io)       | Back-end (Controller, DAO, DB 설계) |
-| 홍길동      | 데이터사이언스학과 | [ws.jung@greentable.io](mailto:ws.jung@greentable.io)       | DevOps (Docker, 배포, 테스트 자동화)      |
+| 이름  | 이메일                                                         | 역할                                |
+| --- | ----------------------------------------------------------- | --------------------------------- |
+| 홍길동 | [ej.kim.dev@greentable.io](mailto:ej.kim.dev@greentable.io) | Full-stack (기획 & 시스템 아키텍처)        |
+| 홍길동 | [sy.lee@greentable.io](mailto:sy.lee@greentable.io)         | DevOps (Docker, 배포, 테스트 자동화)      |
+| 홍길동 | [jh.park@greentable.io](mailto:jh.park@greentable.io)       | Back-end (Controller, DAO, DB 설계) |
+| 정정화 | [jeonghwa485@gmail.com](mailto:jeonghwa485@gmail.com)       | Front-end (JSP, AJAX UI/UX)      |
 
 </br>
 
@@ -471,7 +426,7 @@ AWS EC2 프리티어 환경에서 메모리 최적화 운영
 
 | 구분      | 규칙                                                          |
 | ------- | ----------------------------------------------------------- |
-| Name    | • `feature/기능명`, `release/버전`, `hotfix/버전` 형식 사용            |
+| Name    | • `feat/기능명`, `release/버전`, `hotfix/버전` 형식 사용            |
 | Main    | • 배포용 프로덕션 코드                                               |
 | Develop | • 다음 릴리스를 위한 통합 브랜치                                         |
 | Feature | • 기능 단위 개발 브랜치<br>• `develop`에서 분기하여 작업 후 다시 `develop`으로 머지 |
@@ -481,8 +436,8 @@ AWS EC2 프리티어 환경에서 메모리 최적화 운영
 **브랜치 예시**
 
 ```
-feature/login
-feature/reservation
+feat/login
+feat/reservation
 release/v1.0
 hotfix/v1.0.1
 ```
@@ -555,7 +510,7 @@ refactor : [BE] Service 로직 분리
 
 </br>
 
-## 🌟 프로젝트 하이라이트
+## 🌟 프로젝트 코드
 
 <details>
 <summary><b>Reflection 기반 동적 라우팅</b></summary>
@@ -570,9 +525,9 @@ protected void service(HttpServletRequest req, HttpServletResponse res) {
 }
 ```
 
-✅ URL 매핑을 코드 변경 없이 확장 가능
-✅ 새로운 컨트롤러 추가 시 설정만으로 완료
-✅ Spring 동작 원리 이해 및 직접 구현
+✅ URL 매핑을 코드 변경 없이 확장 가능 </br>
+✅ 새로운 컨트롤러 추가 시 설정만으로 완료 </br>
+✅ Spring 동작 원리 이해 및 직접 구현 </br>
 
 </details>
 
@@ -603,17 +558,17 @@ services:
       - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC
 ```
 
-✅ Jakarta EE 10 + Tomcat 10.1 기반 애플리케이션 컨테이너
-✅ JNDI + Direct JDBC 이중 연결 방식으로 99.9% DB 안정성 확보
+✅ Jakarta EE 10 + Tomcat 10.1 기반 애플리케이션 컨테이너 </br>
+✅ JNDI + Direct JDBC 이중 연결 방식으로 99.9% DB 안정성 확보 </br>
 
 </details>
 
 <details>
 <summary><b>역할 기반 세션 관리</b></summary>
 
-👤 소비자: 상품 검색, 주문, 장바구니, 찜, 후기 작성
-🧑‍🌾 농가: 농가 소개 페이지 생성/수정 (상품 등록 X)
-🧑‍💼 관리자: 상품 등록 및 승인, 회원 및 통계 관리
+👤 소비자: 상품 검색, 주문, 장바구니, 찜, 후기 작성 </br>
+🧑‍🌾 농가: 농가 소개 페이지 생성/수정 (상품 등록 X) </br>
+🧑‍💼 관리자: 상품 등록 및 승인, 회원 및 통계 관리 </br>
 
 ✅ 권한별 세션 분리로 보안성 및 운영 효율성 향상
 
@@ -622,9 +577,9 @@ services:
 <details>
 <summary><b>보안 및 성능 최적화</b></summary>
 
-🔐 PreparedStatement 100% 적용 → SQL Injection 완전 차단
-🔐 세션 속성 설정 (`http-only`, `secure`) → 세션 하이재킹 방지
-⚡ JVM G1GC + 메모리 튜닝으로 저사양 EC2 환경에서도 안정 운영
+🔐 PreparedStatement 100% 적용 → SQL Injection 완전 차단 </br>
+🔐 세션 속성 설정 (`http-only`, `secure`) → 세션 하이재킹 방지 </br>
+⚡ JVM G1GC + 메모리 튜닝으로 저사양 EC2 환경에서도 안정 운영 </br>
 
 ```java
 public static Connection getConnection() throws SQLException {
@@ -644,36 +599,7 @@ public static Connection getConnection() throws SQLException {
 
 </br>
 
-## ⚙️ 설치 및 실행
 
-### 로컬 실행
-
-```bash
-git clone https://github.com/your-username/GreenTable.git
-cd GreenTable
-docker-compose up --build -d
-docker-compose ps
-docker logs -f greentable_app
-```
-
-### 브라우저 접속
-
-[http://localhost:8080/GreenTable/](http://localhost:8080/GreenTable/)
-
-### AWS 배포
-
-```bash
-ssh -i your-key.pem ec2-user@your-ec2-ip
-sudo yum update -y && sudo yum install -y docker
-sudo service docker start
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-git clone https://github.com/your-username/GreenTable.git
-cd GreenTable
-sudo docker-compose up --build -d
-```
-
-</br>
 
 ## 🧾 API 문서 및 예시
 
