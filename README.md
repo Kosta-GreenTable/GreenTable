@@ -202,7 +202,7 @@ SNS 기반 공동구매나 블로그 판매 등 기존의 농산물 유통 방�
 
 <div align="center">시스템 개요도</div> </br>
 
-![시스템 개요](https://github.com/user-attachments/assets/492f9b85-91a1-4e9b-9e64-9bb26c9b950f)
+![시스템 개요](https://github.com/user-attachments/assets/2282b887-50c2-461a-8e4f-4e71f9ae6a49)
 
 </br>
 </details>
