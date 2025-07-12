@@ -278,9 +278,14 @@ AWS EC2 (Ubuntu 22.04)
 
 </br>
 
-<div align="center">관리자 전용 대시보드 UI 예시</div>
+**관리자 전용 대시보드 UI**
 
-![대시보드](https://github.com/your-repo/assets/admin-dashboard.png)
+<img src="https://github.com/user-attachments/assets/43539b96-ba99-4b44-9988-aa660935da61" alt="Image 1" width="700"/><br><br>
+  <img src="https://github.com/user-attachments/assets/03581e21-4655-4adf-8b0a-7c6fe8502041" alt="Image 2" width="700"/><br><br>
+  <img src="https://github.com/user-attachments/assets/5e0ec098-cdd2-4f3e-918a-669be84afead" alt="Image 3" width="700"/><br><br>
+  <img src="https://github.com/user-attachments/assets/a85282bd-a4ff-4110-bf09-072bc863d515" alt="Image 4" width="700"/><br><br>
+  <img src="https://github.com/user-attachments/assets/1ae2fa1d-d4c8-4575-b434-68dcb4778dfc" alt="Image 5" width="700"/><br><br>
+  <img src="https://github.com/user-attachments/assets/157c8cb9-bc1e-4a9d-a65b-615df2311a75" alt="Image 6" width="700"/>
 
 </br>
 </details>
@@ -301,29 +306,21 @@ AWS EC2 (Ubuntu 22.04)
 * ⭐ 리뷰 작성 (구매 후 한정)
 
 </br>
-
-</br>
 </details>
 
 </br>
 
----
 
 ## 🧐 팀 소개
 
 | 이름  | 이메일                                                         | 역할                                |
 | --- | ----------------------------------------------------------- | --------------------------------- |
 | 서경찬 | [sy.lee@greentable.io](mailto:sy.lee@greentable.io)        | Back-end, Front-end (JSP, AJAX UI/UX)       |
-| 송효원 | [woniwoni30k@gmail.com](mailto:woniwoni30@gmail.com)      | Back-end, Front-end, DevOps (Docker 배포) |
+| 송효원 | [woniwoni30@gmail.com](mailto:woniwoni30@gmail.com)      | Back-end, Front-end (JSP, AJAX UI/UX), DevOps (Docker 배포) |
 | 정정화 | [jeonghwa485@gmail.com](mailto:jeonghwa485@gmail.com)      | Back-end, Front-end (JSP, AJAX UI/UX)      |
 | 구현준 | [yoffle0987@gmail.com](mailto:yoffle0987@gmail.com)        | Back-end                                   |
 
 </br>
-
-> 💡 *해당 정보는 포트폴리오용 예시로 작성되었습니다.*
->
-> 
----
 
 ## ✅ 협업 방식
 
