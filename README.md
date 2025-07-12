@@ -157,7 +157,7 @@ SNS 기반 공동구매나 블로그 판매 등 기존의 농산물 유통 방�
 
 </br>
 
-<div align="center">소비자 메인 화면 및 구매 플로우 UI 예시</div>
+<div>소비자 메인 화면 및 구매 플로우 UI 예시</div>
 
 <img src="https://github.com/user-attachments/assets/9fade0fa-2c7f-45c1-a09a-33df5b3e41e9" alt="Image 1" width="700" /><br><br>
 <img src="https://github.com/user-attachments/assets/b77d7d1f-c71f-4109-8a3d-e58f7d9aeadd" alt="Image 2" width="700" /><br><br>
