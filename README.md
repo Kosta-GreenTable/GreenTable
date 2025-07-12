@@ -1,5 +1,4 @@
-## 📌 GreenTable: 친환경 농산물 쇼핑몰 SaaS
-
+## 📌 GreenTable: 친환경 농산물 쇼핑몰
 <p align="center">
   <img src="https://github.com/Kosta-GreenTable/GreenTable/blob/main/src/main/webapp/image/logo_1.png?raw=true" alt="GreenTable Main Image" />
 </p>
@@ -8,7 +7,7 @@
 
 ## 🔥 프로젝트 개요
 
-**GreenTable**은 소비자와 생산자 간의 신뢰를 기반으로 한 **친환경 농산물 쇼핑몰 SaaS 플랫폼**입니다.  
+**GreenTable**은 소비자와 생산자 간의 신뢰를 기반으로 한 **친환경 농산물 쇼핑몰 플랫폼**입니다.  
 기존의 온라인 마켓에서는 친환경 인증 여부 확인이 어렵고, 중간 유통 과정이 복잡하여 생산자는 제값을 받기 힘들며, 소비자 또한 신뢰할 수 있는 제품을 구매하기 어려운 상황입니다.  
 저희는 이러한 문제점을 해결하고자 **생산자 중심의 시스템**, **관리자 농가 승인 기반의 품질 유지**, 그리고 **간편한 주문 및 배송 프로세스**를 갖춘 서비스를 기획하게 되었습니다.
 
