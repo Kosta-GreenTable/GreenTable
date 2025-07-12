@@ -97,7 +97,7 @@
 </br>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/fe0614ce-e82e-4328-a5d0-70ed489c8fbb" alt="농가 소개 UI" width="600" />
+  <img src="https://github.com/user-attachments/assets/fe0614ce-e82e-4328-a5d0-70ed489c8fbb" alt="농가 소개 UI" width="800" />
 </p>
 
 </br>
@@ -124,13 +124,12 @@
 
 </br>
 
-<div align="center">관리자 상품 등록 UI</div>
+<div>관리자 상품 등록 UI</div>
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/6d0731c1-a669-470b-909f-557ebf47d9f5" alt="상품 1" width="300" />
-  <img src="https://github.com/user-attachments/assets/a32e4027-472f-487f-85d5-7388047ca8e2" alt="상품 2" width="300" />
-  <img src="https://github.com/user-attachments/assets/c4d7f445-61ab-457f-a95f-f330d1aea29d" alt="상품 3" width="300" />
-</p>
+<img src="https://github.com/user-attachments/assets/6d0731c1-a669-470b-909f-557ebf47d9f5" alt="상품 1" width="700" />
+<img src="https://github.com/user-attachments/assets/a32e4027-472f-487f-85d5-7388047ca8e2" alt="상품 2" width="700" />
+<img src="https://github.com/user-attachments/assets/c4d7f445-61ab-457f-a95f-f330d1aea29d" alt="상품 3" width="700" />
+
 
 
 </br>
@@ -276,7 +275,6 @@ AWS EC2 (Ubuntu 22.04)
 * 📦 주문 현황 모니터링 (배송 진행 상태 확인)
 * 💰 매출 통계 분석 (카테고리별 매출, 기간별 주문 등)
 * 📈 서비스 운영 지표 확인 (리뷰 수, 찜 수, 회원 수 등)
-* 🔧 시스템 설정 관리 (배너, 분류, 공지사항 등)
 
 </br>
 
@@ -296,20 +294,13 @@ AWS EC2 (Ubuntu 22.04)
 
 * 🚪 비회원도 접근 가능 (회원가입은 주문에 필요)
 * ✍️ 회원가입 및 로그인 (SHA-256 암호화 + 세션 관리)
-* 🏠 메인화면에서 농산물 탐색 (카드 기반 UI 구성)
 * 🔍 키워드 및 카테고리 기반 상품 검색
 * 🛍️ 장바구니에 상품 추가, 수량 변경, 삭제
-* 💳 카카오페이 기반 결제 및 포인트 사용 가능
-* 📦 주문 내역 확인, 배송 상태 추적
+* 💳 포트원 결제
+* 📦 주문 내역 확인
 * ⭐ 리뷰 작성 (구매 후 한정)
-* ❤️ 찜 목록 저장, 찜 상품 빠른 조회
-* 🏆 포인트 적립 시스템 (리뷰 및 구매에 따라 자동 지급)
 
 </br>
-
-<div align="center">소비자 메인 화면 및 구매 플로우 UI 예시</div>
-
-![소비자요청](https://github.com/your-repo/assets/consumer-ui.png)
 
 </br>
 </details>
