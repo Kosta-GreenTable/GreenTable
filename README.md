@@ -157,7 +157,7 @@ SNS 기반 공동구매나 블로그 판매 등 기존의 농산물 유통 방�
 
 </br>
 
-<div align="center">소비자 주문 UI</div>
+<div align="center">소비자 메인 화면 및 구매 플로우 UI 예시</div>
 
 <img src="https://github.com/user-attachments/assets/9fade0fa-2c7f-45c1-a09a-33df5b3e41e9" alt="Image 1" width="700" /><br><br>
 <img src="https://github.com/user-attachments/assets/b77d7d1f-c71f-4109-8a3d-e58f7d9aeadd" alt="Image 2" width="700" /><br><br>
@@ -254,93 +254,12 @@ AWS EC2 (Ubuntu 22.04)
 
 </br>
 
+
 <div align="center">시스템 아키텍처</div>  </br>
 
 ![시스템 아키텍쳐](https://github.com/user-attachments/assets/4a638f8f-ce9a-487b-bf57-48e5d8cda628)
 
 </br>
-
-백엔드는 Jakarta EE 10을 기반으로 Reflection API를 활용한 동적 라우팅 시스템을 구현하였고, JNDI DataSource와 Direct JDBC의 이중 연결 방식으로 99.9% 연결 안정성을 확보했습니다. 데이터베이스는 MySQL 8.0을 Docker 컨테이너로 운영하며, PreparedStatement 100% 적용으로 완벽한 보안을 구현했습니다.
-
-프론트엔드는 JSP + JSTL 3.0을 사용하여 Server-Side Rendering 방식으로 구현했으며, AJAX 기반 비동기 통신으로 사용자 경험을 향상시켰습니다. 역할 기반 세션 관리를 통해 관리자/농가/일반 사용자별 차별화된 UI를 제공합니다.
-
-🐳 컨테이너 구성도
-<!-- 
-┌───────────────────────────────────────────────────────────┐
-│                    AWS EC2 (Ubuntu 22.04)                 │
-│                                                           │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │                Docker Compose                      │   │
-│  │                                                    │   │
-│  │  ┌──────────────────┐    ┌──────────────────────┐  │   │
-│  │  │   MySQL 8.0      │    │   GreenTable App     │  │   │
-│  │  │   Container      │    │   Container          │  │   │
-│  │  │                  │    │                      │  │   │
-│  │  │ • Port: 3306     │◄───┤ • Tomcat 10.1        │  │   │
-│  │  │ • greentable DB  │    │ • JDK 17             │  │   │
-│  │  │ • Volume Mount   │    │ • Jakarta EE 10      │  │   │
-│  │  │ • healthcheck    │    │ • Port: 8080         │  │   │
-│  │  └──────────────────┘    │ • JNDI DataSource    │  │   │
-│  │                          └──────────────────────┘  │   │
-│  └────────────────────────────────────────────────────┘   │
-│                                                           │
-│                          │                                │
-│                          ▼                                │
-│                   Internet Gateway                        │
-└───────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-                    👥 사용자 접근
-              http://3.36.75.98:8080/GreenTable/
--->
-
-![컨테이너 구성도](https://github.com/user-attachments/assets/2fb2a353-c74b-4e5b-a8be-8cf80891ad5b)    
-
-🔄 시스템 처리 흐름
-<!-- 
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            요청 처리 워크플로우                               │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│ 👤 사용자 요청                                                               │
-│     │                                                                       │
-│     ▼                                                                       │
-│ 🌐 JSP + JSTL 3.0 (Presentation Layer)                                      │
-│     │                                                                       │
-│     ▼                                                                       │
-│ 🎮 DispatcherServlet (Front Controller)                                     │
-│     │ ┌─────────────────────────────────────┐                               │
-│     │ │    Reflection API 동적 라우팅        │                               │
-│     │ │ key=product&methodName=list         │                               │
-│     │ │ ↓                                   │                               │
-│     │ │ ProductController.list() 호출       │                               │
-│     │ └─────────────────────────────────────┘                               │
-│     ▼                                                                       │
-│ 💼 Service Layer (Business Logic)                                           │
-│     │                                                                       │
-│     ▼                                                                       │
-│ 🗃️ DAO Layer (Data Access)                                                  │
-│     │ ┌─────────────────────────────────────┐                               │
-│     │ │      이중 연결 방식                  │                               │
-│     │ │ 1순위: JNDI DataSource              │                               │
-│     │ │ 2순위: Direct JDBC                  │                               │
-│     │ │ PreparedStatement 100% 적용         │                               │
-│     │ └─────────────────────────────────────┘                               │
-│     ▼                                                                       │
-│ 🗄️ MySQL 8.0 Database                                                       │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
--->
-
-![시스템 처리 흐름](https://github.com/user-attachments/assets/96ef0ba6-51a7-44dc-a227-6ba5deba9a11)
-
-🏗 서비스 아키텍처
-✅ 아키텍처 구성
-Multi-tier 아키텍처를 Docker Compose로 컨테이너화
-Jakarta EE 10 기반 엔터프라이즈급 웹 애플리케이션
-MySQL 8.0 데이터베이스를 볼륨 마운트로 영속성 보장
-AWS EC2 프리티어 환경에서 메모리 최적화 운영
-
 </details>
 
 <details>
@@ -403,10 +322,10 @@ AWS EC2 프리티어 환경에서 메모리 최적화 운영
 
 | 이름  | 이메일                                                         | 역할                                |
 | --- | ----------------------------------------------------------- | --------------------------------- |
-| 홍길동 | [ej.kim.dev@greentable.io](mailto:ej.kim.dev@greentable.io) | Full-stack (기획 & 시스템 아키텍처)        |
-| 홍길동 | [sy.lee@greentable.io](mailto:sy.lee@greentable.io)         | DevOps (Docker, 배포, 테스트 자동화)      |
-| 홍길동 | [jh.park@greentable.io](mailto:jh.park@greentable.io)       | Back-end (Controller, DAO, DB 설계) |
-| 정정화 | [jeonghwa485@gmail.com](mailto:jeonghwa485@gmail.com)       | Front-end (JSP, AJAX UI/UX)      |
+| 서경찬 | [sy.lee@greentable.io](mailto:sy.lee@greentable.io)        | Back-end, Front-end (JSP, AJAX UI/UX)       |
+| 송효원 | [woniwoni30k@gmail.com](mailto:woniwoni30@gmail.com)      | Back-end, Front-end, DevOps (Docker 배포) |
+| 정정화 | [jeonghwa485@gmail.com](mailto:jeonghwa485@gmail.com)      | Back-end, Front-end (JSP, AJAX UI/UX)      |
+| 구현준 | [yoffle0987@gmail.com](mailto:yoffle0987@gmail.com)        | Full-stack (기획 & 시스템 아키텍처)        |
 
 </br>
 
