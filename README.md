@@ -159,14 +159,13 @@ SNS 기반 공동구매나 블로그 판매 등 기존의 농산물 유통 방�
 
 <div align="center">소비자 주문 UI</div>
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/9fade0fa-2c7f-45c1-a09a-33df5b3e41e9" alt="Image 1" width="400" /><br><br>
-  <img src="https://github.com/user-attachments/assets/b77d7d1f-c71f-4109-8a3d-e58f7d9aeadd" alt="Image 2" width="400" /><br><br>
-  <img src="https://github.com/user-attachments/assets/9f772ff1-1e96-4895-8661-04cc1011ba6b" alt="Image 3" width="400" /><br><br>
-  <img src="https://github.com/user-attachments/assets/9de822eb-d5ac-4d60-9996-79834ee0c969" alt="Image 4" width="400" /><br><br>
-  <img src="https://github.com/user-attachments/assets/6c77e3bb-507a-4c9d-a35b-8b0570c5d33a" alt="Image 5" width="400" /><br><br>
-  <img src="https://github.com/user-attachments/assets/426903fb-30b0-419c-ad1e-9d9b95c9fc78" alt="Image 6" width="400" />
-</p>
+<img src="https://github.com/user-attachments/assets/9fade0fa-2c7f-45c1-a09a-33df5b3e41e9" alt="Image 1" width="700" /><br><br>
+<img src="https://github.com/user-attachments/assets/b77d7d1f-c71f-4109-8a3d-e58f7d9aeadd" alt="Image 2" width="700" /><br><br>
+<img src="https://github.com/user-attachments/assets/9f772ff1-1e96-4895-8661-04cc1011ba6b" alt="Image 3" width="700" /><br><br>
+<img src="https://github.com/user-attachments/assets/9de822eb-d5ac-4d60-9996-79834ee0c969" alt="Image 4" width="700" /><br><br>
+<img src="https://github.com/user-attachments/assets/6c77e3bb-507a-4c9d-a35b-8b0570c5d33a" alt="Image 5" width="700" /><br><br>
+<img src="https://github.com/user-attachments/assets/426903fb-30b0-419c-ad1e-9d9b95c9fc78" alt="Image 6" width="700" />
+
 
 
 </br>
