@@ -1,7 +1,7 @@
 ## 📌 GreenTable: 친환경 농산물 쇼핑몰
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Kosta-GreenTable/GreenTable/main/src/main/webapp/image/logo_1.png" alt="GreenTable Main Image" />
+  <img src="https://github.com/user-attachments/assets/af8ffaf5-a06b-4d05-b1dc-3905a8be1508" alt="GreenTable Main Image" />
 </p>
 
 </br>
