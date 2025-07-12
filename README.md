@@ -305,6 +305,29 @@ AWS EC2 (Ubuntu 22.04)
 * 📦 주문 내역 확인
 * ⭐ 리뷰 작성 (구매 후 한정)
 
+**소비자 회원가입 및 마이페이지**
+
+<img src="https://github.com/user-attachments/assets/6fe48f72-33e9-4878-87e5-479d08d594cc" width="700" />
+<br><br>
+
+<img src="https://github.com/user-attachments/assets/0ef7374a-2208-4c41-96ec-097da4cad908" width="700" />
+<br><br>
+
+<img src="https://github.com/user-attachments/assets/dc1828c9-9183-4766-ab3a-bc481d6578e9" width="700" />
+<br><br>
+
+<img src="https://github.com/user-attachments/assets/3444c461-3778-498e-b792-7ce4aa24980e" width="700" />
+<br><br>
+
+<img src="https://github.com/user-attachments/assets/70885c18-3d71-4fd5-a632-f028595e52a8" width="700" />
+<br><br>
+
+<img src="https://github.com/user-attachments/assets/6d6f79e4-ef33-4abf-8e11-cf45b8f32201" width="700" />
+<br><br>
+
+<img src="https://github.com/user-attachments/assets/664ce5cc-bb5f-44bb-99b7-9c5f807f2b1e" width="700" />
+
+
 </br>
 </details>
 
