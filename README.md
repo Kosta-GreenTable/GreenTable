@@ -96,9 +96,9 @@
 
 </br>
 
-<div align="center">농가 소개 페이지 UI</div>
-
-![농가소개](https://github.com/your-repo/assets/farmer-page.png)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fe0614ce-e82e-4328-a5d0-70ed489c8fbb" alt="농가 소개 UI" width="600" />
+</p>
 
 </br>
 
@@ -126,7 +126,12 @@
 
 <div align="center">관리자 상품 등록 UI</div>
 
-![상품승인](https://github.com/your-repo/assets/admin-approval.png)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6d0731c1-a669-470b-909f-557ebf47d9f5" alt="상품 1" width="300" />
+  <img src="https://github.com/user-attachments/assets/a32e4027-472f-487f-85d5-7388047ca8e2" alt="상품 2" width="300" />
+  <img src="https://github.com/user-attachments/assets/c4d7f445-61ab-457f-a95f-f330d1aea29d" alt="상품 3" width="300" />
+</p>
+
 
 </br>
 
