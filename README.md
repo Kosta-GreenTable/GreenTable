@@ -338,7 +338,7 @@ AWS EC2 (Ubuntu 22.04)
 
 | 이름  | 이메일                                                         | 역할                                |
 | --- | ----------------------------------------------------------- | --------------------------------- |
-| 서경찬 | [sy.lee@greentable.io](mailto:sy.lee@greentable.io)        | Back-end, Front-end (JSP, AJAX UI/UX)       |
+| 서경찬 | [skc3924@gmail.com](mailto:skc3924@gmail.com)        | Back-end, Front-end (JSP, AJAX UI/UX)       |
 | 송효원 | [woniwoni30@gmail.com](mailto:woniwoni30@gmail.com)      | Back-end, Front-end (JSP, AJAX UI/UX), DevOps (Docker 배포) |
 | 정정화 | [jeonghwa485@gmail.com](mailto:jeonghwa485@gmail.com)      | Back-end, Front-end (JSP, AJAX UI/UX)      |
 | 구현준 | [yoffle0987@gmail.com](mailto:yoffle0987@gmail.com)        | Back-end                                   |
